@@ -23,6 +23,12 @@ high enough, but resumed again in 2026/01 after the demand grew again.
 Its specification was then revised in 2026/02 and its realization was
 done in 2026/03.
 
+Contributors & Sponsors
+-----------------------
+
+**Broadcast** development was sponsored by *msg Research*, [*msg systems ag*](https://www.msg.group)
+and multiple [people actively contributed](CONTRIBUTORS.md) to the product over time.
+
 Copyright & License
 -------------------
 
