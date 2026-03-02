@@ -12,7 +12,10 @@ Broadcast
 About
 -----
 
-...FIXME...
+**Broadcast** is a small but flexible portal for displaying the
+broadcasted video streams of a live event and providing its companion
+chat, question and voting interactions. **Broadcast** is designed to
+scale up to 10K parallel attendees.
 
 History
 -------
