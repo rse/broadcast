@@ -2,5 +2,5 @@
 Broadcast
 =========
 
-**Live Event Broadcasting Portal**
+**Live Event Video Broadcasting Portal**
 
