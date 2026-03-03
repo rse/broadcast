@@ -11,7 +11,7 @@ User: All, Device: All
 
 - (Dialog) Header Bar
     - (Fragment) Profile (Firstname, Lastname, Email, Roles) (+ Stored Data, GDPR)
-    - (Fragment) Switch to different 
+    - (Fragment) Switch to different
 
 ### (Screen) Attendee
 
@@ -48,22 +48,30 @@ User: Event Host (ZM), Device: Desktop/Tablet (16:9)
 - (Dialog) Questions (Kachelansicht, interactive)
     - (Info) done, prio
 
-## (Screen) Moderator       (Event  Backoffice,  ZM) -> Desktop (16:9)
-  - Fragment: Filter for states
-  - Questions: 10-30
-    - reject/approve/approve+forward/answered * (Kanban-Board Lane oben)
-  - Chat (zeitkritisch): 10-XXX
-    - reject/approve/approve+forward          * (Kanban-Board Lane unten)
+## (Screen) Moderator
 
-## (Screen) Manager         (Event  Manager,    XT/ZM)
-  - Statistics/Trends
-  - Event Config
-    - config (see Event-Configuration.txt).  *
-    - enable/disable
-    - delete
+User: Event Backoffice (ZM), Device: Desktop (16:9)
 
-## (Screen) [Administrator] (System Manager,    XT)
-  - (none)
-  - (role assignment of users) -> config file
-  - (streaming provider configuration) -> config file
+- (Fragment) Filter for states
+- (Fragment) Questions: 10-30
+    - (Info) reject/approve/approve+forward/answered (Kanban-Board Lane oben)
+- (Fragment) Chat (zeitkritisch): 10-XXX
+    - (Info) reject/approve/approve+forward          (Kanban-Board Lane unten)
+
+## (Screen) Manager
+
+User: Event Manager (XT/ZM)
+
+- (Dialog) Statistics/Trends
+- (Dialog) Event Config
+    - (Fragment) config
+    - (Fragment) enable/disable
+    - (Fragment) delete
+
+## (Screen) Administrator
+
+User: System Manager (XT) Device: Desktop (16:9)
+
+- (none) role assignment of users) &rarr; config file
+- (none) streaming provider configuration) &rarr; config file
 
