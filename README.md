@@ -20,11 +20,11 @@ scale up to 10K parallel attendees.
 History
 -------
 
-**Broadcast** was specified in 2023/10 for use in the msg Filmstudio
-context. It was temporarily suspended in 2024/01 when the demand was not
-high enough, but resumed again in 2026/01 after the demand grew again.
-Its specification was then revised in 2026/02 and its realization was
-done in 2026/03.
+**Broadcast** was designed and specified in 2023/10 for use in the *msg
+Filmstudio* context. The project was temporarily suspended in 2024/01
+when the demand was not high enough, but resumed again in 2026/01 after
+the demand grew again. Its specification was then revised in 2026/02 and
+its realization was started in 2026/03.
 
 Contributors & Sponsors
 -----------------------
