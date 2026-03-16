@@ -25,9 +25,9 @@ It defines the following attributes:
 | end                          | The planned ending time and date of the event.                                                                                                                                                                                                                                                                                                                        |
 | state                        | The state of the event. Newly created events are in state ___planning___ and are not visible for attendees. The ___published___ state lets attendees see the event already, yet it is not started. The state ___running___ represents an event currently held where attendees can attend. A ___finished___ event was held and further access is not possible for attendees. |
 | loginInfo                    | An attendee will get this HTML-Markup as additional text when attending an event. The event manager can provide more information about the event including HTML links and other useful content.                                                                                                                                                                       |
-| loginInfoToBeAccepted        | Whether the login information has to be explicity accepted to continue.                                                                                                                                                             |
+| loginInfoToBeAccepted        | Whether the login information has to be explicitly accepted to continue.                                                                                                                                                             |
 | interactionInfo              | Event attendees will get this additional information when attending an event where interaction is enabled (either chat or questions). Writing chats or questions could get additional HTML-Markup e.g. for text moderation rules or a code of conduct.                                                                                                                |
-| interactionInfoToBeAccepted  | Whether the interaction information has to be explicity accepted to continue.                       |
+| interactionInfoToBeAccepted  | Whether the interaction information has to be explicitly accepted to continue.                       |
 | activeProvider               | An event can have different channels and tracks. A track belongs to a provider. Providers are a good way to manage different content deliveries. In case a CDN encounters problems - the "Manager" can switch to a different provider as a fallback. Attendees should be routed to the correct tracks of providers on change.  |
 | allowAccessAnonymous         | An event might accept anonymous attendees. In that case attendees can access the event without authorization.                                                                                                                                                                                                                                                         |
 | accessEmailPattern           | Beside the accessList-Relation an event can grant anyone access to an event when his given email matches this pattern.                                                                                                                                                                                                                                                |
@@ -54,7 +54,7 @@ It defines the following relations:
 
 | relation   | description                                                                                                          |
 |------------|----------------------------------------------------------------------------------------------------------------------|
-| streams    | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity _Stream_)                 |
+| channels   | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity _Stream_)                 |
 | roles      | A list of all "Manager", "Presenter", "Moderator" and "Administrator" roles for the specific event. (see Entity _Role_) |
 | accessList | A list of all invited attendees identified by their email. (see Entity _User_)                                       |
 | messages   | A list of all messages written by attendees during an event. (see Entity _Message_)                                  |
@@ -91,7 +91,7 @@ It defines the following attributes:
 | provider          | Name of the externally defined provider. The combination of provider and track name has to be unique.                                                                                                                          |
 | name              | A display name for the track e.g. "DE" or "DE mit UT" |
 | streamURL         | The URL of the underlying video stream at the provider. |
-| default           | Whether this track is activated by default when entering an event within the channel. Should be "true" for a provider only once. |
+| default           | Whether this track is activated by default when entering an event within the channel. Only one track per provider should have default="true". |
 
 Entity _Track_ has the following relations.
 
@@ -107,7 +107,7 @@ It defines the following attributes:
 
 | attribute | description                                                                                                              |
 |-----------|--------------------------------------------------------------------------------------------------------------------------|
-| type      | Defines the proper role for the person. The following roles can be set: ___Manager___ and ___Moderator___ for the event. |
+| type      | Defines the proper role for the person. The following roles can be set: "Manager" and "Moderator" for the event. |
 | email     | Is a string with the email address of the authorized person.                                                             |
 
 Entity _Role_ has no further relations.
@@ -132,6 +132,7 @@ It defines the following relations:
 |--------------|--------------------------------------------------------------|
 | likes        | A list of all event messages that the user marked as "like". |
 | sentMessages | A list of all messages that the user has sent.               |
+| statistics   | A list of all track statistics that will be created periodically when an event started until it finishes.            |
 
 ### Entity Message
 
@@ -188,7 +189,7 @@ It defines the following attributes:
 | attribute     | description                                                                                                                                           |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | text          | A unique tag name |
-| moderatorOnly | Whether this tag can be used by a Moderator or Manager role only |
+| moderatorOnly | Whether this tag can be used by a "Moderator" or "Manager" role only |
 | group         | Logical group this tag belongs to. |
 
 ### Entity AuthorizationToken

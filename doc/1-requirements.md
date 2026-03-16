@@ -162,16 +162,16 @@ pre-generated access token could be used one or multiple times.
 Examples for valid URLs:
 - `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>`
 
-### R1.8d Support direct event channel access
+### R1.8d Support direct event track access
 
-Since events can be configured with different channels (each one as
-stream from a CDN provider), an direct access of such a channel should
+Since events can be configured with different tracks (each one as
+stream from a CDN provider), an direct access of such a track should
 be possible - e.g. when users reload the web page.
 
 Examples for valid URLs:
-- `https://msg-broadcast.com/#/event=<event>&channel=<channel>`
-- `https://msg-broadcast.com/#/event=<event>&user=<email>&channel=<channel>`
-- `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>&channel=<channel>`
+- `https://msg-broadcast.com/#/event=<event>&track=<track>`
+- `https://msg-broadcast.com/#/event=<event>&user=<email>&track=<track>`
+- `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>&track=<track>`
 
 R1.9 Compliance and user consent
 --------------------------------
@@ -249,8 +249,8 @@ number of successful challenges
 
 ### R1.12c Channel statistics
 
-Additionally show the number of viewers of each different channel
-(stream) of an event e.g. how many german, english, high-resolution,
+Additionally show the number of viewers of each different track
+(channel) of an event e.g. how many german, english, high-resolution,
 low-resolution, ...
 
 ### R1.13 Changes to Event configurations
