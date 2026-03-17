@@ -77,11 +77,15 @@ the server.
 Sentiment analysis should be configurable for server in an event. If it
 is enabled the server should check inputs before it saves input.
 
-### R1.5i
+### R1.5i Message Editing
 
-Allow users to edit their chat messages, but mark them as edited
+Allow users to edit their chat and question messages, but mark them as edited
 for others and in case of required moderation, pass it through the
 moderation approval process before it is visible (again).
+
+### R1.5j Tag Question Message 
+
+Allow users to tag question message with predefined tags, in order to give a context to the question message (e.g. which person the question should be directed to, or to add the agenda point)
 
 R1.6 Moderator interaction
 --------------------------
@@ -253,7 +257,12 @@ Additionally show the number of viewers of each different track
 (channel) of an event e.g. how many german, english, high-resolution,
 low-resolution, ...
 
-### R1.13 Changes to Event configurations
+### R1.12d User statistics
+
+Additionally show statistics about the viewers. Country information is used to select the default language and optioan default track on first application use.
+
+R1.13 Changes to Event configurations
+-------------------------------------
 
 When event configurations are made the changes should propagate directly
 to all participants of a meeting. (e.g. chatEnabled is changed)
@@ -263,6 +272,11 @@ R1.14 Presenter dashboard
 
 "Moderators" can forward event input (chat and questions) to a
 "Presenter". see requirement R1.6.
+
+R1.15 Attendee Experience
+-------------------------
+
+"Attendees" want to have an overview about the current agenda and which agenda point is currently active.
 
 Requirements ("can")
 ====================

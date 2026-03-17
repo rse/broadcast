@@ -60,6 +60,23 @@ It defines the following relations:
 | messages   | A list of all messages written by attendees during an event. (see Entity _Message_)                                  |
 | statistics | A list of all event statistics that will be created periodically when an event started until it finishes.            |
 | availableQuestionTags | A list of all tags available for use on questions. |
+| activeAgendaPoint | Currently active Agenda Point. |
+| agendaPoints | A list of all Agenda Points for the Event. |
+
+
+### Entity AgendaPoint
+
+A AgendaPoint is the textual description of the current phase in an Event.
+
+It defines the following attributes:
+
+| attribute         | description                                                                                                                                                       |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| agendaPointId          | A unique agenda point id used as foreign key.                                                                                                                           |
+| text              | description of the current phase of the Event |
+| orderPosition           | the ordering of the phases |
+
+
 
 ### Entity Channel
 
@@ -92,6 +109,7 @@ It defines the following attributes:
 | name              | A display name for the track e.g. "DE" or "DE mit UT" |
 | streamURL         | The URL of the underlying video stream at the provider. |
 | default           | Whether this track is activated by default when entering an event within the channel. Only one track per provider should have default="true". |
+| language           | ISO two-letter language code identifying the track content language. |
 
 Entity _Track_ has the following relations.
 
@@ -107,6 +125,7 @@ It defines the following attributes:
 
 | attribute | description                                                                                                              |
 |-----------|--------------------------------------------------------------------------------------------------------------------------|
+| roleId          | A unique role id used as foreign key.                                                                                                                           |
 | type      | Defines the proper role for the person. The following roles can be set: "Manager" and "Moderator" for the event. |
 | email     | Is a string with the email address of the authorized person.                                                             |
 
@@ -145,12 +164,14 @@ It defines the following attributes:
 | messageId        | A unique message id used as foreign key for the translated MessageTexts                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | type             | A message can either be a ___Chat___ message, a ___Support___ message, or a ___Question___. The private type can only be used by "Moderators" when replying ___Chats___ or ___Questions___ as a way to answer the original message sender.                                                                                                                                                                                                                                                                                                      |
 | timestamp        | The timestamp of the message when the sender sent it into the system.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| state            | A message has different states. It is ___pending___ when a sender sent his message to the system. A "Moderator" can then set the message to ___accepted___ or ___rejected___. Rejected messages will be deleted entirely on event finish. Accepted messages will be visible to (and can be liked by) the "Attendee" if configured. "Moderators" can also move "accepted" messages to a "Presenter" by setting the state to ___forwarded___. The "Presenter" can mark messages for him as ___processed___ or ___suspended___ if he processed the message or will not process it in the live event. |
+| state            | A message has different states. It is ___pending___ when a sender sent his message to the system. A "Moderator" can then set the message to ___accepted___ or ___rejected___. Rejected messages will be deleted entirely on event finish. Accepted messages will be visible to (and can be liked by) the "Attendee" if configured. "Moderators" can also move "accepted" messages to a "Presenter" by setting the state to ___forwarded___. The "Presenter" can mark messages for him as ___processed___ or ___suspended___ if he processed the message or will not process it in the live event. Message of type "Question" has all states, Message of type "Chat" has only "pending", "accepted", "rejected" and Message of type "Support" has only "accepted". |
 | originalLanguage | The sender of a message entered a message in a specific language. We store that language in order to notice the difference between human written and ai generated messages. This difference should be visible to everyone at any time.                                                                                                                                                                                                                                                                                                                                      |
 | senderName       | This is the message senders name that should be displayed for others. Messages sent by "Moderators" will be displayed with a different name ("Moderator") instead of the configured event naming pattern (see _chatName_ and _questionsName_ as well as _chatAllowAnonymous_ and _questionsAllowAnonymous_ in Entity _Event_).                                                                                                                                                                                                                                              |
 | presenterHint    | A "Moderator" can add a hint for the presenter when he sets the state to ___forwarded___. This hint should help the presenter with processing the message in the live event. An example could be: a hint to which live event attendee the question should be directed to.                                                                                                                                                                                                                                                                                                    |
 | likes            | The number of likes will be calculated on event finish. Due to GDPR reasons the likers will be removed at the end and the number of likes will be stored as number and are conservated this way.                                                                                                                                                                                                                                                                                                                                                                            |
 | sentimentScore   | If sentiment analysis is enabled on server side, the result of the analysis is stored and can be used for displaying reasons. We expect the score to be a floating point between -1 and 1 where all scores below -0.1 are considered as improper.                                                                                                                                                                                                                                                                                                                           |
+| edited            | Indicates wether the message is still original (none) or was changed (insignificant, significant)                                                                                                                                                                                                                                                                                                                                                                            |
+
 
 It defines the following relations:
 
@@ -178,7 +199,7 @@ It defines the following relations:
 
 | relation  | description                                        |
 |-----------|----------------------------------------------------|
-| messageId | A _MessageText_ is related to its _Message_ entity |
+| message | A _MessageText_ is related to its _Message_ entity |
 
 ### Entity QuestionTag
 
@@ -188,9 +209,12 @@ It defines the following attributes:
 
 | attribute     | description                                                                                                                                           |
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| questionTagId          | A unique question tag id used as foreign key.                                                                                                                           |
 | text          | A unique tag name |
 | moderatorOnly | Whether this tag can be used by a "Moderator" or "Manager" role only |
 | group         | Logical group this tag belongs to. |
+
+Entity _QuestionTag_ has no further relations.
 
 ### Entity AuthorizationToken
 
@@ -210,7 +234,7 @@ It defines the following relations:
 
 | relation | description                         |
 |----------|-------------------------------------|
-| userId   | The user  the token was issued for. |
+| user   | The user  the token was issued for. |
 | event    | The event the token was issued for. |
 
 ### Entity SessionToken
@@ -228,7 +252,7 @@ It defines the following relations:
 
 | relation | description                           |
 |----------|---------------------------------------|
-| userId   | The user  the session was issued for. |
+| user   | The user  the session was issued for. |
 | event    | The event the session was issued for. |
 
 ### Entity EventStatistic
@@ -239,6 +263,7 @@ An EventStatistic defines the following attributes:
 
 | attribute                    | description                                                                                                                                                                                                                                     |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| eventStatisticId          | A unique event statistic id used as foreign key.                                                                                                                           |
 | timestamp                    | The unique timestamp when this _EventStatistic_ was created.                                                                                                                                                                                    |
 | numberOfIssuedAuthTokens  | A bare count of the number of _AuthorizationTokens_ of _type_ ___issued___ of the event at the given _timestamp_.                                                                                                                           |
 | numberOfSentAuthTokens       | A bare count of the number of _AuthorizationTokens_ of _type_ ___sent___ of the event at the given _timestamp_.                                                                                                                                 |
@@ -256,6 +281,7 @@ It defines the following attributes:
 
 | attribute       | description                                                                                  |
 |-----------------|----------------------------------------------------------------------------------------------|
+| trackStatisticId          | A unique track statistic id used as foreign key.                                                                                                                           |
 | timestamp       | The unique timestamp when this _TrackStatistic_ was created.                                |
 | numberOfViewers | A bare count of the number of viewers of the concrete event channel track at the given _timestamp_. |
 
@@ -269,6 +295,7 @@ It defines the following attributes:
 
 | attribute       | description                                                                                  |
 |-----------------|----------------------------------------------------------------------------------------------|
+| userStatisticId          | A unique user statistic id used as foreign key.                                                                                                                           |
 | timestamp       | The unique timestamp when this _UserStatistic_ was created.                                |
 | country         | ISO country code from GeoIP based tracking. |
 | browserType     | Type of browser (e.g. Edge, Firefox, Safari, etc). |
