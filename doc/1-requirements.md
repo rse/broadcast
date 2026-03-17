@@ -1,4 +1,3 @@
-
 Requirements ("must")
 =====================
 
@@ -83,9 +82,10 @@ Allow users to edit their chat and question messages, but mark them as edited
 for others and in case of required moderation, pass it through the
 moderation approval process before it is visible (again).
 
-### R1.5j Tag Question Message 
+### R1.5j Tag Question Message
 
-Allow users to tag question message with predefined tags, in order to give a context to the question message (e.g. which person the question should be directed to, or to add the agenda point)
+Allow users to tag question message with predefined tags, in order to give a context to the question message (e.g. which
+person the question should be directed to, or to add the agenda point)
 
 R1.6 Moderator interaction
 --------------------------
@@ -145,6 +145,7 @@ The event is accessed via an individual and unguessable URL (to minimize
 external viewers).
 
 Examples for valid URLs:
+
 - `https://msg-broadcast.com/#/event=<event>`
 
 ### R1.8b Support personalized event access
@@ -153,6 +154,7 @@ The event URL could also optionally contain the users Email(user). In
 this case the "Email" should be read-only on login dialog.
 
 Examples for valid URLs:
+
 - `https://msg-broadcast.com/#/event=<event>&user=<email>`
 
 ### R1.8c Support automatic event access
@@ -164,6 +166,7 @@ the event by automation. It depends on the event settings, if the
 pre-generated access token could be used one or multiple times.
 
 Examples for valid URLs:
+
 - `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>`
 
 ### R1.8d Support direct event track access
@@ -173,6 +176,7 @@ stream from a CDN provider), an direct access of such a track should
 be possible - e.g. when users reload the web page.
 
 Examples for valid URLs:
+
 - `https://msg-broadcast.com/#/event=<event>&track=<track>`
 - `https://msg-broadcast.com/#/event=<event>&user=<email>&track=<track>`
 - `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>&track=<track>`
@@ -221,6 +225,7 @@ R1.11 Event creation
 ### R1.11a Import Ventari Excel
 
 From Ventari comes an Excel-Sheet with columns:
+
 - "Barcode" (unique id from U2D Ventari)
 - "Email"
 - "Vorname" (for chat)
@@ -259,7 +264,8 @@ low-resolution, ...
 
 ### R1.12d User statistics
 
-Additionally show statistics about the viewers. Country information is used to select the default language and optioan default track on first application use.
+Additionally show statistics about the viewers. Country information is used to select the default language and optioan
+default track on first application use.
 
 R1.13 Changes to Event configurations
 -------------------------------------
