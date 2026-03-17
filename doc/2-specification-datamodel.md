@@ -35,14 +35,14 @@ It defines the following attributes:
 | chatName                     | An attendees name is visible at his chat messages for others. The name can be ___full___ displaying a proper "Firstname Lastname" syntax on chat messages. The ___firstname___ represents only the corresponding value displayed at the message while ___anonymous___ does not show the name to others but "Anonymous" instead.                                             |
 | chatReply                    | Chat messages might be replied by other attendees.                                                                                                                                                                                                                                                                                                                          |
 | chatThrottling               | Chat messages might be restricted to a specific amount per user per minute in order to avoid denial of service attacks.                                                                                                                                                                                                                                                     |
-| chatModerator                | Event chat messages will be moderated by a "Moderator" role before being visible to the audience. Having this option set to "false" will set Entity _Messages_ directly into state ___accepted___ when sent from an attendee.                                                                                                                                               |
+| chatModerator                | Event chat messages will be moderated by a "Moderator" role before being visible to the audience. Having this option set to "false" will set Entity `Messages` directly into state ___accepted___ when sent from an attendee.                                                                                                                                               |
 | questionsEnabled             | The event allows attendees to ask questions (a special type of chat message).                                                                                                                                                                                                                                                                                               |
 | questionsAllowAnonymous      | The event allows attendees to send questions as 'Anonymous'.                                                                                                                                                                                                                                                                                                                |
 | questionsName                | An attendees name is visible at his questions for others. The name can be ___full___ displaying a proper "Firstname Lastname" syntax on questions. The ___firstname___ represents only the corresponding value displayed at the question while  ___anonymous___ does not show the name to others but "Anonymous" instead.                                                   |
 | questionsThrottling          | Questions might be restricted to a specific amount per user per time in order to avoid denial of service attacks.                                                                                                                                                                                                                                                           |
 | questionsPrivate             | Event questions should not be displayed to other attendees. Only the "Moderator" will get the those.                                                                                                                                                                                                                                                                        |
 | questionsModerator           | Event questions will be moderated by a "Moderator" role before they will be visible to the audience.                                                                                                                                                                                                                                                                        |
-| expireAuthTokenOnFirstUse    | Entity _AuthTokens_ can be generated on event creation. Events can configure if those AuthTokens expire after first use. This would support one time tokens from the start with a normal authorization process (token generation and validation) after the first use.                                                                                                       |
+| expireAuthTokenOnFirstUse    | Entity `AuthorizationToken` can be generated on event creation. Events can configure if those `AuthorizationToken` expire after first use. This would support one time tokens from the start with a normal authorization process (token generation and validation) after the first use.                                                                                                       |
 | sentimentSenderAnalysis      | This toggle enables or disables client side sentiment analysis (light weighted)                                                                                                                                                                                                                                                                                             |
 | sentimentSenderAutoPrevent   | In case the client side sentiment analysis is enabled and a check would document an improper input - the submission of that input could be prevented by default.                                                                                                                                                                                                            |
 | sentimentModeratorAnalysis   | This toggle enables or disables server side sentiment analysis (full blown)                                                                                                                                                                                                                                                                                                 |
@@ -53,10 +53,10 @@ It defines the following relations:
 
 | relation              | description                                                                                                             |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------|
-| channels              | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity _Stream_)                    |
-| roles                 | A list of all "Manager", "Presenter", "Moderator" and "Administrator" roles for the specific event. (see Entity _Role_) |
-| accessList            | A list of all invited attendees identified by their email. (see Entity _User_)                                          |
-| messages              | A list of all messages written by attendees during an event. (see Entity _Message_)                                     |
+| channels              | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity `Stream`)                    |
+| roles                 | A list of all "Manager", "Presenter", "Moderator" and "Administrator" roles for the specific event. (see Entity `Role`) |
+| accessList            | A list of all invited attendees identified by their email. (see Entity `User`)                                          |
+| messages              | A list of all messages written by attendees during an event. (see Entity `Message`)                                     |
 | statistics            | A list of all event statistics that will be created periodically when an event started until it finishes.               |
 | availableQuestionTags | A list of all tags available for use on questions.                                                                      |
 | activeAgendaPoint     | Currently active Agenda Point.                                                                                          |
@@ -64,7 +64,7 @@ It defines the following relations:
 
 ### Entity AgendaPoint
 
-A AgendaPoint is the textual description of the current phase in an Event.
+A `AgendaPoint` is the textual description of the current phase in an `Event`.
 
 It defines the following attributes:
 
@@ -76,7 +76,7 @@ It defines the following attributes:
 
 ### Entity Channel
 
-A Channel is responsible for mapping logical content delivery video streams and linking them to an event.
+A `Channel` is responsible for mapping logical content delivery video streams and linking them to an event.
 
 It defines the following attributes:
 
@@ -86,7 +86,7 @@ It defines the following attributes:
 | name      | A display name for the channel e.g. "Digital Townhall" or "Filmstudio SpyCams" |
 | default   | Whether this channel is activated by default when entering an event            |
 
-Entity _Channel_ has the following relations.
+Entity `Channel` has the following relations.
 
 | relation | description                           |
 |----------|---------------------------------------|
@@ -94,7 +94,7 @@ Entity _Channel_ has the following relations.
 
 ### Entity Track
 
-A Track is responsible for mapping physical content delivery video streams and linking them to a channel.
+A `Track` is responsible for mapping physical content delivery video streams and linking them to a channel.
 
 It defines the following attributes:
 
@@ -107,7 +107,7 @@ It defines the following attributes:
 | default   | Whether this track is activated by default when entering an event within the channel. Only one track per provider should have default="true". |
 | language  | ISO two-letter language code identifying the track content language.                                                                          |
 
-Entity _Track_ has the following relations.
+Entity `Track` has the following relations.
 
 | relation   | description                                                                                               |
 |------------|-----------------------------------------------------------------------------------------------------------|
@@ -115,7 +115,7 @@ Entity _Track_ has the following relations.
 
 ### Entity Role
 
-A Role gives a specific user special rights in the application. See the Role Management section for further detail on
+A `Role` gives a specific user special rights in the application. See the Role Management section for further detail on
 the roles.
 
 It defines the following attributes:
@@ -126,11 +126,11 @@ It defines the following attributes:
 | type      | Defines the proper role for the person. The following roles can be set: "Manager" and "Moderator" for the event. |
 | email     | Is a string with the email address of the authorized person.                                                     |
 
-Entity _Role_ has no further relations.
+Entity `Role` has no further relations.
 
 ### Entity User
 
-A User is a helper entity in order to enable event based logins. Users must be added to an events accessList in order to
+A `User` is a helper entity in order to enable event based logins. Users must be added to an events accessList in order to
 access a specific event. \
 In case that the event defined a _accessEmailPattern_ new Users can be generated during login process. This way the
 initial _accessList_ of an event can be pre-filled but does not have to.
@@ -154,8 +154,8 @@ It defines the following relations:
 
 ### Entity Message
 
-A Message entity is used to track all messages of "Attendees" and "Moderators". Note that the specific message text is
-language specific and will be translated into other languages (currently "de" and "en"). See Entity MessageText for
+A `Message` entity is used to track all messages of "Attendees" and "Moderators". Note that the specific message text is
+language specific and will be translated into other languages (currently "de" and "en"). See Entity `MessageText` for
 further details.
 
 It defines the following attributes:
@@ -167,7 +167,7 @@ It defines the following attributes:
 | timestamp        | The timestamp of the message when the sender sent it into the system.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | state            | A message has different states. It is ___pending___ when a sender sent his message to the system. A "Moderator" can then set the message to ___accepted___ or ___rejected___. Rejected messages will be deleted entirely on event finish. Accepted messages will be visible to (and can be liked by) the "Attendee" if configured. "Moderators" can also move "accepted" messages to a "Presenter" by setting the state to ___forwarded___. The "Presenter" can mark messages for him as ___processed___ or ___suspended___ if he processed the message or will not process it in the live event. Message of type "Question" has all states, Message of type "Chat" has only "pending", "accepted", "rejected" and Message of type "Support" has only "accepted". |
 | originalLanguage | The sender of a message entered a message in a specific language. We store that language in order to notice the difference between human written and ai generated messages. This difference should be visible to everyone at any time.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| senderName       | This is the message senders name that should be displayed for others. Messages sent by "Moderators" will be displayed with a different name ("Moderator") instead of the configured event naming pattern (see _chatName_ and _questionsName_ as well as _chatAllowAnonymous_ and _questionsAllowAnonymous_ in Entity _Event_).                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| senderName       | This is the message senders name that should be displayed for others. Messages sent by "Moderators" will be displayed with a different name ("Moderator") instead of the configured event naming pattern (see _chatName_ and _questionsName_ as well as _chatAllowAnonymous_ and _questionsAllowAnonymous_ in Entity `Event`).                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | presenterHint    | A "Moderator" can add a hint for the presenter when he sets the state to ___forwarded___. This hint should help the presenter with processing the message in the live event. An example could be: a hint to which live event attendee the question should be directed to.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | likes            | The number of likes will be calculated on event finish. Due to GDPR reasons the likers will be removed at the end and the number of likes will be stored as number and are conservated this way.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | sentimentScore   | If sentiment analysis is enabled on server side, the result of the analysis is stored and can be used for displaying reasons. We expect the score to be a floating point between -1 and 1 where all scores below -0.1 are considered as improper.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -185,7 +185,7 @@ It defines the following relations:
 
 ### Entity MessageText
 
-A MessageText is a language specific text of a _Message_ Entity.
+A `MessageText` is a language specific text of a `Message` Entity.
 
 It defines the following attributes:
 
@@ -193,17 +193,17 @@ It defines the following attributes:
 |---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | messageTextId | A unique message text id used as foreign key.                                                                                                         |
 | language      | This field states the language the text of the message is in.                                                                                         |
-| text          | This is the text of the message in the stated language. Hint: see _originalLanguage_ in entity _Message_ to determine the user written original text. |
+| text          | This is the text of the message in the stated language. Hint: see _originalLanguage_ in entity `Message` to determine the user written original text. |
 
 It defines the following relations:
 
 | relation | description                                        |
 |----------|----------------------------------------------------|
-| message  | A _MessageText_ is related to its _Message_ entity |
+| message  | A `MessageText` is related to its `Message` entity |
 
 ### Entity QuestionTag
 
-A QuestionTag is a string attached to a _Message_ Entity.
+A `QuestionTag` is a string attached to a `Message` Entity.
 
 It defines the following attributes:
 
@@ -214,22 +214,22 @@ It defines the following attributes:
 | moderatorOnly | Whether this tag can be used by a "Moderator" or "Manager" role only |
 | group         | Logical group this tag belongs to.                                   |
 
-Entity _QuestionTag_ has no further relations.
+Entity `QuestionTag` has no further relations.
 
 ### Entity AuthorizationToken
 
 An authorization token is a simple second factor to ensure that the attendee of an event is in access of the email
-address as first factor. Being invited to an event (see relation _accessList_ in entity _Event_) allows the proper email
+address as first factor. Being invited to an event (see relation _accessList_ in entity `Event`) allows the proper email
 address to receive a generated one time token.
 Using this correct token as a one time password grants access to the event. \
-An _AuthorizationToken_ can be pre-generated on event creation.
+An `AuthorizationToken` can be pre-generated on event creation.
 
 It defines the following attributes:
 
 | attribute  | description                                                                                                                                                                                                                                                                                                                                              |
 |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | token      | The generated one time token for the next login attempt. In special cases this token is pre-generated and might not be invalidated on first use.                                                                                                                                                                                                         |
-| validUntil | The generated token wont last forever. By default a login must be completed within 5 minutes. Pre-generated tokens last until event ends and have validUntil not set. If the attribute ___expireAuthTokenOnFirstUse___ in entity _Event_ is set to "false" the token never expires.                                                                      |
+| validUntil | The generated token wont last forever. By default a login must be completed within 5 minutes. Pre-generated tokens last until event ends and have validUntil not set. If the attribute ___expireAuthTokenOnFirstUse___ in entity `Event` is set to "false" the token never expires.                                                                      |
 | state      | Issued tokens have a proper state to ensure some debugging options and anonymous data sums. A token is ___issued___ when he got created during event creation. ___sent___ is set by the system when a token got sent to the user by email. The state ___used___ is the final state when a token got used for a successful or unsuccessful login attempt. |
 
 It defines the following relations:
@@ -262,49 +262,49 @@ It defines the following relations:
 An event generates periodically cumulated statics when the event started until it gets finished. Plan is to create each
 five minutes a snapshot of the number counts.
 
-An EventStatistic defines the following attributes:
+An `EventStatistic` defines the following attributes:
 
 | attribute                | description                                                                                                                                                                                                                                     |
 |--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | eventStatisticId         | A unique event statistic id used as foreign key.                                                                                                                                                                                                |
-| timestamp                | The unique timestamp when this _EventStatistic_ was created.                                                                                                                                                                                    |
-| numberOfIssuedAuthTokens | A bare count of the number of _AuthorizationTokens_ of _type_ ___issued___ of the event at the given _timestamp_.                                                                                                                               |
-| numberOfSentAuthTokens   | A bare count of the number of _AuthorizationTokens_ of _type_ ___sent___ of the event at the given _timestamp_.                                                                                                                                 |
-| numberOfUsedAuthTokens   | A bare count of the number of _AuthorizationTokens_ of _type_ ___used___ of the event at the given _timestamp_.                                                                                                                                 |
-| numberOfSessionTokens    | A bare count of the number of _SessionTokens_ of the event at the given _timestamp_.                                                                                                                                                            |
+| timestamp                | The unique timestamp when this `EventStatistic` was created.                                                                                                                                                                                    |
+| numberOfIssuedAuthTokens | A bare count of the number of `AuthorizationTokens` of _type_ ___issued___ of the event at the given _timestamp_.                                                                                                                               |
+| numberOfSentAuthTokens   | A bare count of the number of `AuthorizationTokens` of _type_ ___sent___ of the event at the given _timestamp_.                                                                                                                                 |
+| numberOfUsedAuthTokens   | A bare count of the number of `AuthorizationTokens` of _type_ ___used___ of the event at the given _timestamp_.                                                                                                                                 |
+| numberOfSessionTokens    | A bare count of the number of `SessionTokens` of the event at the given _timestamp_.                                                                                                                                                            |
 | numberOfConnections      | A bare count of the number of active mqtt sessions of the event at the given _timestamp_. The difference between the session and mqtt is the activity when an attendee leaves the event, he still has a session but no mqtt connection anymore. |
 
-Entity _EventStatistic_ has no further relations.
+Entity `EventStatistic` has no further relations.
 
 ### Entity TrackStatistic
 
-A TrackStatistic is responsible for presenting bare counts of viewers for the related entity _Track_.
+A `TrackStatistic` is responsible for presenting bare counts of viewers for the related entity `Track`.
 
 It defines the following attributes:
 
 | attribute        | description                                                                                         |
 |------------------|-----------------------------------------------------------------------------------------------------|
 | trackStatisticId | A unique track statistic id used as foreign key.                                                    |
-| timestamp        | The unique timestamp when this _TrackStatistic_ was created.                                        |
+| timestamp        | The unique timestamp when this `TrackStatistic` was created.                                        |
 | numberOfViewers  | A bare count of the number of viewers of the concrete event channel track at the given _timestamp_. |
 
-Entity _TrackStatistic_ has no further relations.
+Entity `TrackStatistic` has no further relations.
 
 ### Entity UserStatistic
 
-A _UserStatistic_ is responsible for tracking information about the related entity _User_.
+A `UserStatistic` is responsible for tracking information about the related entity `User`.
 
 It defines the following attributes:
 
 | attribute       | description                                                 |
 |-----------------|-------------------------------------------------------------|
 | userStatisticId | A unique user statistic id used as foreign key.             |
-| timestamp       | The unique timestamp when this _UserStatistic_ was created. |
+| timestamp       | The unique timestamp when this `UserStatistic` was created. |
 | country         | ISO country code from GeoIP based tracking.                 |
 | browserType     | Type of browser (e.g. Edge, Firefox, Safari, etc).          |
 | deviceType      | Type of device (e.g. Desktop, Tablet, Mobile).              |
 | viewportWidth   | Width in pixels of the browser viewport.                    |
 | viewportHeight  | Height in pixels of the browser viewport.                   |
 
-Entity _UserStatistic_ has no further relations.
+Entity `UserStatistic` has no further relations.
 
