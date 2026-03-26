@@ -80,7 +80,7 @@ is enabled the server should check inputs before it saves input.
 
 Allow users to edit their chat and question messages, but mark them as edited
 for others and in case of required moderation, pass it through the
-moderation approval process before it is visible (again).
+moderation approval process before it is visible (again). And allow the user to delete a chat and question message.
 
 ### R1.5j Tag Question Message
 
