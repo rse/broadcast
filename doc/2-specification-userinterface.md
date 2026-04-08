@@ -75,3 +75,18 @@ User: System Manager (XT) Device: Desktop (16:9)
 - (none) role assignment of users) &rarr; config file
 - (none) streaming provider configuration) &rarr; config file
 
+## XXX
+
+[-] [x] Channel: [DE] [+]
+    [-] Resource: ( ) [Provider1] StreamId: [1 ] Foo: [   ]
+    [-] Resource: (*) [Provider2] SID:      [2 ] Bar: [   ] Quux: [   ]
+[-] [x] Channel: [DE+UT]
+    [-] Resource: (*) [Provider1] StreamId: [1 ] Foo: [   ]
+[-] [ ] Channel: [EN]
+    [-] Resource: (*) [Provider1] StreamId: [1 ] Foo: [   ]
+    [-] Resource: ( ) [Provider2] SID:      [2 ] Bar: [   ] Quux: [   ]
+[-] [ ] Channel: [EN+UT]
+    [-] Resource: (*) [Provider1] StreamId: [1 ] Foo: [   ]
+[-] [ ] Channel: [Program]
+    [-] Resource: (*) [Provider3] Url: [ http://www.flyer.com/ ]
+

@@ -243,6 +243,13 @@ the meeting as a specific user. See R1.8 for more details on the URL.
 The "URL" will contain the event, the user and its token. The "Token"
 consists of 6 digits, formatted as "NNN-NNN".
 
+### R1.11c Import/Export of Event
+
+An event (with its related entities) can be exported to a serialized
+format (e.g. YAML) and re-imported in order to have an easy way for
+development and demonstration and for conveniently creating recurring
+production events.
+
 R1.12 Event statistics
 ----------------------
 
@@ -278,11 +285,7 @@ R1.14 Presenter dashboard
 
 "Moderators" can forward event input (chat and questions) to a
 "Presenter". see requirement R1.6.
-
-R1.15 Attendee Experience
--------------------------
-
-"Attendees" want to have an overview about the current agenda and which agenda point is currently active.
+l
 
 Requirements ("can")
 ====================

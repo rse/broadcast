@@ -1,0 +1,143 @@
+##
+##  broadcast.yaml
+##
+
+baseUrl:   "https://msg-broadcast.com/"
+brokerUrl: "mqtt://broadcast:supersecret@10.0.0.0:8333/broadcast"
+
+admins:
+
+    - email: maximilian.marsch@msg.group
+      token: XXX-XXX
+    - ralf.engelschall@msg.group 
+      token: XXX-XXX
+
+iframe:
+    <iframe width="100%" height="100%" src=""
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+provider:
+
+    #   home:    https://studio.msg.team/
+    #   docs:    https://studio.msg.team/
+    #   pros:    company resource only
+    #   cons:    company resource only
+    -   id:          MF
+        name:        msg Filmstudio
+        params:
+            - streamId
+            - streamKey
+        ingest:
+            "rtmp":    rtmp://studio.msg.team:1935/live/{{ streamId }}!{{ streamKey }}
+            "srt":     srt://studio.msg.team:4444?streamid=live/{{ streamId }}
+        egress:
+            embed:     https://studio.msg.team/stream/#/live/{{ streamId }}
+             "preview": https://studio.msg.team/stream/#/live/{{ streamId }}/sldp
+            "rtmp":    rtmp://studio.msg.team:1935/live/{{ streamId }}
+            "srt":     srt://studio.msg.team:445?streamid=live/{{ streamId }}
+            "hls":     https://studio.msg.team:8443/live/{{ streamId }}/playlist.m3u8
+            "hls+cdn": https://frontend.msg-cdn.com/live-cdn/{{ streamId }}/playlist.m3u8
+
+    #   home: https://stream.msg-broadcast.com/
+    #   docs: https://stream.msg-broadcast.com/
+    #   pros:    company resource only
+    #   cons:    company resource only
+    -   id:          MB
+        name:        msg Broadcast
+        hints:
+        params:
+            - streamId
+            - username
+            - password
+        ingest:
+            rtmp:    rtmp://stream.msg-broadcast.com:1935/{{ streamId }}?username={{ username }}&password={{ password }}
+            srt:     srt://stream.msg-broadcast.com:4455?pkt_size=1316&streamid=publish:{{ streamId }}:{{ username }}:{{ password }}
+            whip:    https://{{ username }}:{{ password }}@stream.msg-broadcast.com/{{ streamId }}/whip
+            webrtc:  https://{{ username }}:{{ password }}@stream.msg-broadcast.com/{{ streamId }}/publish
+        egress:
+            rtmp:    rtmp://stream.msg-broadcast.com:1935/{{ streamId }}
+            srt:     srt://stream.msg-broadcast.com:4455?pkt_size=1316&streamid=read:{{ streamId }}
+            whep:    https://{{ username }}:{{ password }}@stream.msg-broadcast.com/{{ streamId }}/whep
+            webrtc:  https://stream.msg-broadcast.com/test/
+            preview: https://stream.msg-broadcast.com/test/
+            embed:   https://stream-hls.msg-broadcast.com/test/
+            embed+cdn: https://stream-cdn.msg-broadcast.com/test/
+            hls:     https://stream-hls.msg-broadcast.com/test/index.m3u8
+            hls+cdn: https://stream-cdn.msg-broadcast.com/test/index.m3u8
+
+    - id:          YT
+      name:        YouTube Live Event
+      home:        https://www.youtube.com/
+      docs:        https://www.youtube.com/howyoutubeworks/product-features/live/
+      hints:
+          pros:    low latency, high performance, free of charge
+          cons:    advertisement at end of stream
+      params:
+          - streamKey
+          - streamId
+          - backup
+      ingest:
+          rtmp:    rtmp://{{ backup ? "b" : "a" }}.rtmp.youtube.com/live2{{ backup ? "?bac" : "" }}!{{ streamKey }}
+      egress:
+          preview: https://www.youtube{{ privacy ? "-nocookie" : "" }}.com/watch?v={{ streamId }}&autoplay=1
+          embed:   https://www.youtube{{ privacy ? "-nocookie" : "" }}.com/embed/{{ streamId }}&autoplay=1
+          hls:     https://ythls.onrender.com/video/{{ streamId }}.m3u8
+
+    - id:          CF
+      name:        Cloudflare Stream
+      home:        https://cloudflare.com/
+      docs:        https://developers.cloudflare.com/stream/
+      hints:
+          pros:    low latency, high performance, low price, WebRTC support
+          cons:    none
+      params:
+          - streamKey
+          - streamId
+      ingest:
+          rtmp:    rtmps://live.cloudflare.com:443/live/!{{ streamKey }}
+          webrtc:  https://customer-{{ customerId }}.cloudflarestream.com/{{ streamKey }}/webRTC/publish
+      egress:
+          rtmp:    rtmps://live.cloudflare.com:443/live/{{ streamId }}
+          preview: https://customer-{{ customerId }}.cloudflarestream.com/{{ streamId }}/watch
+          embed:   https://customer-{{ customerId }}.cloudflarestream.com/{{ streamId }}/iframe?autoplay=true&muted=true
+          hls:     https://customer-{{ customerId }}.cloudflarestream.com/{{ streamId }}/manifest/video.m3u8{{ "llhls" ? "?protocol=llhls" : "" }}
+          dash:    https://customer-{{ customerId }}.cloudflarestream.com/{{ streamId }}/manifest/video.mpd
+          webrtc:  https://customer-{{ customerId }}.cloudflarestream.com/{{ streamId }}/webRTC/play
+
+    - id:          TW
+      name:        Twitch
+      home:        https://twitch.tv/
+      docs:        https://dev.twitch.tv/docs/
+      hints:
+          pros:    low latency, high performance, free of charge
+          cons:    streams always publically visible, single stream per channel/user
+      params:
+          - streamKey
+          - channelId
+          - domain
+          - test
+      ingest:
+          rtmp:    rtmp://fra06.contribute.live-video.net/app/{{ streamKey }}{{ test ? "?bandwidth_test=true" : "" }}
+      egress:
+          preview: https://www.twitch.tv/{{ channelId }}
+          embed:   https://player.twitch.tv/?channel={{ channelId }}&parent={{ domain }}&autoplay=true&muted=true
+
+    - id:          3Q
+      name:        3Q
+      home:        https://3q.video/
+      docs:        https://docs.3q.video/
+      hints:
+          pros:    GDPR compliant german provider, stable service, decent price
+          cons:    none
+      params:
+          - eventId
+          - streamKey
+          - playoutId
+          - backup
+      ingest:
+          rtmp:    rtmp://de-origin-ingest-live{{ backup ? "-02" : "" }}.3qsdn.com/{{ eventId }}!{{ streamKey }}
+      egress:
+          preview: https://playout.3qsdn.com/embed/{{ playoutId }}
+          embed:   ?
+
+
