@@ -1,8 +1,3 @@
-Specification
-=============
-
-Data Model
-----------
 
 The data model is event centric. It defines the data model as followed:
 
@@ -17,7 +12,7 @@ It defines the following attributes:
 | attribute                    | description                                                                                                                                                                                                                                                                                                                                                 |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | eventId                      | Unique ID of an event. It is part of the URL in order to access a specific event by HTML-links.                                                                                                                                                                                                                                                             |
-| name                         | A display name for the event e.g. "Townhall 1/23".                                                                                                                                                                                                                                                                                                          |
+| title                        | A display title for the event e.g. "Townhall 1/23".                                                                                                                                                                                                                                                                                                          |
 | description                  | An information to describe the event.                                                                                                                                                                                                                                                                                                                       |
 | language                     | The targeted language of the event. It should state the events mothers language - beside the possibility to translate chats and questions on the fly and the fact that video streams might have a different speech translation.                                                                                                                             |
 | begin                        | The planned starting time and date of the event.                                                                                                                                                                                                                                                                                                            |
@@ -77,6 +72,12 @@ It defines the following attributes:
 | agendaPointId | A unique agenda point id used as foreign key. |
 | text          | description of the current phase of the Event |
 | orderPosition | the ordering of the phases                    |
+
+It defines the following relations:
+
+| relation              | description                                                                                                             |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------|
+| corresondingTag       | A list of all tags corresponding to the agenda point, potentially used for tagging questions |
 
 ### Entity Channel
 
