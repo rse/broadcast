@@ -628,7 +628,7 @@
         <mxCell id="3ZFf54skbUkQ8nj5Y4ml-19" parent="3ZFf54skbUkQ8nj5Y4ml-15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;b&gt;+ resourceId: UUID&lt;/b&gt;" vertex="1">
           <mxGeometry height="26" width="300" y="26" as="geometry" />
         </mxCell>
-        <mxCell id="3ZFf54skbUkQ8nj5Y4ml-18" parent="3ZFf54skbUkQ8nj5Y4ml-15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=0" value="&lt;span&gt;+ provider: string (25)&lt;/span&gt;" vertex="1">
+        <mxCell id="3ZFf54skbUkQ8nj5Y4ml-18" parent="3ZFf54skbUkQ8nj5Y4ml-15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=0" value="&lt;span&gt;+ providerId: string (25)&lt;/span&gt;" vertex="1">
           <mxGeometry height="26" width="300" y="52" as="geometry" />
         </mxCell>
         <mxCell id="AOOtxlcdZrGxSMgy-uPt-1" parent="3ZFf54skbUkQ8nj5Y4ml-15" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=0" value="&lt;span&gt;+ active: boolean&lt;/span&gt;" vertex="1">
