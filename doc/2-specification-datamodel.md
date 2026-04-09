@@ -1,4 +1,3 @@
-
 The data model is event centric. It defines the data model as followed:
 
 ![data model overview](./2-specification-datamodel.svg "data model overview").
@@ -12,7 +11,7 @@ It defines the following attributes:
 | attribute                    | description                                                                                                                                                                                                                                                                                                                                                 |
 |------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | eventId                      | Unique ID of an event. It is part of the URL in order to access a specific event by HTML-links.                                                                                                                                                                                                                                                             |
-| title                        | A display title for the event e.g. "Townhall 1/23".                                                                                                                                                                                                                                                                                                          |
+| title                        | A display title for the event e.g. "Townhall 1/23".                                                                                                                                                                                                                                                                                                         |
 | description                  | An information to describe the event.                                                                                                                                                                                                                                                                                                                       |
 | language                     | The targeted language of the event. It should state the events mothers language - beside the possibility to translate chats and questions on the fly and the fact that video streams might have a different speech translation.                                                                                                                             |
 | begin                        | The planned starting time and date of the event.                                                                                                                                                                                                                                                                                                            |
@@ -22,7 +21,6 @@ It defines the following attributes:
 | loginInfoToBeAccepted        | Whether the login information has to be explicitly accepted to continue.                                                                                                                                                                                                                                                                                    |
 | interactionInfo              | Event attendees will get this additional information when attending an event where interaction is enabled (either chat or questions). Writing chats or questions could get additional HTML-Markup e.g. for text moderation rules or a code of conduct.                                                                                                      |
 | interactionInfoToBeAccepted  | Whether the interaction information has to be explicitly accepted to continue.                                                                                                                                                                                                                                                                              |
-| activeProvider               | An event can have different channels and tracks. A track belongs to a provider. Providers are a good way to manage different content deliveries. In case a CDN encounters problems - the "Manager" can switch to a different provider as a fallback. Attendees should be routed to the correct tracks of providers on change.                               |
 | allowAccessAnonymous         | An event might accept anonymous attendees. In that case attendees can access the event without authorization.                                                                                                                                                                                                                                               |
 | accessEmailPattern           | Beside the ___accessList___-Relation an event can grant anyone access to an event when his given email matches this pattern.                                                                                                                                                                                                                                |
 | chatEnabled                  | The event allows attendees to send chat messages.                                                                                                                                                                                                                                                                                                           |
@@ -75,9 +73,9 @@ It defines the following attributes:
 
 It defines the following relations:
 
-| relation              | description                                                                                                             |
-|-----------------------|-------------------------------------------------------------------------------------------------------------------------|
-| corresondingTag       | A list of all tags corresponding to the agenda point, potentially used for tagging questions |
+| relation         | description                                                                                                                                   |
+|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| corresondingTags | A list of all `QuestionTag`s corresponding to the `AgendaPoint`s, potentially used for tagging questions (`Message` with __type__ _Question_) |
 
 ### Entity Channel
 
@@ -85,38 +83,54 @@ A `Channel` is responsible for mapping logical content delivery video streams an
 
 It defines the following attributes:
 
-| attribute | description                                                                    |
-|-----------|--------------------------------------------------------------------------------|
-| channelId | A unique channel id used as foreign key.                                       |
-| name      | A display name for the channel e.g. "Digital Townhall" or "Filmstudio SpyCams" |
-| default   | Whether this channel is activated by default when entering an event            |
+| attribute | description                                                                                                |
+|-----------|------------------------------------------------------------------------------------------------------------|
+| channelId | A unique channel id used as foreign key.                                                                   |
+| name      | A display name for the channel e.g. "Digital Townhall" or "Filmstudio SpyCams"                             |
+| active    | A Flag, if the `Channel` is the current active one. Only ONE `Channel` of the event can be active at once. |
+| default   | Whether this channel is activated by default when entering an event                                        |
 
 Entity `Channel` has the following relations.
 
-| relation | description                           |
-|----------|---------------------------------------|
-| tracks   | A list of all tracks for the channel. |
+| relation   | description                                                                                                                                                           |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| resources  | A list of all `Resource`s for the channel. This could either be a video stream or a static website, e.g. pdf slides for a training                                    |
+| statistics | A list of all `ChannelStatistics`s that will be created periodically when an event started until it finishes, e.g. number of users that have selected this `Channel`. |
 
-### Entity Track
+### Entity Resource
 
-A `Track` is responsible for mapping physical content delivery video streams and linking them to a channel.
+A `Resource` is responsible for mapping physical content delivery resources and linking them to a channel.
 
 It defines the following attributes:
 
-| attribute | description                                                                                                                                   |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| trackId   | A unique track id used as foreign key.                                                                                                        |
-| provider  | Name of the externally defined provider. The combination of provider and track name has to be unique.                                         |
-| name      | A display name for the track e.g. "DE" or "DE mit UT"                                                                                         |
-| streamURL | The URL of the underlying video stream at the provider.                                                                                       |
-| default   | Whether this track is activated by default when entering an event within the channel. Only one track per provider should have default="true". |
-| language  | ISO two-letter language code identifying the track content language.                                                                          |
+| attribute  | description                                                                                                                     |
+|------------|---------------------------------------------------------------------------------------------------------------------------------|
+| resourceId | A unique resource id used as foreign key.                                                                                       |
+| providerId | A unique provider id that comes from the configuration file of the event.                                                       |
+| active     | A Flag, if the `Resource` is the active `Resource` of the `Channel`. Only ONE `Resource` of a  `Channel` can be active at once. |
 
-Entity `Track` has the following relations.
+Entity `Resource` has the following relations.
 
-| relation   | description                                                                                               |
-|------------|-----------------------------------------------------------------------------------------------------------|
-| statistics | A list of all track statistics that will be created periodically when an event started until it finishes. |
+| relation | description                                                                                                                                                    |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| params   | A list of all `ResourceProviderParam`s (key value pairs that comes from the configuration file of the event), that are assigned to the corresponding `Channel` |
+
+### Entity ResourceProviderParam
+
+A `ResourceProviderParam` is a key value pair that is defined in the configuration file of the event and belongs exactly
+to one `Resource` and one provider (___providerId___). The ___providerId___ is defined in the configuration file of the
+event as well.
+
+It defines the following attributes:
+
+| attribute  | description                                                                                       |
+|------------|---------------------------------------------------------------------------------------------------|
+| resourceId | A unique id from the corresponding `Resource`.                                                    |
+| providerId | A unique provider id that comes from the configuration file of the event.                         |
+| key        | The param key corresponding to the `Resource` that comes from the configuration file of the event |
+| value      | The value, the user ("Administrator") entered for the __key__.                                    |
+
+Entity `ResourceProviderParam` has no further relations.
 
 ### Entity Role
 
@@ -152,11 +166,11 @@ It defines the following attributes:
 
 It defines the following relations:
 
-| relation     | description                                                                                               |
-|--------------|-----------------------------------------------------------------------------------------------------------|
-| likes        | A list of all event messages that the user marked as "like".                                              |
-| sentMessages | A list of all messages that the user has sent.                                                            |
-| statistics   | A list of all track statistics that will be created periodically when an event started until it finishes. |
+| relation     | description                                                                                              |
+|--------------|----------------------------------------------------------------------------------------------------------|
+| likes        | A list of all event messages that the user marked as "like".                                             |
+| sentMessages | A list of all messages that the user has sent.                                                           |
+| statistics   | A list of all user statistics that will be created periodically when an event started until it finishes. |
 
 ### Entity Message
 
@@ -187,7 +201,7 @@ It defines the following relations:
 | liker        | Each event "Attendee" can like messages of others. Likes can be canceled as well.                                                                                                                                                                                   |
 | event        | The message is directly related to the specific event. It is necessary to keep track of this because the senders will be deleted for GDPR reasons when the event is finished.                                                                                       |
 | replyTo      | A `Message` can be a reply to another message. Typically messages of ___type___ _Chat_ can be replies to other chat messages. In special cases a "Moderator" can reply to any message and he might also only reply visible to the sender (see ___type___ _Support_) |
-| questionTags | `Message`s can be tagged with zero or more tags.                                                                                                                                                                                                                    |
+| questionTags | `Message`s of __type__ _Question_ can be tagged with zero or more tags.                                                                                                                                                                                             |
 
 ### Entity MessageText
 
@@ -209,7 +223,8 @@ It defines the following relations:
 
 ### Entity QuestionTag
 
-A `QuestionTag` is a string attached to a `Message` Entity.
+A `QuestionTag` is a string attached to a `Message` Entity. This is only possible if the `Message` Entity has the __type
+__ _Question_.
 
 It defines the following attributes:
 
@@ -283,19 +298,19 @@ An `EventStatistic` defines the following attributes:
 
 Entity `EventStatistic` has no further relations.
 
-### Entity TrackStatistic
+### Entity ChannelStatistic
 
-A `TrackStatistic` is responsible for presenting bare counts of viewers for the related entity `Track`.
+A `ChannelStatistic` is responsible for presenting bare counts of viewers for the related entity `Channel`.
 
 It defines the following attributes:
 
-| attribute        | description                                                                                             |
-|------------------|---------------------------------------------------------------------------------------------------------|
-| trackStatisticId | A unique track statistic id used as foreign key.                                                        |
-| timestamp        | The unique timestamp when this `TrackStatistic` was created.                                            |
-| numberOfViewers  | A bare count of the number of viewers of the concrete event channel track at the given ___timestamp___. |
+| attribute          | description                                                                                                |
+|--------------------|------------------------------------------------------------------------------------------------------------|
+| channelStatisticId | A unique channel statistic id used as foreign key.                                                         |
+| timestamp          | The unique timestamp when this `ChannelStatistic` was created.                                             |
+| numberOfViewers    | A bare count of the number of viewers of the concrete `Channel` of the event at the given ___timestamp___. |
 
-Entity `TrackStatistic` has no further relations.
+Entity `ChannelStatistic` has no further relations.
 
 ### Entity UserStatistic
 

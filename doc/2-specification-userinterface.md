@@ -1,4 +1,3 @@
-
 Specification
 =============
 
@@ -37,7 +36,7 @@ User: Event Speaker (V), Device: Desktop (16:9, plakativ/grob 2-4m)
 
 - (Dialog) Statistic Dashboard
     - (Info) X-axis: time, Y-axis: number of users
-    - (Info) pie-chart: percentage of tracks
+    - (Info) pie-chart: percentage of resources
 - (Dialog) Questions (Kachelansicht, non-interactive)
     - (Info) done, prio
 

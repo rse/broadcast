@@ -169,17 +169,17 @@ Examples for valid URLs:
 
 - `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>`
 
-### R1.8d Support direct event track access
+### R1.8d Support direct event resource access
 
-Since events can be configured with different tracks (each one as
-stream from a CDN provider), an direct access of such a track should
+Since events can be configured with different resources (each one as
+stream from a CDN provider, or a static website), an direct access of such a resource should
 be possible - e.g. when users reload the web page.
 
 Examples for valid URLs:
 
-- `https://msg-broadcast.com/#/event=<event>&track=<track>`
-- `https://msg-broadcast.com/#/event=<event>&user=<email>&track=<track>`
-- `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>&track=<track>`
+- `https://msg-broadcast.com/#/event=<event>&resource=<resource>`
+- `https://msg-broadcast.com/#/event=<event>&user=<email>&resource=<resource>`
+- `https://msg-broadcast.com/#/event=<event>&user=<email>&token=<token>&resource=<resource>`
 
 R1.9 Compliance and user consent
 --------------------------------
@@ -265,14 +265,14 @@ number of successful challenges
 
 ### R1.12c Channel statistics
 
-Additionally show the number of viewers of each different track
-(channel) of an event e.g. how many german, english, high-resolution,
+Additionally show the number of viewers of each different
+channel of an event e.g. how many german, english, high-resolution,
 low-resolution, ...
 
 ### R1.12d User statistics
 
-Additionally show statistics about the viewers. Country information is used to select the default language and optioan
-default track on first application use.
+Additionally show statistics about the viewers. Country information is used to select the default language of the
+application on first application use.
 
 R1.13 Changes to Event configurations
 -------------------------------------
