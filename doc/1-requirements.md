@@ -92,14 +92,13 @@ R1.6 Moderator interaction
 
 ### R1.6a Moderate chat and questions
 
-Moderation is optional. If enabled, moderators have to reject or accept
+Moderation is optional. If enabled, moderators have to reject, approve or/and forward
 attendee input.
 
 ### R1.6b Moderator supports the Presenter
 
-Moderators can forward accepted inputs to a "Presenter" and add some
-hints (texts) for the "Presenter" (e.g. "give the question to person
-XYZ", "raise this question immediately", etc)
+Moderators can forward approved inputs to a "Presenter". So the "Presenter"
+has only a few questions visible on his screen and not all approved ones.
 
 ### R1.6c Answer attendee inputs
 
@@ -129,6 +128,20 @@ analysis is negative.
 After an event finished, the Moderators can export all attendee inputs
 with at least a timestamp, the state, the number of likes and the
 message.
+
+### R1.6h Moderator sends hints to the Presenter
+
+Moderators can add some hints (texts) for the "Presenter" (e.g. "give the question to person
+XYZ", "raise this question immediately", "you only have 5 minutes left", etc)
+
+### R1.6i Moderator can sort and filter messages
+
+Moderators can filter the messages, so that they can have a better overview. Forwarded Questions can be sorted manually
+to set the order the "Presenter" has to ask the Questions.
+
+### R1.6j Moderator can administrate and manage included app (if available)
+
+If an app is included and it provides a administration view, it is possible for the Moderator to manage the app.
 
 R1.7 Browser access
 -------------------
