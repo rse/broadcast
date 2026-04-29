@@ -106,7 +106,7 @@
         <mxCell id="WTSlagnMdIsSc-42w4uc-17" parent="WTSlagnMdIsSc-42w4uc-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=1" value="+ roleId: UUID" vertex="1">
           <mxGeometry height="26" width="300" y="26" as="geometry" />
         </mxCell>
-        <mxCell id="bo3hJtlRiP2l5DSDqwvV-3" parent="WTSlagnMdIsSc-42w4uc-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ type: string &amp;lt;&quot;Manager&quot;|&quot;Moderator&quot;&amp;gt;" vertex="1">
+        <mxCell id="bo3hJtlRiP2l5DSDqwvV-3" parent="WTSlagnMdIsSc-42w4uc-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ type: string &amp;lt;&quot;Manager&quot;|&quot;Moderator&quot;|&quot;Presenter&quot;&amp;gt;" vertex="1">
           <mxGeometry height="26" width="300" y="52" as="geometry" />
         </mxCell>
         <mxCell id="WTSlagnMdIsSc-42w4uc-20" parent="WTSlagnMdIsSc-42w4uc-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontStyle=0" value="&lt;span&gt;+ email: string (254)&lt;/span&gt;" vertex="1">
@@ -370,7 +370,7 @@
         <mxCell id="Ka-rTPsv6K6fPwl2P-bU-1" parent="WTSlagnMdIsSc-42w4uc-67" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ presenterAlert?: string (1024)" vertex="1">
           <mxGeometry height="26" width="330" y="650" as="geometry" />
         </mxCell>
-        <mxCell id="Ka-rTPsv6K6fPwl2P-bU-4" parent="WTSlagnMdIsSc-42w4uc-67" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ presenterHintState?: &amp;lt;&quot;raced&quot;, &quot;unraced&quot;&amp;gt;" vertex="1">
+        <mxCell id="Ka-rTPsv6K6fPwl2P-bU-4" parent="WTSlagnMdIsSc-42w4uc-67" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ presenterAlertState?: &amp;lt;&quot;raised&quot;, &quot;unraised&quot;&amp;gt;" vertex="1">
           <mxGeometry height="26" width="330" y="676" as="geometry" />
         </mxCell>
         <mxCell id="AfBX9DBX5LPWlZX21Sw1-0" parent="WTSlagnMdIsSc-42w4uc-67" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ questionsEnabled: boolean = false" vertex="1">

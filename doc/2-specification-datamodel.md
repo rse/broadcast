@@ -142,11 +142,11 @@ the roles.
 
 It defines the following attributes:
 
-| attribute | description                                                                                                      |
-|-----------|------------------------------------------------------------------------------------------------------------------|
-| roleId    | A unique role id used as foreign key.                                                                            |
-| type      | Defines the proper role for the person. The following roles can be set: "Manager" and "Moderator" for the event. |
-| email     | Is a string with the email address of the authorized person.                                                     |
+| attribute | description                                                                                                                   |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------|
+| roleId    | A unique role id used as foreign key.                                                                                         |
+| type      | Defines the proper role for the person. The following roles can be set: "Manager", "Moderator" and "Presenter" for the event. |
+| email     | Is a string with the email address of the authorized person.                                                                  |
 
 Entity `Role` has no further relations.
 
