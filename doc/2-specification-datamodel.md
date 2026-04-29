@@ -233,12 +233,12 @@ __ _Question_.
 
 It defines the following attributes:
 
-| attribute     | description                                                          |
-|---------------|----------------------------------------------------------------------|
-| questionTagId | A unique question tag id used as foreign key.                        |
-| text          | A unique tag name                                                    |
-| moderatorOnly | Whether this tag can be used by a "Moderator" or "Manager" role only |
-| group         | Logical group this tag belongs to.                                   |
+| attribute     | description                                                                                                           |
+|---------------|-----------------------------------------------------------------------------------------------------------------------|
+| questionTagId | A unique question tag id used as foreign key.                                                                         |
+| text          | A unique tag name                                                                                                     |
+| moderatorOnly | Whether this tag can be used by a "Moderator" or "Manager" role only                                                  |
+| group         | Logical group this tag belongs to, e.g. a topic or a person, which person should be asked. e.g. "Zahlen", "An Jürgen" |
 
 Entity `QuestionTag` has no further relations.
 
