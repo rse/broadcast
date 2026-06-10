@@ -51,12 +51,14 @@ implementing broadcast.
 
 - **Runtime Infrastructure**:
   - **Vue.js** -- reactive component-based UI framework.
-  - **Stylus** -- preferred preprocessor for authoring CSS.
+  - **Pinia** -- state/data management
+  - **Reka UI** -- headless widget framework
   - **Tailwind CSS** -- utility-first CSS framework for styling.
+  - **Stylus** -- preferred preprocessor for authoring CSS.
   - **Luxon** -- date management
   - **MQTT-plus** -- MQTT handling for the messaging/relay layer.
   - **MQTT.js** -- MQTT base functionality.
-  - **Axios** -- HTTP/REST client.
+  - **OFetch** -- HTTP/REST client.
   - **TypoPRO** -- typography.
   - **Fontawesome** -- icons.
   - **natural+@nlpjs/core+multilang-sentiment** -- local sentiment analysis.
@@ -71,10 +73,9 @@ implementing broadcast.
   - **OxLint** -- linting for code quality and style (alternative).
 
 - **Runtime Infrastructure**:
-  - **HAPI** -- framework for the REST API endpoints.
   - **MQTT-plus** -- MQTT handling for the messaging/relay layer.
   - **MQTT.js** -- MQTT base functionality.
   - **Commander.js** -- parsing of command-line options.
-  - **Execa** -- command execution
-  - **@ai-sdk** -- AI/LLM connectivity
+  - **@ai-sdk** -- AI/LLM connectivity (for translation)
+  - **OFetch** -- HTTP/REST client (for GraphQL mail sending)
 
