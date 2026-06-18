@@ -46,7 +46,7 @@ implementing broadcast.
   - **Vite** -- build tool and development server.
   - **ESLint** -- linting for code quality and style.
   - **OxLint** -- linting for code quality and style (alternative).
-  - **HTMLLint** -- linting for HTML.
+  - **HTMLHint** -- linting for HTML.
   - **StyleLint** -- linting for Stylus files.
 
 - **Runtime Infrastructure**:
@@ -75,6 +75,7 @@ implementing broadcast.
 - **Runtime Infrastructure**:
   - **MQTT-plus** -- MQTT handling for the messaging/relay layer.
   - **MQTT.js** -- MQTT base functionality.
+  - **Junction** -- serving the static client content over MQTT+ (backend).
   - **Commander.js** -- parsing of command-line options.
   - **@ai-sdk** -- AI/LLM connectivity (for translation)
   - **OFetch** -- HTTP/REST client (for GraphQL mail sending)
