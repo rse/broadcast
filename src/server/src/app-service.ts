@@ -13,7 +13,7 @@ import { nanoid }                    from "nanoid"
 
 /*  the typed MQTT+ API contract provided by this server  */
 type API = {
-    "broadcast/hello": Svc<(name: string) => string>
+    "backend/hello": Svc<(name: string) => string>
 }
 
 /*  the messaging/service layer, bridging the application to the MQTT broker
@@ -132,9 +132,9 @@ export default class Service {
             }
         })
 
-        /*  provide the "broadcast/hello" service  */
-        await api.service("broadcast/hello", (name: string) => {
-            this.log.write("info", `broadcast/hello: ${name}`)
+        /*  provide the "backend/hello" service  */
+        await api.service("backend/hello", (name: string) => {
+            this.log.write("info", `backend/hello: ${name}`)
             return `Hello, ${name}!`
         })
 

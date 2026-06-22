@@ -11,7 +11,7 @@ import Log, { type LogLevel }        from "./app-log.js"
 
 /*  the typed MQTT+ API contract consumed by this client  */
 type API = {
-    "broadcast/hello": Svc<(name: string) => string>
+    "backend/hello": Svc<(name: string) => string>
 }
 
 /*  the messaging/service layer, bridging the application to the MQTT broker
@@ -126,12 +126,14 @@ export default class Service {
         })
     }
 
-    /*  consume the "broadcast/hello" service  */
+    /*  consume the "backend/hello" service  */
     async hello (name: string): Promise<string> {
         if (this.api === null)
             throw new Error("not connected to MQTT broker")
-        this.log.write("info", `broadcast/hello: ${name}`)
-        return this.api.call("broadcast/hello", name)
+        this.log.write("info", `caller: backend/hello call: ${name}`)
+        const reply = this.api.call("backend/hello", name)
+        this.log.write("info", `caller: backend/hello replay: ${reply}`)
+        return reply
     }
 
     /*  gracefully tear down the API layer and close the broker connection  */

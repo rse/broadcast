@@ -144,9 +144,10 @@ export default defineComponent({
         await this.service.connect()
         this.connected = true
 
-        /*  consume the "broadcast/hello" service  */
+        /*  consume the "backend/hello" service  */
+        log.write("info", "app: backend/hello call: \"World\"")
         const reply = await this.service.hello("World")
-        log.write("info", `broadcast/hello reply: ${reply}`)
+        log.write("info", `app: backend/hello reply: ${reply}`)
     },
     async beforeUnmount () {
         /*  tear down the messaging/service layer  */
