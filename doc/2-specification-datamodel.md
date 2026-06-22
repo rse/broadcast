@@ -53,8 +53,8 @@ It defines the following relations:
 
 | relation              | description                                                                                                             |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------|
-| channels              | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity `Stream`)                    |
-| roles                 | A list of all "Manager", "Presenter", "Moderator" and "Administrator" roles for the specific event. (see Entity `Role`) |
+| channels              | A list of all language specific content distributors e.g. 3Q, YouTube, Twitch. (see Entity `Channel`)                   |
+| roles                 | A list of all "Manager", "Moderator" and "Presenter" roles for the specific event. (see Entity `Role`)                  |
 | accessList            | A list of all invited attendees identified by their email. (see Entity `User`)                                          |
 | messages              | A list of all messages written by attendees during an event. (see Entity `Message`)                                     |
 | statistics            | A list of all event statistics that will be created periodically when an event started until it finishes.               |
@@ -78,7 +78,7 @@ It defines the following relations:
 
 | relation         | description                                                                                                                                   |
 |------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| corresondingTags | A list of all `QuestionTag`s corresponding to the `AgendaPoint`s, potentially used for tagging questions (`Message` with __type__ _Question_) |
+| correspondingTags | A list of all `QuestionTag`s corresponding to the `AgendaPoint`, potentially used for tagging questions (`Message` with __type__ _Question_) |
 
 ### Entity Channel
 
@@ -116,7 +116,7 @@ Entity `Resource` has the following relations.
 
 | relation | description                                                                                                                                                    |
 |----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| params   | A list of all `ResourceProviderParam`s (key value pairs that comes from the configuration file of the event), that are assigned to the corresponding `Channel` |
+| params   | A list of all `ResourceProviderParam`s (key value pairs that comes from the configuration file of the event), that are assigned to the corresponding `Resource` |
 
 ### Entity ResourceProviderParam
 
