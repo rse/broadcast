@@ -5,6 +5,7 @@
 ##
 
 logLevel:      info
+workers:       4
 adminUsername: admin
 adminPassword: admin
 mqttUrl:       wss://example:example@127.0.0.1:1883/pr/api/server/?topic=broadcast

@@ -23,9 +23,12 @@ export default class Log {
 
     constructor (
         private prefix: string,
-        private level:  LogLevel = "info"
+        private level:  LogLevel = "info",
+        private worker?: string
     ) {
-        /*  establish logging facility  */
+        /*  establish logging facility (the optional "worker" identifier is
+            woven into the message prefix, so every line is attributed to its
+            originating cluster process, e.g. "[broadcast/12345]")  */
         this.logger = pino({
             level: levels[this.level],
             formatters: {
@@ -38,8 +41,8 @@ export default class Log {
                     colorize:      process.stdout.isTTY,
                     customColors:  "info:blue,warn:yellow,error:red,message:reset",
                     translateTime: "UTC:yyyy-mm-dd HH:MM:ss.l",
-                    messageFormat: "[{prefix}] {msg}",
-                    ignore:        "pid,hostname,prefix"
+                    messageFormat: "[{prefix}{worker}] {msg}",
+                    ignore:        "pid,hostname,prefix,worker"
                 }
             }
         })
@@ -61,8 +64,15 @@ export default class Log {
         return this.logger.isLevelEnabled(levels[level])
     }
 
+    /*  adjust the active worker identifier at runtime (woven into the prefix
+        of every subsequent log line as "/<worker>", or omitted when unset)  */
+    setWorker (worker: string): void {
+        this.worker = worker
+    }
+
     /*  emit a log message if its level is enabled  */
     write (level: LogLevel, msg: string): void {
-        this.logger[levels[level]]({ prefix: this.prefix }, msg)
+        const worker = this.worker !== undefined && this.worker !== "" ? `/${this.worker}` : ""
+        this.logger[levels[level]]({ prefix: this.prefix, worker }, msg)
     }
 }

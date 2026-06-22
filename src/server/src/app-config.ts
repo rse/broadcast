@@ -24,7 +24,13 @@ export const ConfigSchema = v.strictObject({
     mqttUrl:       v.pipe(v.string(), v.minLength(1)),
     dbUrl:         v.pipe(v.string(), v.minLength(1)),
     directory:     v.pipe(v.string(), v.minLength(1)),
-    logLevel:      v.picklist([ "error", "warning", "info", "debug" ])
+    logLevel:      v.picklist([ "error", "warning", "info", "debug" ]),
+    workers:       v.pipe(
+        /*  coerce a string-valued source (an env or YAML "4") to a number,
+            then require a positive integer worker count  */
+        v.union([ v.number(), v.pipe(v.string(), v.transform(Number)) ]),
+        v.number(), v.integer(), v.minValue(1)
+    )
 })
 
 /*  the resulting, validated configuration type (inferred from the schema)  */
@@ -40,6 +46,7 @@ export type ConfigCliOverrides = {
     dbUrl?:         string
     directory?:     string
     logLevel?:      string
+    workers?:       number
 }
 
 /*  the base-layer defaults (lowest precedence), supplying every value the
@@ -48,7 +55,8 @@ const defaults: Record<string, unknown> = {
     mqttUrl:   "wss://example:example@127.0.0.1:1883/pr/api/server/?topic=broadcast",
     dbUrl:     "postgres://127.0.0.1:5432/broadcast",
     directory: path.resolve(import.meta.dirname, "../../client/dst"),
-    logLevel:  "info"
+    logLevel:  "info",
+    workers:   1
 }
 
 /*  redact the credentials (userinfo) of a URL so it can be safely logged  */
@@ -157,7 +165,8 @@ export const loadConfig = (cli: ConfigCliOverrides): Config => {
         mqttUrl:       cli.mqttUrl,
         dbUrl:         cli.dbUrl,
         directory:     cli.directory,
-        logLevel:      cli.logLevel
+        logLevel:      cli.logLevel,
+        workers:       cli.workers
     }))
 
     /*  validate (and coerce) the fully merged configuration against the
