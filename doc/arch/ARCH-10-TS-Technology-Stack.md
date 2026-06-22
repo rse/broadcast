@@ -2,7 +2,7 @@
 #   ARCHITECTURE: TECHNOLOGY STACK (ARCH-TS)
 
 ✳   Created:  **2026-06-19 00:15**
-✎   Modified: **2026-06-22 15:45**
+✎   Modified: **2026-06-22 18:56**
 
 ##  COMPONENT: Client Language <a id="ARCH-TS-client-language"></a>
 
@@ -264,6 +264,31 @@ the same messaging infrastructure used for live data.
 
 Commander.js parses the server's command-line options and arguments to bootstrap application parameters, **BECAUSE** a
 mature CLI parser covers option handling at server startup without custom code.
+
+##  COMPONENT: Configuration Loading <a id="ARCH-TS-configuration-loading"></a>
+
+-   Product:      dotenvx + YAML
+-   Coverage:     Component Management, Environment Detection
+-   Realizes:     ARCH-FV-service
+-   Tier:         Server
+-   When:         Run-Time
+
+dotenvx loads optional environment files into the process environment and the YAML library parses the optional
+configuration file, together feeding the layered configuration resolved from defaults, file, environment, and
+command-line, **BECAUSE** the server's runtime parameters and secrets must be configurable from files and the
+`BROADCAST_*` environment without hardcoding them.
+
+##  COMPONENT: Configuration Validation <a id="ARCH-TS-configuration-validation"></a>
+
+-   Product:      Valibot
+-   Coverage:     Request Validation
+-   Realizes:     ARCH-FV-service
+-   Tier:         Server
+-   When:         Run-Time
+
+Valibot declares the canonical, strict configuration schema that validates and coerces the merged configuration at
+startup, **BECAUSE** a single schema as the source of truth gives fail-fast validation of secrets and a typed
+configuration surface that catches misconfiguration before the service runs.
 
 ##  COMPONENT: Server Logging <a id="ARCH-TS-server-logging"></a>
 
