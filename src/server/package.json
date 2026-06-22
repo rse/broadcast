@@ -12,7 +12,7 @@
     "type":                                 "module",
     "bin":                                  { "broadcast-server": "bin/broadcast-server" },
     "dependencies": {
-        "@rse/junction":                    "0.9.5",
+        "@rse/junction":                    "0.9.7",
         "broadcast-common":                 "../common",
         "commander":                        "15.0.0",
         "@dotenvx/dotenvx":                 "1.75.1",
