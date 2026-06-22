@@ -44,6 +44,8 @@ export default class Service {
         const mqtt = MQTT.connect(this.url, {
             clientId: `broadcast-server-${nanoid()}`,
             path: pathname,
+            keepalive: 30,
+            reconnectPeriod: 1000,
             ...(username !== undefined && username !== "" ? { username } : {}),
             ...(password !== undefined && password !== "" ? { password } : {}),
             rejectUnauthorized: false,
