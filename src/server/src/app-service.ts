@@ -148,6 +148,10 @@ export default class Service {
             mqtt,
             topic:     topicPrefix,
             logLevel:  level === "warning" ? "warn" : level,
+            logSink:   (record) => {
+                const level = record.level === "warn" ? "warning" : record.level
+                this.log.write(level, `junction: ${record.msg}`)
+            },
             watch:     false,
             exclude:   [],
             timeout:   10 * 1000,
