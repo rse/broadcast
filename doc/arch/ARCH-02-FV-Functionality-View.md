@@ -104,7 +104,7 @@ client must be distributed alongside the same messaging infrastructure used for 
 
 -   Kind:           Component
 -   Responsibility: Persist all business objects and static assets.
--   Interface:      SQL via Sequelize ORM
+-   Interface:      SQL via Drizzle
 
 The PostgreSQL database with the filesystem stores all events, messages, tokens, statistics, and static assets accessed
-through the Sequelize ORM, **BECAUSE** the authoritative, durable state of every event must be persisted in one tier.
+through the Drizzle persistence layer, **BECAUSE** the authoritative, durable state of every event must be persisted in one tier.

@@ -2,7 +2,7 @@
 #   ARCHITECTURE: TECHNOLOGY STACK (ARCH-TS)
 
 ✳   Created:  **2026-06-19 00:15**
-✎   Modified: **2026-06-22 14:58**
+✎   Modified: **2026-06-22 15:45**
 
 ##  COMPONENT: Client Language <a id="ARCH-TS-client-language"></a>
 
@@ -217,6 +217,31 @@ linters keep the server codebase clean and consistent.
 
 MQTT-Plus handles the server's MQTT messaging for the relay layer on top of the base MQTT.js functionality, **BECAUSE**
 MQTT is the messaging protocol for the real-time relay layer and MQTT-Plus adds the needed handling.
+
+##  COMPONENT: Database <a id="ARCH-TS-database"></a>
+
+-   Product:      PostgreSQL
+-   Coverage:     Persistence, Data Retention
+-   Realizes:     ARCH-FV-database
+-   Tier:         Server
+-   When:         Run-Time
+
+PostgreSQL stores the authoritative, durable state of every event together with its channels, messages, tokens, and
+statistics snapshots, **BECAUSE** the event-centric data model is inherently relational and demands transactional
+integrity, EU-resident self-hosting, and rich query support for moderation and reporting.
+
+##  COMPONENT: Persistence Layer <a id="ARCH-TS-persistence-layer"></a>
+
+-   Product:      Drizzle
+-   Alternatives: Kysely, Prisma, MikroORM, Sequelize
+-   Coverage:     Persistence, Data Conversion
+-   Realizes:     ARCH-FV-database
+-   Tier:         Server
+-   When:         Run-Time
+
+Drizzle provides the type-safe SQL query builder and schema definition layer between the server's TypeScript code and
+PostgreSQL, with its schema generated spec-first from the data model, **BECAUSE** a thin, zero-overhead typed layer
+preserves end-to-end TypeScript type-safety and full PostgreSQL feature access without the runtime cost of a heavy ORM.
 
 ##  COMPONENT: Static Content Server <a id="ARCH-TS-static-content-server"></a>
 

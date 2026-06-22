@@ -12,7 +12,7 @@
 -   Lifecycle:  created in planning, edited while running, deleted explicitly by a manager
 
 The service persists every event together with its channels, resources, and roles as one aggregate in PostgreSQL via
-Sequelize, **BECAUSE** the data model is event-centric and all entities hang off the owning event.
+Drizzle, **BECAUSE** the data model is event-centric and all entities hang off the owning event.
 
 ##  ASPECT: Message and Translation Store <a id="ARCH-IV-message-store"></a>
 
