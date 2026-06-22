@@ -11,13 +11,27 @@ import pluginTS      from "typescript-eslint"
 import globals       from "globals"
 import parserTS      from "@typescript-eslint/parser"
 
+/*  neostandard 0.13.0 still references the @stylistic rule under its old name
+    "func-call-spacing", which @stylistic 5.x (required for ESLint 10) renamed to
+    "function-call-spacing". Strip the obsolete key from the neostandard config
+    objects so ESLint does not reject the unknown rule; the equivalent new rule is
+    re-applied in our own rule block below.  */
+const stripObsoleteStylistic = (configs) => configs.map((config) => {
+    if (config.rules && "@stylistic/func-call-spacing" in config.rules) {
+        const rules = { ...config.rules }
+        delete rules["@stylistic/func-call-spacing"]
+        return { ...config, rules }
+    }
+    return config
+})
+
 export default [
     pluginJs.configs.recommended,
     ...pluginTS.configs.strict,
     ...pluginTS.configs.stylistic,
-    ...pluginStd({
+    ...stripObsoleteStylistic(pluginStd({
         ignores: pluginStd.resolveIgnoresFromGitignore()
-    }),
+    })),
     {
         plugins: {
             "import":  pluginImport
@@ -51,6 +65,7 @@ export default [
             "@stylistic/operator-linebreak":                      [ "error", "after", { overrides: { "&&": "before", "||": "before", ":": "after" } } ],
             "@stylistic/brace-style":                             [ "error", "stroustrup", { allowSingleLine: true } ],
             "@stylistic/quotes":                                  [ "error", "double" ],
+            "@stylistic/function-call-spacing":                   [ "error", "never" ],
 
             "@stylistic/no-multi-spaces":                         "off",
             "@stylistic/no-multiple-empty-lines":                 "off",

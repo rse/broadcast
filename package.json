@@ -25,6 +25,12 @@
         "concurrently":                     "10.0.3",
         "@dotenvx/dotenvx":                 "1.75.1"
     },
+    "overrides": {
+        "@stylistic/eslint-plugin":         "5.10.0",
+        "neostandard": {
+            "@stylistic/eslint-plugin":     "5.10.0"
+        }
+    },
     "engines": {
         "npm":                              ">=10.0.0",
         "node":                             ">=22.0.0"
