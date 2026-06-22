@@ -8,6 +8,7 @@ import MQTT, { type MqttClient }     from "mqtt"
 import MQTTp, { type Service as Svc } from "mqtt-plus"
 import { JunctionBackend }           from "@rse/junction"
 import Log, { type LogLevel }        from "./app-log.js"
+import { redactUrl }                 from "./app-config.js"
 import { nanoid }                    from "nanoid"
 
 /*  the typed MQTT+ API contract provided by this server  */
@@ -39,7 +40,7 @@ export default class Service {
         url.search = ""
 
         /*  establish the low-level MQTT.js transport connection  */
-        this.log.write("info", `connecting to MQTT broker at ${this.url}`)
+        this.log.write("info", `connecting to MQTT broker at ${redactUrl(this.url)}`)
         const mqtt = MQTT.connect(this.url, {
             clientId: `broadcast-server-${nanoid()}`,
             path: pathname,
@@ -77,7 +78,7 @@ export default class Service {
             mqtt.on("connect", onConnect)
         })
         this.mqtt = mqtt
-        this.log.write("info", `connected to MQTT broker at ${this.url}`)
+        this.log.write("info", `connected to MQTT broker at ${redactUrl(this.url)}`)
 
         /*  observe MQTT broker connection situation  */
         mqtt.on("reconnect", () => {
