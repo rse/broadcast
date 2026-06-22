@@ -1,0 +1,36 @@
+{
+    "private":                              true,
+    "name":                                 "broadcast",
+    "description":                          "Live Event Video Broadcasting Portal",
+    "keywords":                             [ "broadcast", "live", "event", "video" ],
+    "homepage":                             "https://github.com/rse/broadcast",
+    "repository":                           { "url": "git+https://github.com/rse/broadcast.git", "type": "git" },
+    "bugs":                                 { "url": "http://github.com/rse/broadcast/issues" },
+    "version":                              "0.0.0",
+    "license":                              "GPL-3.0-only",
+    "author": {
+        "name":                             "Dr. Ralf S. Engelschall",
+        "email":                            "rse@engelschall.com",
+        "url":                              "http://engelschall.com"
+    },
+    "workspaces": [
+        "src/common",
+        "src/client",
+        "src/server"
+    ],
+    "devDependencies": {
+        "@rse/stx":                         "1.1.6",
+        "shx":                              "0.4.0",
+        "patch-package":                    "8.0.1",
+        "concurrently":                     "10.0.3",
+        "@dotenvx/dotenvx":                 "1.75.1"
+    },
+    "engines": {
+        "npm":                              ">=10.0.0",
+        "node":                             ">=22.0.0"
+    },
+    "scripts": {
+        "postinstall":                      "npm start patch-apply",
+        "start":                            "stx -v4 -c etc/stx.conf"
+    }
+}

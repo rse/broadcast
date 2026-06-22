@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target":                  "ESNext",
+        "useDefineForClassFields": true,
+        "composite":               false,
+        "strict":                  true,
+        "resolveJsonModule":       true,
+        "isolatedModules":         true,
+        "esModuleInterop":         true,
+        "skipLibCheck":            true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch":       true,
+        "noUnusedLocals":          false,
+        "noUnusedParameters":      false,
+        "outDir":                  "../dst",
+        "rootDir":                 "../src",
+        "module":                  "ESNext",
+        "moduleResolution":        "Bundler",
+        "jsx":                     "preserve",
+        "verbatimModuleSyntax":    true,
+        "noImplicitThis":          true,
+        "lib":                     [ "ESNext", "DOM", "DOM.Iterable" ],
+        "noEmit":                  true,
+        "types":                   [ "vite/client" ]
+    },
+    "include": [
+        "../src/**/*.d.ts",
+        "../src/**/*.ts",
+        "../src/**/*.vue"
+    ]
+}

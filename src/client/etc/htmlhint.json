@@ -1,0 +1,16 @@
+{
+    "tag-pair":                  true,
+    "tagname-lowercase":         true,
+    "attr-value-double-quotes":  true,
+    "attr-no-duplication":       true,
+    "attr-unsafe-chars":         true,
+    "attr-value-not-empty":      true,
+    "id-unique":                 true,
+    "id-class-ad-disabled":      true,
+    "alt-require":               true,
+    "src-not-empty":             true,
+    "spec-char-escape":          true,
+    "title-require":             true,
+    "id-class-value":            "underline",
+    "space-tab-mixed-disabled":  "space4"
+}

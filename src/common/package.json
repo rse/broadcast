@@ -1,0 +1,42 @@
+{
+    "private":                              true,
+    "name":                                 "broadcast-common",
+    "description":                          "Broadcast Common (shared types and utilities)",
+    "version":                              "0.0.0",
+    "license":                              "GPL-3.0-only",
+    "author": {
+        "name":                             "Dr. Ralf S. Engelschall",
+        "email":                            "rse@engelschall.com",
+        "url":                              "http://engelschall.com"
+    },
+    "type":                                 "module",
+    "main":                                 "dst/index.js",
+    "types":                                "dst/index.d.ts",
+    "exports": {
+        ".":                                { "types": "./dst/index.d.ts", "import": "./dst/index.js" }
+    },
+    "devDependencies": {
+        "@rse/stx":                         "1.1.5",
+        "typescript":                       "6.0.3",
+        "nodemon":                          "3.1.14",
+        "shx":                              "0.4.0",
+        "eslint":                           "10.4.1",
+        "@eslint/js":                       "10.0.1",
+        "typescript-eslint":                "8.61.0",
+        "@typescript-eslint/parser":        "8.61.0",
+        "@typescript-eslint/eslint-plugin": "8.61.0",
+        "eslint-plugin-import":             "2.32.0",
+        "eslint-plugin-promise":            "7.3.0",
+        "neostandard":                      "0.13.0",
+        "globals":                          "17.6.0",
+        "oxlint":                           "1.69.0",
+        "eslint-plugin-oxlint":             "1.69.0"
+    },
+    "dependencies": {
+        "luxon":                            "3.7.2",
+        "@types/luxon":                     "3.7.1"
+    },
+    "scripts": {
+        "start":                            "stx -v4 -c etc/stx.conf"
+    }
+}

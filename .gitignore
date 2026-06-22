@@ -1,3 +1,4 @@
 .ase
 .env
 node_modules
+tmp
