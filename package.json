@@ -23,13 +23,21 @@
         "shx":                              "0.4.0",
         "patch-package":                    "8.0.1",
         "concurrently":                     "10.0.3",
-        "@dotenvx/dotenvx":                 "1.75.1"
+        "@dotenvx/dotenvx":                 "2.6.0"
     },
     "overrides": {
         "@stylistic/eslint-plugin":         "5.10.0",
         "neostandard": {
             "@stylistic/eslint-plugin":     "5.10.0"
-        }
+        },
+        "stylelint-stylus":                 { "stylelint":  ">=17.0.0" },
+        "mqtt":                             "5.15.2",
+        "mqtt-plus":                        "1.4.25"
+    },
+    "allowScripts": {
+        "typopro-web":                      true,
+        "esbuild":                          true,
+        "vue-demi":                         true
     },
     "engines": {
         "npm":                              ">=10.0.0",
