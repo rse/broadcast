@@ -11,6 +11,36 @@
         <header class="header">
             <i class="fas fa-broadcast-tower"></i>
             <span class="title">Broadcast</span>
+            <ComboboxRoot class="channels" v-model="selectedChannels" v-bind:multiple="true">
+                <ComboboxAnchor class="channels-anchor">
+                    <ComboboxTrigger class="channels-trigger">
+                        <span class="channels-selection">
+                            <span class="channels-tag"
+                                v-for="channel of selectedChannels" v-bind:key="channel">
+                                {{ channel }}
+                                <i class="fas fa-xmark channels-tag-remove"
+                                    v-on:click.stop="toggleChannel(channel)"></i>
+                            </span>
+                            <span class="channels-placeholder"
+                                v-if="selectedChannels.length === 0">Channels</span>
+                        </span>
+                        <i class="fas fa-chevron-down channels-chevron"></i>
+                    </ComboboxTrigger>
+                </ComboboxAnchor>
+                <ComboboxContent class="channels-content">
+                    <ComboboxViewport class="channels-viewport">
+                        <ComboboxEmpty class="channels-empty">No channels</ComboboxEmpty>
+                        <ComboboxItem class="channels-item"
+                            v-for="channel of channels" v-bind:key="channel"
+                            v-bind:value="channel">
+                            <ComboboxItemIndicator class="channels-indicator">
+                                <i class="fas fa-check"></i>
+                            </ComboboxItemIndicator>
+                            <span class="channels-label">{{ channel }}</span>
+                        </ComboboxItem>
+                    </ComboboxViewport>
+                </ComboboxContent>
+            </ComboboxRoot>
             <span class="state" v-bind:class="connected ? 'on' : 'off'">
                 {{ connected ? "connected" : "disconnected" }}
             </span>
@@ -57,8 +87,83 @@
         .title
             font-weight: 600
             color: var(--color-std-fg-5)
-        .state
+        .channels
             margin-left: auto
+            position: relative
+            .channels-anchor
+                display: flex
+                align-items: center
+                .channels-trigger
+                    display: flex
+                    align-items: center
+                    max-width: 16rem
+                    gap: 0.25rem
+                    padding: 0.25rem 0.5rem
+                    border: none
+                    border-radius: 0.25rem
+                    background-color: var(--color-std-bg-4)
+                    color: var(--color-std-fg-3)
+                    font-family: var(--font-family)
+                    font-size: 0.8rem
+                    cursor: pointer
+                    .channels-selection
+                        display: flex
+                        align-items: center
+                        gap: 0.25rem
+                        overflow: hidden
+                        white-space: nowrap
+                        text-overflow: ellipsis
+                        .channels-tag
+                            display: flex
+                            align-items: center
+                            gap: 0.25rem
+                            flex: none
+                            padding: 0.1rem 0.4rem
+                            border-radius: 0.25rem
+                            background-color: var(--color-acc-bg-3)
+                            color: var(--color-std-fg-5)
+                            font-size: 0.75rem
+                            .channels-tag-remove
+                                color: var(--color-std-fg-4)
+                                cursor: pointer
+                                &:hover
+                                    color: var(--color-std-fg-5)
+                        .channels-placeholder
+                            color: var(--color-std-fg-1)
+                    .channels-chevron
+                        flex: none
+                        margin-left: auto
+                        color: var(--color-std-fg-3)
+            .channels-content
+                position: absolute
+                z-index: 10
+                margin-top: 0.25rem
+                min-width: 100%
+                border-radius: 0.25rem
+                background-color: var(--color-std-bg-4)
+                box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 40%)
+                .channels-viewport
+                    padding: 0.25rem
+                    .channels-empty
+                        padding: 0.25rem 0.5rem
+                        font-size: 0.75rem
+                        color: var(--color-std-fg-1)
+                    .channels-item
+                        display: flex
+                        align-items: center
+                        gap: 0.5rem
+                        padding: 0.25rem 0.5rem
+                        border-radius: 0.25rem
+                        font-size: 0.8rem
+                        color: var(--color-std-fg-4)
+                        cursor: pointer
+                        &[data-highlighted]
+                            background-color: var(--color-acc-bg-3)
+                            color: var(--color-std-fg-5)
+                        .channels-indicator
+                            color: var(--color-acc-fg-3)
+
+        .state
             font-size: 0.8rem
             &.on
                 color: var(--color-acc-fg-3)
@@ -117,24 +222,48 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from "vue"
-import { DateTime }        from "luxon"
-import type { Message }    from "broadcast-common"
-import Service             from "./app-service.js"
-import Log                 from "./app-log.js"
+import { defineComponent }  from "vue"
+import { DateTime }         from "luxon"
+import {
+    ComboboxRoot,
+    ComboboxAnchor,
+    ComboboxTrigger,
+    ComboboxContent,
+    ComboboxViewport,
+    ComboboxEmpty,
+    ComboboxItem,
+    ComboboxItemIndicator
+} from "reka-ui"
+import type { Message }     from "broadcast-common"
+import Service              from "./app-service.js"
+import Log                  from "./app-log.js"
 
 export default defineComponent({
     name: "App",
+    components: {
+        ComboboxRoot,
+        ComboboxAnchor,
+        ComboboxTrigger,
+        ComboboxContent,
+        ComboboxViewport,
+        ComboboxEmpty,
+        ComboboxItem,
+        ComboboxItemIndicator
+    },
     data () {
         return {
             /*  reactive component state  */
-            broadcastId: "demo",
-            messages:    [] as Message[],
-            draft:       "",
-            connected:   false,
+            broadcastId:      "demo",
+            messages:         [] as Message[],
+            draft:            "",
+            connected:        false,
+
+            /*  multi-select channel filter state  */
+            channels:         [ "General", "Support", "Questions", "Announcements" ],
+            selectedChannels: [] as string[],
 
             /*  non-reactive service handle  */
-            service:     null as Service | null
+            service:          null as Service | null
         }
     },
     async mounted () {
@@ -161,6 +290,15 @@ export default defineComponent({
         /*  format an ISO-8601 timestamp for display  */
         formatTime (timestamp: string): string {
             return DateTime.fromISO(timestamp).toFormat("HH:mm:ss")
+        },
+
+        /*  toggle a channel in the multi-select filter  */
+        toggleChannel (channel: string): void {
+            const i = this.selectedChannels.indexOf(channel)
+            if (i === -1)
+                this.selectedChannels.push(channel)
+            else
+                this.selectedChannels.splice(i, 1)
         },
 
         /*  send the currently drafted message  */
