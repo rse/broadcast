@@ -32,7 +32,8 @@ export default [
     ...pluginTS.configs.strict,
     ...pluginTS.configs.stylistic,
     ...stripObsoleteStylistic(pluginStd({
-        ignores: pluginStd.resolveIgnoresFromGitignore()
+        ignores: pluginStd.resolveIgnoresFromGitignore(),
+        noJsx:   true
     })),
     ...pluginVue.configs["flat/recommended"],
     {
