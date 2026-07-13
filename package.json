@@ -21,9 +21,10 @@
     "devDependencies": {
         "@rse/stx":                         "1.1.6",
         "shx":                              "0.4.0",
+        "delay-cli":                        "3.0.0",
         "patch-package":                    "8.0.1",
         "concurrently":                     "10.0.3",
-        "@dotenvx/dotenvx":                 "2.6.0"
+        "@dotenvx/dotenvx":                 "2.7.0"
     },
     "overrides": {
         "@stylistic/eslint-plugin":         "5.10.0",

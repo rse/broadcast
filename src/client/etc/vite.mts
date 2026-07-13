@@ -46,7 +46,7 @@ export default Vite.defineConfig(({ command, mode }) => ({
         minify:                 (mode === "production"),
         reportCompressedSize:   false,
         rollupOptions: {
-            input: "src/index.html",
+            input: "index.html",
             output: {
                 entryFileNames: "[name].js",
                 chunkFileNames: "[name].js",
