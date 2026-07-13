@@ -112,10 +112,6 @@ export default class Service {
         const api = new MQTTp<API>(mqtt, {
             timeout: 10 * 1000,
             codec:   "json",
-            /*  join the fixed MQTT5 shared-subscription group "broadcast", so
-                the broker round-robins each request to exactly one worker
-                process of the pre-forked cluster (load-balanced traffic)
-                instead of delivering it to every worker  */
             share:   "broadcast",
             topicMake: (name, protocol, peerId) =>
                 `${prefix}${name}/${protocol}/${peerId ?? "any"}`,
@@ -160,7 +156,8 @@ export default class Service {
             watch:     false,
             exclude:   [],
             timeout:   10 * 1000,
-            codec:     "json"
+            codec:     "json",
+            share:     "broadcast"
         })
         await backend.start()
         this.backend = backend
