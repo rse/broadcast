@@ -12,13 +12,21 @@
 
 "I just want to watch the townhall and ask my question without jumping through hoops."
 
-##  PERSONA: Markus <a id="SPEC-PE-moderator"></a>
+##  PERSONA: Markus <a id="SPEC-PE-moderator-chat"></a>
 
 -   Gender: male
 -   Age:    41
--   Role:   Event Moderator
+-   Role:   Event Chat Moderator
 
-"I keep the conversation clean and feed the presenter only what truly matters."
+"I keep the Chat conversation clean."
+
+##  PERSONA: Peter <a id="SPEC-PE-moderator-qa"></a>
+
+-   Gender: male
+-   Age:    42
+-   Role:   Event Q&A Moderator
+
+"I keep the Q&A funnel clean and feed the presenter only question which truly matter."
 
 ##  PERSONA: Petra <a id="SPEC-PE-presenter"></a>
 

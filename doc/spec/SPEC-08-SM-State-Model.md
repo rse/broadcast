@@ -84,11 +84,11 @@
 
 -   `Forwarded` ─(answer)─► `Answered`:
     The answered timestamp is recorded,
-    **WHEN** the presenter marks the message as answered on stage.
+    **WHEN** the presenter or moderator marked the message as answered on stage.
 
 -   `Forwarded` ─(suspend)─► `Suspended`:
     The message is set aside for the live event,
-    **WHEN** the presenter decides not to process it.
+    **WHEN** the presenter or moderator decided not to process it.
 
 ##  LIFECYCLE: AuthorizationToken <a id="SPEC-SM-authtoken"></a>
 

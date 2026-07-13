@@ -436,6 +436,10 @@ A single chat, support, or question item tracked for attendees and moderators,
     Tags attached to a question message,
     **BECAUSE** questions can be tagged with zero or more tags for context.
 
+-   `messageText`: [`MessageText`](#SPEC-DM-message)(`1..n`):<br/>
+    The message texts of this message,
+    **BECAUSE** each message text can be translated to multiple languages.
+
 ##  ENTITY: `MessageText` <a id="SPEC-DM-messagetext"></a>
 
 A language-specific text of a message,
@@ -456,10 +460,6 @@ A language-specific text of a message,
     **BECAUSE** the displayed content depends on the chosen language.
 
 ### RELATIONS
-
--   `message`: [`Message`](#SPEC-DM-message)(`1`):<br/>
-    The message this text belongs to,
-    **BECAUSE** each text variant is owned by exactly one message.
 
 ##  ENTITY: `QuestionTag` <a id="SPEC-DM-questiontag"></a>
 
