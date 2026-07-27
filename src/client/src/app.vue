@@ -234,9 +234,14 @@ import {
     ComboboxItem,
     ComboboxItemIndicator
 } from "reka-ui"
+import { nanoid }           from "nanoid"
 import type { Message }     from "broadcast-common"
 import Service              from "./app-service.js"
 import Log                  from "./app-log.js"
+
+/*  the maximum number of retained chat messages (the server emits one
+    per second, so the display list has to be bounded)  */
+const messagesMax = 100
 
 export default defineComponent({
     name: "App",
@@ -272,6 +277,19 @@ export default defineComponent({
         this.service = new Service(log, "wss://127.0.0.1:8443/pr/api/client/")
         await this.service.connect()
         this.connected = true
+
+        /*  consume the "frontend/chat" event and display its messages  */
+        await this.service.chatSetup((message: string) => {
+            this.messages.push({
+                id:          nanoid(),
+                broadcastId: this.broadcastId,
+                author:      { id: "server", name: "Server", role: "operator" },
+                text:        message,
+                timestamp:   DateTime.now().toISO()
+            })
+            if (this.messages.length > messagesMax)
+                this.messages.splice(0, this.messages.length - messagesMax)
+        })
 
         /*  consume the "backend/hello" service  */
         log.write("info", "app: backend/hello call: \"World\"")

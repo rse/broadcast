@@ -5,13 +5,14 @@
 */
 
 import MQTT, { type MqttClient }     from "mqtt"
-import MQTTp, { type Service as Svc } from "mqtt-plus"
+import MQTTp, { type Service as Svc, type Event } from "mqtt-plus"
 import { nanoid }                    from "nanoid"
 import Log, { type LogLevel }        from "./app-log.js"
 
 /*  the typed MQTT+ API contract consumed by this client  */
 type API = {
-    "backend/hello": Svc<(name: string) => string>
+    "frontend/chat":  Event<(message: string) => void>
+    "backend/hello":  Svc<(name: string) => string>
 }
 
 /*  the messaging/service layer, bridging the application to the MQTT broker
@@ -123,6 +124,16 @@ export default class Service {
                 await log.resolve()
                 this.log.write(level, `MQTT+: ${log.msg}`)
             }
+        })
+    }
+
+    /*  consume the "frontend/chat" event  */
+    async chatSetup (callback: (message: string) => void): Promise<void> {
+        if (this.api === null)
+            throw new Error("not connected to MQTT broker")
+        await this.api.event("frontend/chat", (message: string) => {
+            this.log.write("debug", `receiver: frontend/chat event: ${message}`)
+            callback(message)
         })
     }
 
