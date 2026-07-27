@@ -33,7 +33,11 @@
         },
         "stylelint-stylus":                 { "stylelint":  ">=17.0.0" },
         "mqtt":                             "5.15.2",
-        "mqtt-plus":                        "1.4.25"
+        "mqtt-plus":                        "1.4.25",
+        "stylus":                           "0.64.0",
+        "shx":                              "0.4.0",
+        "glob":                             "13.0.6",
+        "@esbuild-kit/esm-loader":          "npm:tsx@4.23.1"
     },
     "allowScripts": {
         "typopro-web":                      true,
