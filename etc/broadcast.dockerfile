@@ -55,13 +55,13 @@ RUN         useradd -u 2000 -g app -d /app -m -s /bin/bash -p '!' -l app
 RUN         mkdir -p -m 755 /app
 
 #   establish application area
-RUN         mkdir -p -m 755 /app/bin /app/etc /app/lib/{client,etc,server,node_modules,server/node_modules} /app/var /app/share
+RUN         mkdir -p -m 755 /app/bin /app/etc/migrations /app/lib/{client,server,node_modules} /app/var /app/share
 
 #   copy artifacts from STAGE 1
-COPY        --chown=app:app --from=stage1 /app/src/src/client/dst/*          /app/lib/client/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/dst/*          /app/lib/server/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/etc/migrations /app/lib/etc/migrations/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/package.json   /app/lib/server/
+COPY        --chown=app:app --from=stage1 /app/src/src/client/dst/*            /app/lib/client/
+COPY        --chown=app:app --from=stage1 /app/src/src/server/dst/*            /app/lib/server/
+COPY        --chown=app:app --from=stage1 /app/src/src/server/package.json     /app/lib/server/
+COPY        --chown=app:app --from=stage1 /app/src/src/server/etc/migrations/* /app/etc/migrations/
 
 #   copy NPM dependencies from STAGE 1: this is an NPM "workspaces" setup, so
 #   npm hoists nearly all dependencies into the top-level "node_modules"
