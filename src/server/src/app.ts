@@ -101,6 +101,13 @@ const main = async (): Promise<void> => {
 const primary = async (config: Config): Promise<void> => {
     log.setWorker(`primary:${process.pid}`)
     process.title = `broadcast server [primary:${process.pid}]`
+
+    /*  bring the database schema up-to-date before any worker exists, so the
+        workers neither race each other over the migration nor ever observe a
+        stale schema (a failure here aborts the startup, which is intended:
+        running against a mismatching schema would corrupt data)  */
+    await DB.migrate(log, config.dbUrl)
+
     log.write("info", `pre-forking ${config.workers} worker process(es)`)
 
     /*  track whether we are shutting down, so a worker exit during shutdown

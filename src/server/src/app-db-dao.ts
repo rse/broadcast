@@ -4,8 +4,10 @@
 **  Licensed under GPL 3.0 <https://spdx.org/licenses/GPL-3.0-only>
 */
 
+import path                      from "node:path"
 import postgres                  from "postgres"
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js"
+import { migrate }               from "drizzle-orm/postgres-js/migrator"
 import { eq }                    from "drizzle-orm"
 import Log                       from "./app-log.js"
 import * as schema               from "./app-db-ddl.js"
@@ -24,6 +26,36 @@ export default class DB {
         private log: Log,
         private url: string
     ) {}
+
+    /*  apply all pending schema migrations, driven by the SQL files and the
+        journal which Drizzle Kit generated into "etc/migrations" from the
+        schema definition in "app-db-ddl.ts". This is intentionally a static
+        method, as it runs in the cluster primary before any worker process
+        exists, and hence outside the lifecycle of a regular DB instance.
+        Drizzle records every applied migration in its own bookkeeping table,
+        so a re-run against an already up-to-date database is a no-op.  */
+    static async migrate (log: Log, url: string): Promise<void> {
+        /*  use a dedicated, single-connection pool: the migrator guards its
+            run with a PostgreSQL advisory lock, which a multi-connection pool
+            could acquire and release on two different backends  */
+        const sql = postgres(url, {
+            max:             1,
+            connect_timeout: 10
+        })
+
+        /*  resolve the migrations directory relative to the transpiled
+            artifacts, mirroring the source tree layout ("dst" and "etc" are
+            siblings both in the working copy and in the container image)  */
+        const migrationsFolder = path.resolve(import.meta.dirname, "../etc/migrations")
+        try {
+            log.write("info", `applying database schema migrations from ${migrationsFolder}`)
+            await migrate(drizzle(sql), { migrationsFolder })
+            log.write("info", "database schema is up-to-date")
+        }
+        finally {
+            await sql.end({ timeout: 10 })
+        }
+    }
 
     /*  establish the connection pool and the Drizzle query API  */
     async connect (): Promise<void> {
