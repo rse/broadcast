@@ -55,13 +55,21 @@ RUN         useradd -u 2000 -g app -d /app -m -s /bin/bash -p '!' -l app
 RUN         mkdir -p -m 755 /app
 
 #   establish application area
-RUN         mkdir -p -m 755 /app/bin /app/etc /app/lib/{client,server,server/node_modules} /app/var /app/share
+RUN         mkdir -p -m 755 /app/bin /app/etc /app/lib/{client,etc,server,node_modules,server/node_modules} /app/var /app/share
 
 #  copy artifacts from STAGE 1
 COPY        --chown=app:app --from=stage1 /app/src/src/client/dst/*          /app/lib/client/
 COPY        --chown=app:app --from=stage1 /app/src/src/server/dst/*          /app/lib/server/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/node_modules/* /app/lib/server/node_modules/
+COPY        --chown=app:app --from=stage1 /app/src/src/server/etc/migrations /app/lib/etc/migrations/
 COPY        --chown=app:app --from=stage1 /app/src/src/server/package.json   /app/lib/server/
+
+#  copy NPM dependencies from STAGE 1: this is an NPM "workspaces" setup, so
+#  npm hoists nearly all dependencies into the top-level "node_modules" and
+#  leaves only the few non-hoistable ones in the workspace's own directory --
+#  both have to travel, and both stay resolvable from "/app/lib/server/*.js"
+#  through Node's regular upward "node_modules" lookup
+COPY        --chown=app:app --from=stage1 /app/src/node_modules/            /app/lib/node_modules/
+COPY        --chown=app:app --from=stage1 /app/src/src/server/node_modules/ /app/lib/server/node_modules/
 
 #   extend environment
 ENV         PATH=/app/bin:$PATH

@@ -20,69 +20,69 @@ services:
     #   the ingress: NFTables router, HAProxy reverse proxy,
     #   Mosquitto broker and Junction gateway in a single container
     junction:
-      image:        ghcr.io/rse/junction:0.9.10-20260727
-      restart:      always
-      command:      [ "-L", "info", "-c", "/app/etc/junction-server.yaml", "-e", "/app/etc/.env" ]
-      network_mode: host
-      cap_add:
-          -   NET_ADMIN
-          -   NET_RAW
-      volumes:
-          -   type:      bind
-              source:    ./junction-server.yaml
-              target:    /app/etc/junction-server.yaml
-              read_only: true
-          -   type:      bind
-              source:    ../.env
-              target:    /app/etc/.env
-              read_only: true
-          -   type:      volume
-              source:    junction
-              target:    /app/var
-
-    #   the persistence: PostgreSQL database
-    database:
-      image:    postgres:18.4-alpine3.24
-      restart:  always
-      shm_size: 128mb
-      environment:
-          POSTGRES_USER:     broadcast
-          POSTGRES_PASSWORD: broadcast
-          POSTGRES_DB:       broadcast
-      ports:
-          -   "127.0.0.1:5432:5432"
-      healthcheck:
-          test:     [ "CMD-SHELL", "pg_isready -U broadcast -d broadcast" ]
-          interval: 10s
-          timeout:  5s
-          retries:  5
-      volumes:
-          -   type:   volume
-              source: database
-              target: /var/lib/postgresql
-          -   type:   tmpfs
-              target: /dev/shm
-              tmpfs:
-                  size: 134217728 # 128*2^20 bytes = 128Mb
+        image:        ghcr.io/rse/junction:0.9.10-20260727
+        restart:      always
+        command:      [ "-L", "info", "-c", "/app/etc/junction-server.yaml", "-e", "/app/etc/.env" ]
+        network_mode: host
+        cap_add:
+            -   NET_ADMIN
+            -   NET_RAW
+        volumes:
+            -   type:      bind
+                source:    ./junction-server.yaml
+                target:    /app/etc/junction-server.yaml
+                read_only: true
+            -   type:      bind
+                source:    ../.env
+                target:    /app/etc/.env
+                read_only: true
+            -   type:      volume
+                source:    junction
+                target:    /app/var
 
     #   the application: Broadcast server (and its static client content)
     broadcast:
-      image:        ghcr.io/rse/broadcast:latest
-      restart:      always
-      network_mode: host
-      depends_on:
-          database:
-              condition: service_healthy
-          junction:
-              condition: service_started
-      environment:
-          BROADCAST_LOG_LEVEL:      info
-          BROADCAST_WORKERS:        4
-          BROADCAST_ADMIN_USERNAME: admin
-          BROADCAST_ADMIN_PASSWORD: admin
-          BROADCAST_DIRECTORY:      /app/lib/client
-          BROADCAST_MQTT_URL:       ws://service:${JUNCTION_BROKER_PR_BACKEND_PASS}@127.0.0.1:10280/
-          BROADCAST_DB_URL:         postgres://broadcast:broadcast@127.0.0.1:5432/broadcast
+        image:        ghcr.io/rse/broadcast:latest
+        restart:      always
+        network_mode: host
+        depends_on:
+            database:
+                condition: service_healthy
+            junction:
+                condition: service_started
+        environment:
+            BROADCAST_LOG_LEVEL:      info
+            BROADCAST_WORKERS:        4
+            BROADCAST_ADMIN_USERNAME: admin
+            BROADCAST_ADMIN_PASSWORD: admin
+            BROADCAST_DIRECTORY:      /app/lib/client
+            BROADCAST_MQTT_URL:       ws://service:${JUNCTION_BROKER_PR_BACKEND_PASS}@127.0.0.1:10280/
+            BROADCAST_DB_URL:         postgres://broadcast:broadcast@127.0.0.1:5432/broadcast
+
+    #   the persistence: PostgreSQL database
+    database:
+        image:    postgres:18.4-alpine3.24
+        restart:  always
+        shm_size: 128mb
+        environment:
+            POSTGRES_USER:     broadcast
+            POSTGRES_PASSWORD: broadcast
+            POSTGRES_DB:       broadcast
+        ports:
+            -   "127.0.0.1:5432:5432"
+        healthcheck:
+            test:     [ "CMD-SHELL", "pg_isready -U broadcast -d broadcast" ]
+            interval: 10s
+            timeout:  5s
+            retries:  5
+        volumes:
+            -   type:   volume
+                source: database
+                target: /var/lib/postgresql
+            -   type:   tmpfs
+                target: /dev/shm
+                tmpfs:
+                    size: 134217728 # 128*2^20 bytes = 128Mb
 
 volumes:
     junction:
