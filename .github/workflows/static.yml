@@ -1,0 +1,69 @@
+
+name: Build and Publish Broadcast Application
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "publish"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "26"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm start build
+
+      - name: Package application
+        run: npm start package
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Credentials
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,format=long
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Docker Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags:   ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Trigger Deployment Webhook
+        env:
+          ARCANE_WEBHOOK_URL: ${{ secrets.ARCANE_WEBHOOK_URL }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+               --request POST "$ARCANE_WEBHOOK_URL" \
+               --header "Content-Type: application/json" \
+               --data "{ \"repository\": \"$GITHUB_REPOSITORY\", \"ref\": \"$GITHUB_REF\", \"sha\": \"$GITHUB_SHA\", \"run\": \"$GITHUB_RUN_ID\" }"
