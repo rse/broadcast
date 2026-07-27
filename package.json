@@ -38,7 +38,8 @@
     "allowScripts": {
         "typopro-web":                      true,
         "esbuild":                          true,
-        "vue-demi":                         true
+        "vue-demi":                         true,
+        "fsevents":                         true
     },
     "engines": {
         "npm":                              ">=10.0.0",
