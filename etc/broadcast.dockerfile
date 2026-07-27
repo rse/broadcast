@@ -64,12 +64,8 @@ COPY        --chown=app:app --from=stage1 /app/src/src/server/etc/migrations /ap
 COPY        --chown=app:app --from=stage1 /app/src/src/server/package.json   /app/lib/server/
 
 #   copy NPM dependencies from STAGE 1: this is an NPM "workspaces" setup, so
-#   npm hoists nearly all dependencies into the top-level "node_modules" and
-#   leaves only the few non-hoistable ones in the workspace's own directory --
-#   both have to travel, and both stay resolvable from "/app/lib/server/*.js"
-#   through Node's regular upward "node_modules" lookup
+#   npm hoists nearly all dependencies into the top-level "node_modules"
 COPY        --chown=app:app --from=stage1 /app/src/node_modules/            /app/lib/node_modules/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/node_modules/ /app/lib/server/node_modules/
 
 #   extend environment
 ENV         PATH=/app/bin:$PATH
