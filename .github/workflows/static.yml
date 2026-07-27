@@ -32,14 +32,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Docker Image Version
+        id: image
+        run: |
+          version=$(sed -n 's/^ARG[[:space:]]\{1,\}IMAGE_VERSION=\(.*\)$/\1/p' etc/broadcast.dockerfile)
+          release=$(sed -n 's/^ARG[[:space:]]\{1,\}IMAGE_RELEASE=\(.*\)$/\1/p' etc/broadcast.dockerfile)
+          test -n "$version" || { echo "ERROR: IMAGE_VERSION not found" >&2; exit 1; }
+          test -n "$release" || { echo "ERROR: IMAGE_RELEASE not found" >&2; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+
       - name: Docker Credentials
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ steps.image.outputs.version }}
+            type=raw,value=${{ steps.image.outputs.version }}-${{ steps.image.outputs.release }}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long
 
       - name: Docker Build and Push
         uses: docker/build-push-action@v6
