@@ -1,0 +1,22 @@
+##
+##  Broadcast - Live Event Video Broadcasting Portal
+##  Copyright (c) 2025-2026 Dr. Ralf S. Engelschall <rse@engelschall.com>
+##  Licensed under GPL 3.0 <https://spdx.org/licenses/GPL-3.0-only>
+##
+
+#   secrets (never travel into an image layer)
+.env
+
+#   version control and tooling metadata
+.git
+.github
+.ase
+.claude
+.idea
+
+#   host-side build artifacts (they are regenerated inside the image, and
+#   would otherwise shadow the container's own Linux-native installation)
+node_modules
+src/*/node_modules
+src/*/dst
+tmp
