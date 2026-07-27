@@ -33,7 +33,7 @@ RUN         mkdir -p -m 755 /app/src
 #   install Junction
 COPY        . /app/src/
 WORKDIR     /app/src
-RUN         npm install # --legacy-peer-deps
+RUN         npm install
 RUN         npm start build
 
 #   ==== STAGE 2 ====
@@ -61,7 +61,7 @@ RUN         mkdir -p -m 755 /app/bin /app/etc/migrations /app/lib/{client,server
 COPY        --chown=app:app --from=stage1 /app/src/src/client/dst/*            /app/lib/client/
 COPY        --chown=app:app --from=stage1 /app/src/src/server/dst/*            /app/lib/server/
 COPY        --chown=app:app --from=stage1 /app/src/src/server/package.json     /app/lib/server/
-COPY        --chown=app:app --from=stage1 /app/src/src/server/etc/migrations/* /app/etc/migrations/
+#COPY       --chown=app:app --from=stage1 /app/src/src/server/etc/migrations/* /app/etc/migrations/
 
 #   copy NPM dependencies from STAGE 1: this is an NPM "workspaces" setup, so
 #   npm hoists nearly all dependencies into the top-level "node_modules"
