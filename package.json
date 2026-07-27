@@ -23,8 +23,8 @@
         "shx":                              "0.4.0",
         "delay-cli":                        "3.0.0",
         "patch-package":                    "8.0.1",
-        "concurrently":                     "10.0.3",
-        "@dotenvx/dotenvx":                 "2.7.0"
+        "concurrently":                     "10.0.4",
+        "@dotenvx/dotenvx":                 "2.19.0"
     },
     "overrides": {
         "@stylistic/eslint-plugin":         "5.10.0",
