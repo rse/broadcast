@@ -5,23 +5,29 @@
 */
 
 import MQTT, { type MqttClient }     from "mqtt"
-import MQTTp, { type Service as Svc } from "mqtt-plus"
+import MQTTp, { type Service as Svc, type Event } from "mqtt-plus"
 import { JunctionBackend }           from "@rse/junction"
+import { DateTime }                  from "luxon"
 import Log, { type LogLevel }        from "./app-log.js"
 import { redactUrl }                 from "./app-config.js"
 import { nanoid }                    from "nanoid"
 
 /*  the typed MQTT+ API contract provided by this server  */
 type API = {
-    "backend/hello": Svc<(name: string) => string>
+    "frontend/chat":  Event<(message: string) => void>
+    "backend/hello":  Svc<(name: string) => string>
 }
+
+/*  the interval (in milliseconds) between two "frontend/chat" heartbeat events  */
+const chatInterval = 1000
 
 /*  the messaging/service layer, bridging the application to the MQTT broker
     via MQTT.js (low-level transport) and MQTT+ (high-level patterns)  */
 export default class Service {
-    private mqtt:    MqttClient      | null = null
-    private api:     MQTTp<API>      | null = null
-    private backend: JunctionBackend | null = null
+    private mqtt:      MqttClient      | null = null
+    private api:       MQTTp<API>      | null = null
+    private backend:   JunctionBackend | null = null
+    private chatTimer: ReturnType<typeof setInterval> | null = null
 
     constructor (
         private log:       Log,
@@ -139,6 +145,20 @@ export default class Service {
             return `Hello, ${name}!`
         })
 
+        /*  emit the current date and time as a chat message to all connected
+            clients, once per second, via the "frontend/chat" event  */
+        this.log.write("info", `emitting frontend/chat events every ${chatInterval}ms`)
+        this.chatTimer = setInterval(() => {
+            const message = DateTime.now().toISO()
+            api.emit("frontend/chat", message).then(() => {
+                this.log.write("debug", `frontend/chat: ${message}`)
+            }).catch((err: unknown) => {
+                const msg = err instanceof Error ? err.message : String(err)
+                this.log.write("warning", `frontend/chat: failed to emit event: ${msg}`)
+            })
+        }, chatInterval)
+        this.chatTimer.unref()
+
         /*  provide the static client content via the Junction backend
             (re-using its "backend/fetch" serving, but without driving
             its filesystem watcher, so a Junction frontend can fetch it)  */
@@ -165,6 +185,11 @@ export default class Service {
 
     /*  gracefully tear down the API layer and close the broker connection  */
     async disconnect (): Promise<void> {
+        if (this.chatTimer !== null) {
+            clearInterval(this.chatTimer)
+            this.chatTimer = null
+            this.log.write("info", "stopped emitting frontend/chat events")
+        }
         if (this.backend !== null) {
             await this.backend.stop()
             this.backend = null
