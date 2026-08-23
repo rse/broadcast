@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/rse/broadcast/master/art/logo.svg" width="400" align="right" alt=""/>
+<img src="https://raw.githubusercontent.com/rse/broadcast/master/art/logo-light.svg" width="400" align="right" alt=""/>
 
 Broadcast
 =========
