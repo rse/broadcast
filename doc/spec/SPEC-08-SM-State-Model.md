@@ -1,122 +1,121 @@
+---
+Created:  2026-06-18 10:18
+Modified: 2026-06-18 10:18
+---
 
-#   SPECIFICATION: STATE MODEL (SPEC-SM)
+SPEC: State Model (SM)
+======================
 
-✳   Created:  **2026-06-18 10:18**
-✎   Modified: **2026-06-18 10:18**
+LIFECYCLE: Event {{event}}
+--------------------------
 
-##  LIFECYCLE: Event <a id="SPEC-SM-event"></a>
+-   ENTITY:  [[ENTITY:Event]]
 
--   Entity:  SPEC-DM-event
--   Initial: Planning
--   Final:   Finished
+### STATE
 
-### STATES
-
--   `Planning`:
+-   Planning; INITIAL: true;
     The event is created and configured but not visible to attendees.
 
--   `Published`:
+-   Published;
     The event is visible to attendees but not yet started.
 
--   `Running`:
+-   Running;
     The event is live and attendees can attend and interact.
 
--   `Finished`:
+-   Finished; FINAL: true;
     The event has ended, access is closed, and data is anonymized.
 
-### TRANSITIONS
+### TRANSITION
 
--   `Planning` ─(publish)─► `Published`:
+-   publish; FROM: [[STATE:Planning]]; TO: [[STATE:Published]];
     The event becomes visible to invited attendees,
     **WHEN** the manager publishes the configured event.
 
--   `Published` ─(start)─► `Running`:
+-   start; FROM: [[STATE:Published]]; TO: [[STATE:Running]];
     The live stream and interaction channels open for attendees,
     **WHEN** the manager starts the event.
 
--   `Planning` ─(start)─► `Running`:
+-   start {{start-unpublished}}; FROM: [[STATE:Planning]]; TO: [[STATE:Running]];
     The event goes live directly from planning,
     **WHEN** the manager starts an unpublished event.
 
--   `Running` ─(finish)─► `Finished`:
+-   finish; FROM: [[STATE:Running]]; TO: [[STATE:Finished]];
     The anonymization procedure runs and access is closed,
     **WHEN** the manager finishes the event.
 
-##  LIFECYCLE: Message <a id="SPEC-SM-message"></a>
+LIFECYCLE: Message {{message}}
+------------------------------
 
--   Entity:  SPEC-DM-message
--   Initial: Pending
--   Final:   Rejected, Answered, Suspended, Accepted
+-   ENTITY:  [[ENTITY:Message]]
 
-### STATES
+### STATE
 
--   `Pending`:
+-   `Pending`; INITIAL: true;
     The attendee has submitted the message and it awaits moderation.
 
--   `Accepted`:
+-   `Accepted`; FINAL: true;
     The message is approved and visible to the audience if configured.
 
--   `Rejected`:
+-   `Rejected`; FINAL: true;
     The message is declined and will be deleted entirely on event finish.
 
--   `Forwarded`:
+-   `Forwarded`;
     The accepted message is handed to the presenter as a work item.
 
--   `Answered`:
+-   `Answered`; FINAL: true;
     The presenter has processed and answered the message in the live event.
 
--   `Suspended`:
+-   `Suspended`; FINAL: true;
     The presenter will not process the message in the live event.
 
-### TRANSITIONS
+### TRANSITION
 
--   `Pending` ─(accept)─► `Accepted`:
+-   `accept`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]];
     The message becomes visible to the audience,
     **WHEN** a moderator approves it or sentiment auto-accept applies.
 
--   `Pending` ─(reject)─► `Rejected`:
+-   `reject`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]];
     The message is hidden and marked for deletion,
     **WHEN** a moderator declines it or sentiment auto-reject applies.
 
--   `Accepted` ─(forward)─► `Forwarded`:
+-   `forward`; FROM: [[STATE:Accepted]]; TO: [[STATE:Forwarded]];
     The message enters the presenter's work basket and becomes immutable,
     **WHEN** a moderator forwards it to the presenter.
 
--   `Forwarded` ─(answer)─► `Answered`:
+-   `answer`; FROM: [[STATE:Forwarded]]; TO: [[STATE:Answered]];
     The answered timestamp is recorded,
-    **WHEN** the presenter or moderator marked the message as answered on stage.
+    **WHEN** the presenter or moderator marks the message as answered on stage.
 
--   `Forwarded` ─(suspend)─► `Suspended`:
+-   `suspend`; FROM: [[STATE:Forwarded]]; TO: [[STATE:Suspended]];
     The message is set aside for the live event,
-    **WHEN** the presenter or moderator decided not to process it.
+    **WHEN** the presenter or moderator decides not to process it.
 
-##  LIFECYCLE: AuthorizationToken <a id="SPEC-SM-authtoken"></a>
+LIFECYCLE: AuthorizationToken {{authtoken}}
+-------------------------------------------
 
--   Entity:  SPEC-DM-authtoken
--   Initial: Issued
--   Final:   Used
+-   ENTITY:  [[ENTITY:AuthorizationToken]]
 
-### STATES
+### STATE
 
--   `Issued`:
+-   `Issued`; INITIAL: true;
     The token has been generated, typically at event creation.
 
--   `Sent`:
+-   `Sent`;
     The token has been delivered to the user by email.
 
--   `Used`:
+-   `Used`; FINAL: true;
     The token has been consumed in a login attempt.
 
-### TRANSITIONS
+### TRANSITION
 
--   `Issued` ─(send)─► `Sent`:
+-   `send`; FROM: [[STATE:Issued]]; TO: [[STATE:Sent]];
     The token is emailed to the user,
     **WHEN** the user requests a login challenge.
 
--   `Sent` ─(consume)─► `Used`:
+-   `consume`; FROM: [[STATE:Sent]]; TO: [[STATE:Used]];
     The token is marked spent,
     **WHEN** the user submits it in a successful or unsuccessful login attempt.
 
--   `Issued` ─(consume)─► `Used`:
+-   `consume {{consume-automatic}}`; FROM: [[STATE:Issued]]; TO: [[STATE:Used]];
     The pre-generated token is marked spent,
     **WHEN** an automatic-access URL carrying the token is used.
