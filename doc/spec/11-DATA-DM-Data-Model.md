@@ -1,20 +1,27 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-06-18 10:18
+Modified: 2026-08-29 17:28
 ---
 
-#   SPEC: Data Model (DM)
+#   DATA: Data Model (DM)
 
 ##  ENTITY: Event (*)
+
+-   REQUIREMENTS: [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:automatic-url]],
+    [[REQUIREMENT:user-consent]], [[REQUIREMENT:info-messages]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:chat]],
+    [[REQUIREMENT:replies]], [[REQUIREMENT:questions]], [[REQUIREMENT:moderation]], [[REQUIREMENT:client-sentiment]],
+    [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:manage-app]],
+    [[REQUIREMENT:config-propagation]], [[REQUIREMENT:event-portability]]
+-   TERMS: [[TERM:event]]
 
 The master entity describing a single live broadcast event and all of its configuration,
 BECAUSE the entire data model is event-centric and every other entity hangs off an event.
 
--   ATTRIBUTE: eventId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: eventId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the event used in the access URL,
     BECAUSE attendees reach a specific event by an unguessable link.
 
--   ATTRIBUTE: title (*); TYPE: `string`;
+-   ATTRIBUTE: title (*); TYPE: `string`; CLASSIFICATION: Public;
     Display title of the event such as "Townhall 1/23",
     BECAUSE attendees and managers need a human-readable label.
 
@@ -162,44 +169,47 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     Whether improper input is auto-rejected on the server,
     BECAUSE moderators can be relieved of rejecting negative input.
 
--   RELATION: channels; TYPE: [[ENTITY:Channel]]; ARITY: `0..n`;
+-   RELATION: channels; TARGET: [[ENTITY:Channel]]; ARITY: `0..n`;
     Language-specific content distributors of the event,
     BECAUSE an event delivers content through one or more logical channels.
 
--   RELATION: roles; TYPE: [[ENTITY:Role]]; ARITY: `0..n`;
+-   RELATION: roles; TARGET: [[ENTITY:Role]]; ARITY: `0..n`;
     Manager, Moderator, and Presenter roles for the event,
     BECAUSE event-specific rights are granted through roles.
 
--   RELATION: accessList; TYPE: [[ENTITY:User]]; ARITY: `0..n`;
+-   RELATION: accessList; TARGET: [[ENTITY:User]]; ARITY: `0..n`;
     Invited attendees identified by email,
     BECAUSE access is granted to an explicit list of users.
 
--   RELATION: messages; TYPE: [[ENTITY:Message]]; ARITY: `0..n`;
+-   RELATION: messages; TARGET: [[ENTITY:Message]]; ARITY: `0..n`;
     Messages written during the event,
     BECAUSE all chat, question, and support input belongs to the event.
 
--   RELATION: statistics; TYPE: [[ENTITY:EventStatistic]]; ARITY: `0..n`;
+-   RELATION: statistics; TARGET: [[ENTITY:EventStatistic]]; ARITY: `0..n`;
     Periodic cumulative statistics snapshots,
     BECAUSE trend visualization requires periodic counts.
 
--   RELATION: availableQuestionTags; TYPE: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
+-   RELATION: availableQuestionTags; TARGET: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
     Tags available for use on questions,
     BECAUSE the event defines the vocabulary for tagging questions.
 
--   RELATION: activeAgendaPoint; TYPE: [[ENTITY:AgendaPoint]]; ARITY: `0..1`;
+-   RELATION: activeAgendaPoint; TARGET: [[ENTITY:AgendaPoint]]; ARITY: `0..1`;
     The currently active agenda point,
     BECAUSE attendees see which phase of the event is current.
 
--   RELATION: agendaPoints; TYPE: [[ENTITY:AgendaPoint]]; ARITY: `0..n`;
+-   RELATION: agendaPoints; TARGET: [[ENTITY:AgendaPoint]]; ARITY: `0..n`;
     All agenda points of the event,
     BECAUSE the event has an ordered agenda of phases.
 
 ##  ENTITY: AgendaPoint
 
+-   REQUIREMENTS: [[REQUIREMENT:question-tags]]
+-   TERMS: [[TERM:agendapoint]]
+
 The textual description of a phase in an event,
 BECAUSE attendees and moderators track which part of the event is currently active.
 
--   ATTRIBUTE: agendaPointId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: agendaPointId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the agenda point,
     BECAUSE it is referenced as a foreign key.
 
@@ -211,16 +221,19 @@ BECAUSE attendees and moderators track which part of the event is currently acti
     Ordering position of the phase,
     BECAUSE agenda points have a defined sequence.
 
--   RELATION: correspondingTags; TYPE: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
+-   RELATION: correspondingTags; TARGET: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
     Question tags corresponding to this agenda point,
     BECAUSE questions can be associated with the agenda phase they relate to.
 
 ##  ENTITY: Channel
 
+-   REQUIREMENTS: [[REQUIREMENT:multi-provider]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:channel-stats]]
+-   TERMS: [[TERM:channel]]
+
 A logical content delivery stream linking video streams to an event,
 BECAUSE an event groups its streams by language and resolution into channels.
 
--   ATTRIBUTE: channelId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: channelId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the channel,
     BECAUSE it is referenced as a foreign key.
 
@@ -236,20 +249,23 @@ BECAUSE an event groups its streams by language and resolution into channels.
     Whether this channel is activated by default on entering an event,
     BECAUSE attendees need a defined initial channel.
 
--   RELATION: resources; TYPE: [[ENTITY:Resource]]; ARITY: `1..n`;
+-   RELATION: resources; TARGET: [[ENTITY:Resource]]; ARITY: `1..n`;
     Physical resources backing the channel,
     BECAUSE a channel is delivered by one or more provider resources.
 
--   RELATION: statistics; TYPE: [[ENTITY:ChannelStatistic]]; ARITY: `0..n`;
+-   RELATION: statistics; TARGET: [[ENTITY:ChannelStatistic]]; ARITY: `0..n`;
     Periodic viewer statistics of the channel,
     BECAUSE organizers track viewers per channel over time.
 
 ##  ENTITY: Resource
 
+-   REQUIREMENTS: [[REQUIREMENT:multi-provider]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:resource-url]]
+-   TERMS: [[TERM:resource]], [[TERM:provider]]
+
 A physical content delivery resource such as a provider stream or static website linked to a channel,
 BECAUSE a channel must map to concrete provider endpoints to be playable.
 
--   ATTRIBUTE: resourceId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: resourceId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the resource,
     BECAUSE it is referenced as a foreign key and in the access URL.
 
@@ -261,24 +277,27 @@ BECAUSE a channel must map to concrete provider endpoints to be playable.
     Whether this resource is the active resource of the channel,
     BECAUSE only one resource of a channel is active at once for provider switching.
 
--   RELATION: params; TYPE: [[ENTITY:ResourceProviderParam]]; ARITY: `0..n`;
+-   RELATION: params; TARGET: [[ENTITY:ResourceProviderParam]]; ARITY: `0..n`;
     Provider key-value parameters assigned to this resource,
     BECAUSE each provider needs configured parameters to address its stream.
 
 ##  ENTITY: ResourceProviderParam
 
+-   REQUIREMENTS: [[REQUIREMENT:multi-provider]]
+-   TERMS: [[TERM:provider]]
+
 A key-value parameter belonging to exactly one resource and provider, defined in the event configuration file,
 BECAUSE provider endpoints are parameterized by values an administrator supplies.
 
--   ATTRIBUTE: resourceId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: resourceId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Identifier of the owning resource,
     BECAUSE the parameter belongs to exactly one resource.
 
--   ATTRIBUTE: providerId (*); TYPE: `unique string`;
+-   ATTRIBUTE: providerId (*); TYPE: `key string`;
     Provider identifier from the configuration file,
     BECAUSE the parameter is scoped to one provider.
 
--   ATTRIBUTE: key (*); TYPE: `unique string`;
+-   ATTRIBUTE: key (*); TYPE: `key string`;
     Parameter key defined in the configuration file,
     BECAUSE each provider parameter is identified by its key.
 
@@ -288,10 +307,13 @@ BECAUSE provider endpoints are parameterized by values an administrator supplies
 
 ##  ENTITY: Role
 
+-   REQUIREMENTS: [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:export-inputs]]
+-   TERMS: [[TERM:role]], [[TERM:manager]], [[TERM:moderator]], [[TERM:presenter]]
+
 A grant of special rights to a specific user within an event,
 BECAUSE the application is role-based and rights are granted through roles.
 
--   ATTRIBUTE: roleId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: roleId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the role,
     BECAUSE it is referenced as a foreign key.
 
@@ -299,49 +321,61 @@ BECAUSE the application is role-based and rights are granted through roles.
     The role granted to the person for the event,
     BECAUSE each role carries a distinct set of rights.
 
--   ATTRIBUTE: email (*); TYPE: `string`;
+-   ATTRIBUTE: email (*); TYPE: `string`; CLASSIFICATION: Personal;
+    RETENTION: until event finish (Moderator), until event deletion (Manager);
     Email address of the authorized person,
     BECAUSE roles are granted by email without permanent accounts.
 
 ##  ENTITY: User
 
+-   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:likes]],
+    [[REQUIREMENT:personalized-url]], [[REQUIREMENT:registration-import]]
+-   TERMS: [[TERM:user]], [[TERM:attendee]], [[TERM:accesslist]]
+
 A helper entity enabling event-based logins for invited or pattern-matched attendees,
 BECAUSE the system holds no permanent accounts yet must identify attendees per event.
 
--   ATTRIBUTE: userId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: userId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the user,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: email (*); TYPE: `string`;
+-   ATTRIBUTE: email (*); TYPE: `string`; CLASSIFICATION: Personal; RETENTION: until event finish;
     Concrete email address of the user,
     BECAUSE authorization tokens are sent to this address at login.
 
--   ATTRIBUTE: firstname; TYPE: `string`; DEFAULT: `""`;
+-   ATTRIBUTE: firstname; TYPE: `string`; DEFAULT: `""`; CLASSIFICATION: Personal; RETENTION: until event finish;
     Optional first name of the user,
     BECAUSE it is displayed on the user's chat and question messages.
 
--   ATTRIBUTE: lastname; TYPE: `string`; DEFAULT: `""`;
+-   ATTRIBUTE: lastname; TYPE: `string`; DEFAULT: `""`; CLASSIFICATION: Personal; RETENTION: until event finish;
     Optional last name of the user,
     BECAUSE it is displayed on the user's chat and question messages.
 
--   RELATION: likes; TYPE: [[ENTITY:Message]]; ARITY: `0..n`;
+-   RELATION: likes; TARGET: [[ENTITY:Message]]; ARITY: `0..n`;
     Messages the user marked as liked,
     BECAUSE likes are tracked per user until anonymization.
 
--   RELATION: sentMessages; TYPE: [[ENTITY:Message]]; ARITY: `0..n`;
+-   RELATION: sentMessages; TARGET: [[ENTITY:Message]]; ARITY: `0..n`;
     Messages the user has sent,
     BECAUSE authorship links a message to its sending user.
 
--   RELATION: statistics; TYPE: [[ENTITY:UserStatistic]]; ARITY: `0..n`;
+-   RELATION: statistics; TARGET: [[ENTITY:UserStatistic]]; ARITY: `0..n`;
     Periodic statistics about the user,
     BECAUSE viewer information is captured per user over time.
 
 ##  ENTITY: Message
 
+-   REQUIREMENTS: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]],
+    [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:answer-inputs]],
+    [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:deleted-placeholder]],
+    [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:sort-filter]], [[REQUIREMENT:question-tags]], [[REQUIREMENT:export-inputs]]
+-   TERMS: [[TERM:message]], [[TERM:chat]], [[TERM:question]], [[TERM:support]], [[TERM:like]],
+    [[TERM:sentiment]]
+
 A single chat, support, or question item tracked for attendees and moderators,
 BECAUSE all event interaction is represented uniformly as messages with language-specific texts.
 
--   ATTRIBUTE: messageId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: messageId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the message,
     BECAUSE it is the foreign key for the translated message texts.
 
@@ -365,7 +399,8 @@ BECAUSE all event interaction is represented uniformly as messages with language
     Language the sender originally wrote the message in,
     BECAUSE the difference between human-written and AI-translated text must always be visible.
 
--   ATTRIBUTE: senderName; TYPE: `string`;
+-   ATTRIBUTE: senderName; TYPE: `string`; CLASSIFICATION: Personal;
+    RETENTION: until event finish, then replaced by "Anonymous";
     Display name shown to others for the sender,
     BECAUSE the visible name depends on event naming and anonymity options.
 
@@ -385,40 +420,43 @@ BECAUSE all event interaction is represented uniformly as messages with language
     Whether and how the message was changed or deleted,
     BECAUSE edits must be marked for others and edits stop once forwarded.
 
--   RELATION: sender; TYPE: [[ENTITY:User]]; ARITY: `0..1`;
+-   RELATION: sender; TARGET: [[ENTITY:User]]; ARITY: `0..1`;
     The authoring attendee of the message,
     BECAUSE a message has an author until the sender is removed on finish.
 
--   RELATION: liker; TYPE: [[ENTITY:User]]; ARITY: `0..n`;
+-   RELATION: liker; TARGET: [[ENTITY:User]]; ARITY: `0..n`;
     Attendees who liked the message,
     BECAUSE likes are tracked per liking user before anonymization.
 
--   RELATION: event; TYPE: [[ENTITY:Event]]; ARITY: `1`;
+-   RELATION: event; TARGET: [[ENTITY:Event]]; ARITY: `1`;
     The event the message belongs to,
     BECAUSE the event link must persist even after senders are deleted.
 
--   RELATION: replyTo; TYPE: [[ENTITY:Message]]; ARITY: `0..1`;
+-   RELATION: replyTo; TARGET: [[ENTITY:Message]]; ARITY: `0..1`;
     The message this message replies to,
     BECAUSE chat replies and moderator answers chain messages together.
 
--   RELATION: predecessor; TYPE: [[ENTITY:Message]]; ARITY: `0..1`;
+-   RELATION: predecessor; TARGET: [[ENTITY:Message]]; ARITY: `0..1`;
     The preceding message in a manual ordering,
     BECAUSE moderators sort forwarded messages for the presenter.
 
--   RELATION: questionTags; TYPE: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
+-   RELATION: questionTags; TARGET: [[ENTITY:QuestionTag]]; ARITY: `0..n`;
     Tags attached to a question message,
     BECAUSE questions can be tagged with zero or more tags for context.
 
--   RELATION: messageText; TYPE: [[ENTITY:MessageText]]; ARITY: `1..n`;
+-   RELATION: messageText; TARGET: [[ENTITY:MessageText]]; ARITY: `1..n`;
     The message texts of this message,
     BECAUSE each message text can be translated to multiple languages.
 
 ##  ENTITY: MessageText
 
+-   REQUIREMENTS: [[REQUIREMENT:language-switch]], [[REQUIREMENT:export-inputs]]
+-   TERMS: [[TERM:message]]
+
 A language-specific text of a message,
 BECAUSE a message is translated into multiple languages while retaining one original.
 
--   ATTRIBUTE: messageTextId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: messageTextId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the message text,
     BECAUSE it is referenced as a foreign key.
 
@@ -432,10 +470,13 @@ BECAUSE a message is translated into multiple languages while retaining one orig
 
 ##  ENTITY: QuestionTag
 
+-   REQUIREMENTS: [[REQUIREMENT:question-tags]]
+-   TERMS: [[TERM:questiontag]]
+
 A named tag attachable to question messages,
 BECAUSE questions are categorized by topic or addressed person for routing and grouping.
 
--   ATTRIBUTE: questionTagId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: questionTagId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the question tag,
     BECAUSE it is referenced as a foreign key.
 
@@ -453,10 +494,15 @@ BECAUSE questions are categorized by topic or addressed person for routing and g
 
 ##  ENTITY: AuthorizationToken
 
+-   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:automatic-url]], [[REQUIREMENT:registration-import]],
+    [[REQUIREMENT:registration-export]], [[REQUIREMENT:debug-stats]]
+-   TERMS: [[TERM:authtoken]]
+
 A one-time second factor proving an attendee controls the email address used as the first factor,
 BECAUSE email-verified access is the core mechanism limiting the audience.
 
--   ATTRIBUTE: token (*); TYPE: `string`;
+-   ATTRIBUTE: token (*); TYPE: `string`; CONSTRAINT: `six digits as NNN-NNN`;
+    CLASSIFICATION: Confidential; RETENTION: until validity expiry, at the latest until event finish;
     The generated one-time token for the next login attempt,
     BECAUSE the attendee proves control of the email by returning this token.
 
@@ -468,20 +514,23 @@ BECAUSE email-verified access is the core mechanism limiting the audience.
     Lifecycle state of the token,
     BECAUSE debugging statistics and anonymized sums need the token state.
 
--   RELATION: user; TYPE: [[ENTITY:User]]; ARITY: `1`;
+-   RELATION: user; TARGET: [[ENTITY:User]]; ARITY: `1`;
     The user the token was issued for,
     BECAUSE a token authorizes exactly one user.
 
--   RELATION: event; TYPE: [[ENTITY:Event]]; ARITY: `1`;
+-   RELATION: event; TARGET: [[ENTITY:Event]]; ARITY: `1`;
     The event the token was issued for,
     BECAUSE a token grants access to exactly one event.
 
 ##  ENTITY: SessionToken
 
+-   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:parallel-access]], [[REQUIREMENT:event-stats]]
+-   TERMS: [[TERM:sessiontoken]]
+
 The result of a successful login of a user to an event,
 BECAUSE an active session must be tracked to enforce single concurrent access.
 
--   ATTRIBUTE: sessionId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: sessionId; TYPE: `key uuid`; DEFAULT: `uuid()`; CLASSIFICATION: Confidential; RETENTION: until event finish;
     Unique identifier of the session,
     BECAUSE the active session of a user for an event must be addressable.
 
@@ -489,20 +538,22 @@ BECAUSE an active session must be tracked to enforce single concurrent access.
     Time the user successfully entered the event,
     BECAUSE the session start time is recorded for tracking.
 
--   RELATION: user; TYPE: [[ENTITY:User]]; ARITY: `1`;
+-   RELATION: user; TARGET: [[ENTITY:User]]; ARITY: `1`;
     The user the session was issued for,
     BECAUSE a session belongs to exactly one user.
 
--   RELATION: event; TYPE: [[ENTITY:Event]]; ARITY: `1`;
+-   RELATION: event; TARGET: [[ENTITY:Event]]; ARITY: `1`;
     The event the session was issued for,
     BECAUSE a session grants access to exactly one event.
 
 ##  ENTITY: EventStatistic
 
+-   REQUIREMENTS: [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]]
+
 A periodic cumulative snapshot of event-wide counts,
 BECAUSE trend visualization of audience size and authentication flow requires regular snapshots.
 
--   ATTRIBUTE: eventStatisticId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: eventStatisticId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the event statistic,
     BECAUSE it is referenced as a foreign key.
 
@@ -532,10 +583,12 @@ BECAUSE trend visualization of audience size and authentication flow requires re
 
 ##  ENTITY: ChannelStatistic
 
+-   REQUIREMENTS: [[REQUIREMENT:channel-stats]]
+
 A periodic count of viewers for a channel,
 BECAUSE organizers need per-channel popularity over time.
 
--   ATTRIBUTE: channelStatisticId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: channelStatisticId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the channel statistic,
     BECAUSE it is referenced as a foreign key.
 
@@ -549,10 +602,12 @@ BECAUSE organizers need per-channel popularity over time.
 
 ##  ENTITY: UserStatistic
 
+-   REQUIREMENTS: [[REQUIREMENT:user-stats]]
+
 Tracked viewer information about a user,
 BECAUSE audience composition informs reporting and default localization.
 
--   ATTRIBUTE: userStatisticId; TYPE: `unique uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: userStatisticId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Unique identifier of the user statistic,
     BECAUSE it is referenced as a foreign key.
 
@@ -560,15 +615,18 @@ BECAUSE audience composition informs reporting and default localization.
     Time the snapshot was created,
     BECAUSE user statistics are recorded over time.
 
--   ATTRIBUTE: country (*); TYPE: `string`;
+-   ATTRIBUTE: country (*); TYPE: `string`; CLASSIFICATION: Personal;
+    RETENTION: linked to the user until event finish, retained unlinked afterwards;
     ISO country code from GeoIP tracking,
     BECAUSE country selects the default application language on first use.
 
--   ATTRIBUTE: browserType (*); TYPE: `string`;
+-   ATTRIBUTE: browserType (*); TYPE: `string`; CLASSIFICATION: Personal;
+    RETENTION: linked to the user until event finish, retained unlinked afterwards;
     Type of browser used,
     BECAUSE browser distribution informs compatibility decisions.
 
--   ATTRIBUTE: deviceType (*); TYPE: `string`;
+-   ATTRIBUTE: deviceType (*); TYPE: `string`; CLASSIFICATION: Personal;
+    RETENTION: linked to the user until event finish, retained unlinked afterwards;
     Type of device used,
     BECAUSE device distribution informs responsive design priorities.
 

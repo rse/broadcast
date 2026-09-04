@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-06-18 10:18
+Modified: 2026-08-30 00:49
 ---
 
 ARCH: Context View (CV)
@@ -10,7 +10,9 @@ ARCH: Context View (CV)
 
 -   KIND:      Person
 -   DIRECTION: Bidirectional
--   INTERFACE: Web UI over HTTPS and MQTT-over-WebSocket
+-   TERMS:     [[TERM:attendee]]
+-   ACTORS:    [[PERSONA:attendee]]
+-   PREMISES:  [[PREMISE:websocket-passage]]
 -   DATA:      Login credentials, video playback, chat, questions, likes
 
 The attendee's web browser is the primary client through which a person
@@ -21,7 +23,8 @@ browser-delivered solution serving thousands of concurrent attendees.
 
 -   KIND:      Person
 -   DIRECTION: Bidirectional
--   INTERFACE: Web UI over HTTPS and MQTT-over-WebSocket
+-   TERMS:     [[TERM:manager]], [[TERM:moderator]], [[TERM:presenter]]
+-   ACTORS:    [[PERSONA:moderator-chat]], [[PERSONA:moderator-qa]], [[PERSONA:presenter]], [[PERSONA:manager]]
 -   DATA:      Event configuration, moderation actions, statistics, exports
 
 Managers, moderators, and presenters use their browsers to configure
@@ -32,7 +35,8 @@ event operation happens through the same web application as attendance.
 
 -   KIND:      System
 -   DIRECTION: Outbound
--   INTERFACE: RTMP/SRT ingest and HLS/WebRTC egress URLs
+-   TERMS:     [[TERM:provider]]
+-   PREMISES:  [[PREMISE:provider-delivery]]
 -   DATA:      Live video ingest and playback streams
 
 External streaming providers such as msg Filmstudio, msg Broadcast,
@@ -44,21 +48,21 @@ provider endpoints rather than hosting video.
 
 -   KIND:      Service
 -   DIRECTION: Outbound
--   INTERFACE: HTTPS edge delivery (Cloudflare)
 -   DATA:      Static client assets and static resources
 
 A Cloudflare content delivery network fronts static content for fast,
 stable distribution, BECAUSE static assets must load quickly and
 reliably for a global, large-scale audience.
 
-##  ENTITY: Ventari Platform {{ventari}}
+##  ENTITY: Event Registration System {{registration-system}}
 
 -   KIND:      System
 -   DIRECTION: Bidirectional
--   INTERFACE: Excel sheet import and export
+-   TERMS:     [[TERM:registration-system]]
+-   PREMISES:  [[PREMISE:audience-known]], [[PREMISE:registration-exchange]]
 -   DATA:      Attendee registration data and generated access URLs
 
-The U2D Ventari platform supplies attendee registration data and
+The Event Registration System supplies attendee registration data and
 receives generated access URLs via Excel exchange, BECAUSE events are
 provisioned from the organization's existing registration system.
 
@@ -66,7 +70,7 @@ provisioned from the organization's existing registration system.
 
 -   KIND:      Service
 -   DIRECTION: Outbound
--   INTERFACE: GraphQL mail-sending API over HTTPS
+-   PREMISES:  [[PREMISE:email-delivery]]
 -   DATA:      Authorization token emails
 
 An external mail-sending service delivers one-time authorization tokens
@@ -77,7 +81,7 @@ access is verified.
 
 -   KIND:      Service
 -   DIRECTION: Outbound
--   INTERFACE: AI SDK over HTTPS
+-   PREMISES:  [[PREMISE:translation-service]], [[PREMISE:message-personal-data]]
 -   DATA:      Source and translated message texts
 
 An external AI/LLM service translates message texts between the
@@ -88,7 +92,6 @@ German and English on the fly.
 
 -   KIND:      System
 -   DIRECTION: Bidirectional
--   INTERFACE: Embedded iframe with user and admin URLs
 -   DATA:      Interactive app content and administration
 
 An optional third-party application is embedded into the event for
