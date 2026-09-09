@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-import("../dst/index.js")
+import("../dst/app.js")
