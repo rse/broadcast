@@ -17,7 +17,7 @@ import {
     pgTable, pgEnum, uuid, text, boolean, integer, doublePrecision,
     timestamp, primaryKey, index, uniqueIndex
 } from "drizzle-orm/pg-core"
-import { relations } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 
 /*  ==== ENUMERATIONS (SPEC-DM "enum(...)" attributes) ====================  */
 
@@ -80,7 +80,7 @@ export const events = pgTable("Event", {
     eventId:                     uuid("eventId").primaryKey().defaultRandom(),
     title:                       text("title").notNull(),
     description:                 text("description").notNull().default(""),
-    language:                    text("language").notNull(),
+    language:                    text("language").notNull().default("en"),
     begin:                       timestamp("begin", { withTimezone: true }).notNull(),
     end:                         timestamp("end",   { withTimezone: true }).notNull(),
     state:                       eventStateEnum("state").notNull().default("planning"),
@@ -100,7 +100,7 @@ export const events = pgTable("Event", {
     chatAllowAnonymous:          boolean("chatAllowAnonymous").notNull().default(false),
     chatName:                    nameDisplayEnum("chatName").notNull().default("full"),
     chatReply:                   boolean("chatReply").notNull().default(false),
-    chatThrottling:              integer("chatThrottling").notNull().default(0),
+    chatThrottling:              integer("chatThrottling").notNull().default(1),
     chatModerator:               boolean("chatModerator").notNull().default(false),
 
     /*  support configuration  */
@@ -120,12 +120,12 @@ export const events = pgTable("Event", {
     questionsEnabled:            boolean("questionsEnabled").notNull().default(false),
     questionsAllowAnonymous:     boolean("questionsAllowAnonymous").notNull().default(false),
     questionsName:               nameDisplayEnum("questionsName").notNull().default("full"),
-    questionsThrottling:         integer("questionsThrottling").notNull().default(0),
+    questionsThrottling:         integer("questionsThrottling").notNull().default(1),
     questionsPrivate:            boolean("questionsPrivate").notNull().default(false),
     questionsModerator:          boolean("questionsModerator").notNull().default(false),
 
     /*  authorization tokens  */
-    expireAuthTokenOnFirstUse:   boolean("expireAuthTokenOnFirstUse").notNull().default(false),
+    expireAuthTokenOnFirstUse:   boolean("expireAuthTokenOnFirstUse").notNull().default(true),
 
     /*  sentiment analysis  */
     sentimentSenderAnalysis:     boolean("sentimentSenderAnalysis").notNull().default(false),
@@ -195,7 +195,7 @@ export const roles = pgTable("Role", {
     roleId:                      uuid("roleId").primaryKey().defaultRandom(),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
-    type:                        roleTypeEnum("type").notNull(),
+    type:                        roleTypeEnum("type").notNull().default("Presenter"),
     email:                       text("email").notNull()
 }, (t) => [
     index("Role_eventId_idx").on(t.eventId)
@@ -209,8 +209,8 @@ export const users = pgTable("User", {
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     email:                       text("email").notNull(),
-    firstname:                   text("firstname"),
-    lastname:                    text("lastname")
+    firstname:                   text("firstname").notNull().default(""),
+    lastname:                    text("lastname").notNull().default("")
 }, (t) => [
     index("User_eventId_idx").on(t.eventId)
 ])
@@ -222,7 +222,7 @@ export const messages = pgTable("Message", {
     messageId:                   uuid("messageId").primaryKey().defaultRandom(),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
-    type:                        messageTypeEnum("type").notNull(),
+    type:                        messageTypeEnum("type").notNull().default("Chat"),
     timestamp:                   timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
     timestampAnswered:           timestamp("timestampAnswered", { withTimezone: true }),
     state:                       messageStateEnum("state").notNull().default("pending"),
@@ -310,7 +310,7 @@ export const messageLiker = pgTable("Message_liker", {
 
 export const authorizationTokens = pgTable("AuthorizationToken", {
     token:                       text("token").primaryKey(),
-    validUntil:                  timestamp("validUntil", { withTimezone: true }),
+    validUntil:                  timestamp("validUntil", { withTimezone: true }).default(sql`now() + interval '1 day'`),
     state:                       tokenStateEnum("state").notNull().default("issued"),
     user:                        uuid("user").notNull()
         .references(() => users.userId, { onDelete: "cascade" }),
