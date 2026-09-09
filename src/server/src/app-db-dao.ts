@@ -11,7 +11,25 @@ import { migrate }               from "drizzle-orm/postgres-js/migrator"
 import { eq }                    from "drizzle-orm"
 import Log                       from "./app-log.js"
 import * as schema               from "./app-db-ddl.js"
-import type { NewEvent }         from "./app-db-ddl.js"
+import type { User, Event, NewEvent, NewMessage } from "./app-db-ddl.js"
+
+type Session = {
+    role: string
+    user: User
+}
+type CrudOp = "create" | "read" | "update" | "delete"
+
+class AuthorizationError extends Error {
+    constructor (
+        public readonly session: Session,
+        public readonly op:      CrudOp,
+        public readonly entity:  string,
+        options?: ErrorOptions
+    ) {
+        super(`${op} on ${entity} denied for role "${session.role}"`, options)
+        this.name = "AuthorizationError"
+    }
+}
 
 /*  the persistence layer, bridging the application to the PostgreSQL database
     via postgres.js (low-level driver with an explicit, tuned connection pool)
@@ -98,11 +116,49 @@ export default class DB {
         return this.db
     }
 
+    /*  ==== AUTHORIZATION ====  */
+
+    private async authorize (session: Session, operation: "create", entity: "Event",   event: NewEvent): Promise<void>
+    private async authorize (session: Session, operation: "read",   entity: "Event",   event: Event): Promise<void>
+    private async authorize (session: Session, operation: "update", entity: "Event",   event: Event): Promise<void>
+    private async authorize (session: Session, operation: "delete", entity: "Event",   event: Event): Promise<void>
+    private async authorize (session: Session, operation: "create", entity: "Message", event: NewMessage): Promise<void>
+    private async authorize (session: Session, operation: CrudOp,   entity: string, obj: any): Promise<void> {
+        if (session.role === "Administrator")
+            return
+
+        const db = this.require()
+
+        /*  PERMISSION: Enter the Event  */
+        if (session.role === "Attendee" && entity === "Event" && [ "read" ].includes(operation)) {
+            let grant = false
+            const x = obj as Event
+            const state = "Published" // FIXME
+            if ([ "Published", "Running" ].includes(state)) {
+                const accessList = (await db
+                    .select({ email: schema.users.email })
+                    .from(schema.users)
+                    .where(eq(schema.users.eventId, x.eventId))
+                ).map((r) => r.email)
+                if (
+                       accessList.includes(session.user.email)
+                    || session.user.email.match(x.accessEmailPattern)
+                    || x.allowAccessAnonymous
+                ) {
+                    grant = true
+                }
+            }
+            if (!grant)
+                throw new AuthorizationError(session, operation, entity)
+        }
+    }
+
     /*  ==== EXAMPLE DATA ACCESS OBJECTS (DAOs) ===========================  */
 
     /*  DAO: create a new event and return its generated id  */
-    async createEvent (event: NewEvent): Promise<string> {
+    async createEvent (session: Session, event: NewEvent): Promise<string> {
         const db = this.require()
+        await this.authorize(session, "create", "Event", event)
         const [ row ] = await db
             .insert(schema.events)
             .values(event)
@@ -112,9 +168,9 @@ export default class DB {
 
     /*  DAO: read an event together with its channels, agenda points, and
         messages aggregate, navigating the relations via the Drizzle query API  */
-    async readEventAggregate (eventId: string) {
+    async readEventAggregate (session: Session, eventId: string) {
         const db = this.require()
-        return db.query.events.findFirst({
+        const result = db.query.events.findFirst({
             where: eq(schema.events.eventId, eventId),
             with: {
                 channels:     { with: { resources: true } },
@@ -122,5 +178,7 @@ export default class DB {
                 messages:     { with: { texts: true } }
             }
         })
+        await this.authorize(session, "read", "Event", result as unknown as Event) /* FIXME */
+        return result
     }
 }
