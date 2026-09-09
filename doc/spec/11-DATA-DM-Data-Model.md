@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-09 12:00
+Modified: 2026-09-09 16:28
 ---
 
 #   DATA: Data Model (DM)
@@ -238,7 +238,6 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
 
 -   REQUIREMENTS: [[REQUIREMENT:question-tags]]
 -   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:moderate]]
--   TERMS: [[TERM:agendapoint]]
 -   GROUP: [[GROUP:Events]]
 
 The textual description of a phase in an event,
@@ -523,7 +522,6 @@ BECAUSE a message is translated into multiple languages while retaining one orig
 
 -   REQUIREMENTS: [[REQUIREMENT:question-tags]]
 -   USE-CASES: [[USE-CASE:ask-question]], [[USE-CASE:moderate]]
--   TERMS: [[TERM:questiontag]]
 -   GROUP: [[GROUP:Events]]
 
 A named tag attachable to question messages,
