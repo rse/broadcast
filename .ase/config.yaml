@@ -1,0 +1,18 @@
+agent:
+    persona: engineer
+project:
+    id: broadcast
+    name: Broadcast
+    artifact:
+        spec:
+            basedir: "doc/spec"
+            files:   "*.{md,txt,svg,png,jpg}"
+        code:
+            basedir: "src"
+            files:   "**/*"
+        docs:
+            basedir: "."
+            files:   "doc/** art/** !doc/{spec,arch}/** *.md *.txt"
+        infr:
+            basedir: "."
+            files:   "**/{.github,.claude*,etc}/** **/{AGENTS.md,{package,tsconfig*}.json,.{git,npm}ignore}"
