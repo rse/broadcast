@@ -41,3 +41,11 @@ npm start prune               # remove all development-only NPM dependencies
 npm start clean               # remove all generated artifacts (reverse of "npm start build")
 npm start distclean           # remove all generated artifacts (reverse of "npm install" and "npm start build")
 ```
+
+## COMMANDMENTS
+
+- When creating any scripts, you *MUST* use TypeScript programm language.
+
+- For editing multiple files, always *MUST* use the built-in `Edit` and `Write` tools instead of
+  generating and executing any temporary scripts.
+
