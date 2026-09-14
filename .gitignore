@@ -1,4 +1,5 @@
-.ase
+.ase/service.*
+.ase/task
 .env
 .idea
 node_modules
