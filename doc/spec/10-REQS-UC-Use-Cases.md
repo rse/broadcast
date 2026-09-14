@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 10:13
+Modified: 2026-09-14 14:01
 ---
 
 REQS: Use Cases (UC)
@@ -738,6 +738,17 @@ are locked out or stuck.
 4.  The system admits the administrator to the event in every state with every operation.
 5.  The administrator edits a setting, a message, or a user of the event.
 6.  The system applies the change and propagates it like the change of the respective event role.
+
+### SCENARIO: Reach an Event via the Overview {{administer-event-list}}
+
+-   TYPE:         Alternative
+-   RESULT:       Resume
+-   AT-MAIN-STEP: 1
+-   OUTCOME:      The administrator has reached the event through the overview instead of its URL, and the flow resumes at step 1.
+
+1.  The administrator opens the overview of all events instead of the URL of a particular event.
+2.  The system lists every event in every state.
+3.  The administrator selects an event, which opens its URL.
 
 ### SCENARIO: Administrator Role Stays Configured {{administer-event-no-grant}}
 

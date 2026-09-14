@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 12:00
-Modified: 2026-09-14 10:13
+Modified: 2026-09-14 14:01
 ---
 
 DATA: Authorization Model (AM)
@@ -231,8 +231,8 @@ DATA: Authorization Model (AM)
 -   Administer Every Event {{administrator-events}}; ROLE: [[ROLE:administrator]]; ENTITY: [[ENTITY:Event]];
     OPERATIONS: Create, Read, Update, Delete, [[TRANSITION:publish]], [[start]], [[start-unpublished]], [[TRANSITION:finish]];
     RULES: [[RULE:administrator-access]], [[RULE:anonymize]];
-    USE-CASES: [[USE-CASE:administer-event]];
-    The administrator provisions the events through the configuration and enters, configures, runs, and deletes every event in every state through the user interface, without any access list entry.
+    USE-CASES: [[USE-CASE:administer-event]], [[SCENARIO:administer-event-list]];
+    The administrator provisions the events through the configuration and lists, enters, configures, runs, and deletes every event in every state through the user interface, without any access list entry.
 
 -   Administer the Agenda {{administrator-agenda}}; ROLE: [[ROLE:administrator]]; ENTITY: [[ENTITY:AgendaPoint]]; OPERATIONS: Create, Read, Update, Delete;
     USE-CASES: [[USE-CASE:administer-event]];
