@@ -4,41 +4,83 @@
 **  Licensed under GPL 3.0 <https://spdx.org/licenses/GPL-3.0-only>
 */
 
-import path                      from "node:path"
-import postgres                  from "postgres"
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js"
-import { migrate }               from "drizzle-orm/postgres-js/migrator"
-import { eq }                    from "drizzle-orm"
-import Log                       from "./app-log.js"
-import * as schema               from "./app-db-ddl.js"
-import type { User, Event, NewEvent, NewMessage } from "./app-db-ddl.js"
+import path                               from "node:path"
+import postgres                           from "postgres"
+import { drizzle, type PostgresJsDatabase, type PostgresJsQueryResultHKT } from "drizzle-orm/postgres-js"
+import { migrate }                        from "drizzle-orm/postgres-js/migrator"
+import type { PgDatabase, PgColumn, PgTable } from "drizzle-orm/pg-core"
+import { sql, getTableColumns, type SQL } from "drizzle-orm"
+import Log                                from "./app-log.js"
+import * as schema                        from "./app-db-ddl.js"
+import type { Entity, Row, Draft }        from "./app-db-types.js"
+import { authorize, AuthorizationError, type Session, type Operation } from "./app-db-auth.js"
+import { EventLifecycleDAO }              from "./app-db-dao-sm-event.js"
+import { AgendaPointDAO }                 from "./app-db-dao-dm-agenda-point.js"
+import { ChannelDAO }                     from "./app-db-dao-dm-channel.js"
+import { ResourceDAO }                    from "./app-db-dao-dm-resource.js"
+import { ResourceProviderParamDAO }       from "./app-db-dao-dm-resource-provider-param.js"
+import { UserDAO }                        from "./app-db-dao-dm-user.js"
+import { RoleDAO }                        from "./app-db-dao-dm-role.js"
+import { MessageLifecycleDAO }            from "./app-db-dao-sm-message.js"
+import { MessageTextDAO }                 from "./app-db-dao-dm-message-text.js"
+import { QuestionTagDAO }                 from "./app-db-dao-dm-question-tag.js"
+import { AuthorizationTokenLifecycleDAO } from "./app-db-dao-sm-authorization-token.js"
+import { SessionTokenDAO }                from "./app-db-dao-dm-session-token.js"
+import { EventStatisticDAO }              from "./app-db-dao-dm-event-statistic.js"
+import { ChannelStatisticDAO }            from "./app-db-dao-dm-channel-statistic.js"
+import { UserStatisticLifecycleDAO }      from "./app-db-dao-sm-user-statistic.js"
 
-type Session = {
-    role: string
-    user: User
-}
-type CrudOp = "create" | "read" | "update" | "delete"
+/*  a query executor: the connection pool or a transaction on it  */
+export type Executor = PgDatabase<PostgresJsQueryResultHKT, typeof schema>
 
-class AuthorizationError extends Error {
+/*  the error raised when an object was changed or deleted concurrently,
+    i.e. its version no longer matches the stored one (optimistic locking)  */
+export class ConflictError extends Error {
     constructor (
-        public readonly session: Session,
-        public readonly op:      CrudOp,
-        public readonly entity:  string,
+        public readonly entity: Entity,
+        public readonly id:     string,
         options?: ErrorOptions
     ) {
-        super(`${op} on ${entity} denied for role "${session.role}"`, options)
-        this.name = "AuthorizationError"
+        super(`${entity} "${id}" changed concurrently`, options)
+        this.name = "ConflictError"
     }
 }
 
 /*  the persistence layer, bridging the application to the PostgreSQL database
     via postgres.js (low-level driver with an explicit, tuned connection pool)
-    and Drizzle (high-level, type-safe query API). This is intentionally a thin
-    connection wrapper with only a couple of example Data Access Objects (DAOs);
-    the full per-aggregate DAO surface grows in later tasks.  */
+    and Drizzle (high-level, type-safe query API). It is the core the Data
+    Access Objects (DAOs) of the SPEC-DM entities ("app-db-dao-dm-*.ts") and
+    of the SPEC-SM lifecycles ("app-db-dao-sm-*.ts") operate on: it provides
+    the connection, the authorization bridge, and the shared helpers, and
+    exposes the DAOs as its fields, so that "db.event.create(...)" creates an
+    event and "db.event.publish(...)" transitions it. The DAOs operate on
+    objects: a creation takes a draft and returns the stored row, an update
+    takes the changed row, writes the attributes differing from the stored row,
+    and returns the stored row, and every write of a row checks and increments
+    its version (optimistic locking), raising a ConflictError on a concurrent
+    change. As SPEC-AM knows no system role, the system-driven operations of
+    the service (login challenge, translation, statistics) run under the
+    administrator session.  */
 export default class DB {
     private sql: ReturnType<typeof postgres>            | null = null
     private db:  PostgresJsDatabase<typeof schema>      | null = null
+
+    /*  the DAOs of the SPEC-DM entities, carrying their SPEC-SM lifecycles  */
+    readonly event                 = new EventLifecycleDAO(this)
+    readonly agendaPoint           = new AgendaPointDAO(this)
+    readonly channel               = new ChannelDAO(this)
+    readonly resource              = new ResourceDAO(this)
+    readonly resourceProviderParam = new ResourceProviderParamDAO(this)
+    readonly user                  = new UserDAO(this)
+    readonly role                  = new RoleDAO(this)
+    readonly message               = new MessageLifecycleDAO(this)
+    readonly messageText           = new MessageTextDAO(this)
+    readonly questionTag           = new QuestionTagDAO(this)
+    readonly authorizationToken    = new AuthorizationTokenLifecycleDAO(this)
+    readonly sessionToken          = new SessionTokenDAO(this)
+    readonly eventStatistic        = new EventStatisticDAO(this)
+    readonly channelStatistic      = new ChannelStatisticDAO(this)
+    readonly userStatistic         = new UserStatisticLifecycleDAO(this)
 
     constructor (
         private log: Log,
@@ -109,76 +151,92 @@ export default class DB {
         }
     }
 
-    /*  internal helper: ensure the query API is available  */
-    private require (): PostgresJsDatabase<typeof schema> {
+    /*  ==== SHARED HELPERS (for the entity and lifecycle DAO modules) =======  */
+
+    /*  ensure the query API is available  */
+    require (): PostgresJsDatabase<typeof schema> {
         if (this.db === null)
             throw new Error("database not connected")
         return this.db
     }
 
-    /*  ==== AUTHORIZATION ====  */
+    /*  ensure a loaded object of an entity exists  */
+    found<T> (obj: T | undefined, entity: Entity, id: string): T {
+        if (obj === undefined)
+            throw new Error(`${entity} "${id}" not found`)
+        return obj
+    }
 
-    private async authorize (session: Session, operation: "create", entity: "Event",   event: NewEvent): Promise<void>
-    private async authorize (session: Session, operation: "read",   entity: "Event",   event: Event): Promise<void>
-    private async authorize (session: Session, operation: "update", entity: "Event",   event: Event): Promise<void>
-    private async authorize (session: Session, operation: "delete", entity: "Event",   event: Event): Promise<void>
-    private async authorize (session: Session, operation: "create", entity: "Message", event: NewMessage): Promise<void>
-    private async authorize (session: Session, operation: CrudOp,   entity: string, obj: any): Promise<void> {
-        if (session.role === "Administrator")
-            return
+    /*  ensure a version-checked write of an object of an entity returned the
+        stored row, i.e. hit the version it was based on  */
+    stored<T> (obj: T | undefined, entity: Entity, id: string): T {
+        if (obj === undefined)
+            throw new ConflictError(entity, id)
+        return obj
+    }
 
-        const db = this.require()
+    /*  the incremented version of a row (optimistic locking)  */
+    bump (version: PgColumn): SQL {
+        return sql`${version} + 1`
+    }
 
-        /*  PERMISSION: Enter the Event  */
-        if (session.role === "Attendee" && entity === "Event" && [ "read" ].includes(operation)) {
-            let grant = false
-            const x = obj as Event
-            const state = "Published" // FIXME
-            if ([ "Published", "Running" ].includes(state)) {
-                const accessList = (await db
-                    .select({ email: schema.users.email })
-                    .from(schema.users)
-                    .where(eq(schema.users.eventId, x.eventId))
-                ).map((r) => r.email)
-                if (
-                       accessList.includes(session.user.email)
-                    || session.user.email.match(x.accessEmailPattern)
-                    || x.allowAccessAnonymous
-                ) {
-                    grant = true
-                }
-            }
-            if (!grant)
-                throw new AuthorizationError(session, operation, entity)
+    /*  the attributes of an object which differ from its stored row: only the
+        columns of the table are compared (so loaded relations are ignored), the
+        version and the derived attributes are excluded, and dates are compared
+        by value  */
+    changesOf<T extends PgTable> (table: T, row: T["$inferSelect"], obj: T["$inferSelect"],
+        ...derived: string[]): Partial<T["$inferSelect"]> {
+        const changes: Record<string, unknown> = {}
+        const before = row as Record<string, unknown>
+        const after  = obj as Record<string, unknown>
+        for (const key of Object.keys(getTableColumns(table))) {
+            if (key === "version" || derived.includes(key))
+                continue
+            const same = before[key] instanceof Date && after[key] instanceof Date ?
+                (before[key] as Date).getTime() === (after[key] as Date).getTime() : before[key] === after[key]
+            if (!same)
+                changes[key] = after[key]
+        }
+        return changes as Partial<T["$inferSelect"]>
+    }
+
+    /*  ==== AUTHORIZATION ====================================================  */
+
+    /*  authorize an operation of a session on an object of an entity according
+        to the authorization model (see "app-db-auth.ts"): a creation is judged
+        on its insert data, every other operation on the row, where an update
+        additionally states the attributes it changes  */
+    authorize<E extends Entity> (session: Session, operation: "create",
+        entity: E, obj: Draft<Row<E>>): Promise<void>
+    authorize<E extends Entity> (session: Session, operation: Exclude<Operation, "create">,
+        entity: E, obj: Row<E>, changes?: Partial<Row<E>>): Promise<void>
+    authorize (session: Session, operation: Operation,
+        entity: Entity, obj: unknown, changes?: object): Promise<void> {
+        return authorize(this.require(), session, operation, entity, obj, changes)
+    }
+
+    /*  decide whether a session may perform an operation on a row of an
+        entity, mapping a denial onto false instead of an error  */
+    async permitted<E extends Entity> (session: Session, operation: Exclude<Operation, "create">,
+        entity: E, obj: Row<E>, changes?: Partial<Row<E>>): Promise<boolean> {
+        try {
+            await this.authorize(session, operation, entity, obj, changes)
+            return true
+        }
+        catch (err) {
+            if (err instanceof AuthorizationError)
+                return false
+            throw err
         }
     }
 
-    /*  ==== EXAMPLE DATA ACCESS OBJECTS (DAOs) ===========================  */
-
-    /*  DAO: create a new event and return its generated id  */
-    async createEvent (session: Session, event: NewEvent): Promise<string> {
-        const db = this.require()
-        await this.authorize(session, "create", "Event", event)
-        const [ row ] = await db
-            .insert(schema.events)
-            .values(event)
-            .returning({ eventId: schema.events.eventId })
-        return row.eventId
-    }
-
-    /*  DAO: read an event together with its channels, agenda points, and
-        messages aggregate, navigating the relations via the Drizzle query API  */
-    async readEventAggregate (session: Session, eventId: string) {
-        const db = this.require()
-        const result = db.query.events.findFirst({
-            where: eq(schema.events.eventId, eventId),
-            with: {
-                channels:     { with: { resources: true } },
-                agendaPoints: true,
-                messages:     { with: { texts: true } }
-            }
-        })
-        await this.authorize(session, "read", "Event", result as unknown as Event) /* FIXME */
+    /*  reduce the rows of an entity to the ones a session may read  */
+    async readable<E extends Entity, T extends Row<E>> (session: Session, entity: E, objs: T[]): Promise<T[]> {
+        const result: T[] = []
+        for (const obj of objs)
+            if (await this.permitted(session, "read", entity, obj))
+                result.push(obj)
         return result
     }
 }
+

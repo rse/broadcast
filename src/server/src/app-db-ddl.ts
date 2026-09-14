@@ -10,8 +10,14 @@
     (camelCase); both are emitted as quoted SQL identifiers. Every entity becomes
     a "pgTable", every "enum(...)" attribute becomes a "pgEnum", and every relation
     is declared in both directions via "relations()" so the data can be navigated
-    either way through the Drizzle query API. The inferred row types exported at the
-    bottom are independent of the simplified "broadcast-common" Hello-World types.  */
+    either way through the Drizzle query API. A relation with arity 1 or 0..1 on
+    one side is realized by a foreign-key column "<relation>Id" on that side (a
+    column named like the relation itself would collide with it in the query
+    API), a relation with arity 0..n on both sides by a relation table. Every
+    entity additionally carries the technical attribute "version", the counter
+    of its updates, which the persistence layer checks and increments on every
+    update for optimistic locking. The TypeScript types inferred from this
+    schema are exported by "app-db-types.ts".  */
 
 import {
     pgTable, pgEnum, uuid, text, boolean, integer, doublePrecision,
@@ -42,7 +48,9 @@ export const alertStateEnum = pgEnum("AlertState", [
 export const roleTypeEnum = pgEnum("RoleType", [
     "Manager",
     "Moderator",
-    "Presenter"
+    "Presenter",
+    "Attendee",
+    "Administrator"
 ])
 
 export const messageTypeEnum = pgEnum("MessageType", [
@@ -78,6 +86,7 @@ export const tokenStateEnum = pgEnum("TokenState", [
 
 export const events = pgTable("Event", {
     eventId:                     uuid("eventId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     title:                       text("title").notNull(),
     description:                 text("description").notNull().default(""),
     language:                    text("language").notNull().default("en"),
@@ -143,6 +152,7 @@ export const events = pgTable("Event", {
 
 export const agendaPoints = pgTable("AgendaPoint", {
     agendaPointId:               uuid("agendaPointId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     text:                        text("text").notNull(),
@@ -155,6 +165,7 @@ export const agendaPoints = pgTable("AgendaPoint", {
 
 export const channels = pgTable("Channel", {
     channelId:                   uuid("channelId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     name:                        text("name").notNull(),
@@ -168,6 +179,7 @@ export const channels = pgTable("Channel", {
 
 export const resources = pgTable("Resource", {
     resourceId:                  uuid("resourceId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     channelId:                   uuid("channelId").notNull()
         .references(() => channels.channelId, { onDelete: "cascade" }),
     providerId:                  text("providerId").notNull(),
@@ -184,29 +196,21 @@ export const resourceProviderParams = pgTable("ResourceProviderParam", {
         .references(() => resources.resourceId, { onDelete: "cascade" }),
     providerId:                  text("providerId").notNull(),
     key:                         text("key").notNull(),
+    version:                     integer("version").notNull().default(0),
     value:                       text("value").notNull().default("")
 }, (t) => [
     primaryKey({ columns: [ t.resourceId, t.providerId, t.key ] })
 ])
 
-/*  ==== ENTITY: Role (SPEC-DM-role) ======================================  */
-
-export const roles = pgTable("Role", {
-    roleId:                      uuid("roleId").primaryKey().defaultRandom(),
-    eventId:                     uuid("eventId").notNull()
-        .references(() => events.eventId, { onDelete: "cascade" }),
-    type:                        roleTypeEnum("type").notNull().default("Presenter"),
-    email:                       text("email").notNull()
-}, (t) => [
-    index("Role_eventId_idx").on(t.eventId)
-])
-
 /*  ==== ENTITY: User (SPEC-DM-user) ======================================  */
-/*  a helper entity enabling event-based logins; no permanent accounts.  */
+/*  a helper entity identifying a person within an event for event-based
+    logins and roles; no permanent accounts, except the administrator user,
+    which holds the Administrator role and exists outside any event.  */
 
 export const users = pgTable("User", {
     userId:                      uuid("userId").primaryKey().defaultRandom(),
-    eventId:                     uuid("eventId").notNull()
+    version:                     integer("version").notNull().default(0),
+    eventId:                     uuid("eventId")
         .references(() => events.eventId, { onDelete: "cascade" }),
     email:                       text("email").notNull(),
     firstname:                   text("firstname").notNull().default(""),
@@ -215,11 +219,26 @@ export const users = pgTable("User", {
     index("User_eventId_idx").on(t.eventId)
 ])
 
+/*  ==== ENTITY: Role (SPEC-DM-role) ======================================  */
+/*  a grant of rights held by a user (the SPEC-DM User "roles" relation),
+    scoped to the event of the user, or global for the administrator user.  */
+
+export const roles = pgTable("Role", {
+    roleId:                      uuid("roleId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
+    userId:                      uuid("userId").notNull()
+        .references(() => users.userId, { onDelete: "cascade" }),
+    type:                        roleTypeEnum("type").notNull().default("Attendee")
+}, (t) => [
+    index("Role_userId_idx").on(t.userId)
+])
+
 /*  ==== ENTITY: Message (SPEC-DM-message) ================================  */
 /*  the central interaction entity (chat, support, question).  */
 
 export const messages = pgTable("Message", {
     messageId:                   uuid("messageId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     type:                        messageTypeEnum("type").notNull().default("Chat"),
@@ -235,19 +254,19 @@ export const messages = pgTable("Message", {
 
     /*  the authoring attendee (0..1): SET NULL on the GDPR anonymization that
         deletes the sender while the message itself survives.  */
-    sender:                      uuid("sender")
+    senderId:                    uuid("senderId")
         .references(() => users.userId, { onDelete: "set null" }),
 
     /*  self-references (0..1 each): a message can reply to / follow another
         message; the FK constraints are declared in the relations below.  */
-    replyTo:                     uuid("replyTo"),
-    predecessor:                 uuid("predecessor")
+    replyToId:                   uuid("replyToId"),
+    predecessorId:               uuid("predecessorId")
 }, (t) => [
     index("Message_eventId_idx").on(t.eventId),
     index("Message_eventId_state_idx").on(t.eventId, t.state),
-    index("Message_sender_idx").on(t.sender),
-    index("Message_replyTo_idx").on(t.replyTo),
-    index("Message_predecessor_idx").on(t.predecessor)
+    index("Message_senderId_idx").on(t.senderId),
+    index("Message_replyToId_idx").on(t.replyToId),
+    index("Message_predecessorId_idx").on(t.predecessorId)
 ])
 
 /*  ==== ENTITY: MessageText (SPEC-DM-messagetext) ========================  */
@@ -255,18 +274,20 @@ export const messages = pgTable("Message", {
 
 export const messageTexts = pgTable("MessageText", {
     messageTextId:               uuid("messageTextId").primaryKey().defaultRandom(),
-    message:                     uuid("message").notNull()
+    version:                     integer("version").notNull().default(0),
+    messageId:                   uuid("messageId").notNull()
         .references(() => messages.messageId, { onDelete: "cascade" }),
     language:                    text("language").notNull(),
     text:                        text("text").notNull()
 }, (t) => [
-    uniqueIndex("MessageText_message_language_idx").on(t.message, t.language)
+    uniqueIndex("MessageText_messageId_language_idx").on(t.messageId, t.language)
 ])
 
 /*  ==== ENTITY: QuestionTag (SPEC-DM-questiontag) ========================  */
 
 export const questionTags = pgTable("QuestionTag", {
     questionTagId:               uuid("questionTagId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     text:                        text("text").notNull(),
@@ -310,35 +331,38 @@ export const messageLiker = pgTable("Message_liker", {
 
 export const authorizationTokens = pgTable("AuthorizationToken", {
     token:                       text("token").primaryKey(),
+    version:                     integer("version").notNull().default(0),
     validUntil:                  timestamp("validUntil", { withTimezone: true }).default(sql`now() + interval '1 day'`),
     state:                       tokenStateEnum("state").notNull().default("issued"),
-    user:                        uuid("user").notNull()
+    userId:                      uuid("userId").notNull()
         .references(() => users.userId, { onDelete: "cascade" }),
-    event:                       uuid("event").notNull()
+    eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" })
 }, (t) => [
-    index("AuthorizationToken_user_idx").on(t.user),
-    index("AuthorizationToken_event_idx").on(t.event)
+    index("AuthorizationToken_userId_idx").on(t.userId),
+    index("AuthorizationToken_eventId_idx").on(t.eventId)
 ])
 
 /*  ==== ENTITY: SessionToken (SPEC-DM-sessiontoken) ======================  */
 
 export const sessionTokens = pgTable("SessionToken", {
     sessionId:                   uuid("sessionId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     issuedAt:                    timestamp("issuedAt", { withTimezone: true }).notNull().defaultNow(),
-    user:                        uuid("user").notNull()
+    userId:                      uuid("userId").notNull()
         .references(() => users.userId, { onDelete: "cascade" }),
-    event:                       uuid("event").notNull()
+    eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" })
 }, (t) => [
-    index("SessionToken_user_idx").on(t.user),
-    index("SessionToken_event_idx").on(t.event)
+    index("SessionToken_userId_idx").on(t.userId),
+    index("SessionToken_eventId_idx").on(t.eventId)
 ])
 
 /*  ==== ENTITY: EventStatistic (SPEC-DM-eventstatistic) ==================  */
 
 export const eventStatistics = pgTable("EventStatistic", {
     eventStatisticId:            uuid("eventStatisticId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     eventId:                     uuid("eventId").notNull()
         .references(() => events.eventId, { onDelete: "cascade" }),
     timestamp:                   timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
@@ -355,6 +379,7 @@ export const eventStatistics = pgTable("EventStatistic", {
 
 export const channelStatistics = pgTable("ChannelStatistic", {
     channelStatisticId:          uuid("channelStatisticId").primaryKey().defaultRandom(),
+    version:                     integer("version").notNull().default(0),
     channelId:                   uuid("channelId").notNull()
         .references(() => channels.channelId, { onDelete: "cascade" }),
     timestamp:                   timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
@@ -364,11 +389,17 @@ export const channelStatistics = pgTable("ChannelStatistic", {
 ])
 
 /*  ==== ENTITY: UserStatistic (SPEC-DM-userstatistic) ====================  */
+/*  owned by its event and linked to its user until the event finishes, where
+    the anonymization unlinks it (SPEC-SM userstatistic) and it is retained
+    unlinked (SPEC-DM retention of the personal attributes).  */
 
 export const userStatistics = pgTable("UserStatistic", {
     userStatisticId:             uuid("userStatisticId").primaryKey().defaultRandom(),
-    userId:                      uuid("userId").notNull()
-        .references(() => users.userId, { onDelete: "cascade" }),
+    version:                     integer("version").notNull().default(0),
+    eventId:                     uuid("eventId").notNull()
+        .references(() => events.eventId, { onDelete: "cascade" }),
+    userId:                      uuid("userId")
+        .references(() => users.userId, { onDelete: "set null" }),
     timestamp:                   timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
     country:                     text("country"),
     browserType:                 text("browserType"),
@@ -376,6 +407,7 @@ export const userStatistics = pgTable("UserStatistic", {
     viewportWidth:               integer("viewportWidth"),
     viewportHeight:              integer("viewportHeight")
 }, (t) => [
+    index("UserStatistic_eventId_idx").on(t.eventId),
     index("UserStatistic_userId_idx").on(t.userId)
 ])
 
@@ -383,10 +415,10 @@ export const userStatistics = pgTable("UserStatistic", {
 
 export const eventsRelations = relations(events, ({ one, many }) => ({
     channels:                    many(channels),
-    roles:                       many(roles),
     accessList:                  many(users),
     messages:                    many(messages),
     statistics:                  many(eventStatistics),
+    userStatistics:              many(userStatistics),
     availableQuestionTags:       many(questionTags),
     agendaPoints:                many(agendaPoints, { relationName: "eventAgendaPoints" }),
     authorizationTokens:         many(authorizationTokens),
@@ -433,9 +465,9 @@ export const resourceProviderParamsRelations = relations(resourceProviderParams,
 }))
 
 export const rolesRelations = relations(roles, ({ one }) => ({
-    event:                       one(events, {
-        fields:                  [ roles.eventId ],
-        references:              [ events.eventId ]
+    user:                        one(users, {
+        fields:                  [ roles.userId ],
+        references:              [ users.userId ]
     })
 }))
 
@@ -444,6 +476,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
         fields:                  [ users.eventId ],
         references:              [ events.eventId ]
     }),
+    roles:                       many(roles),
     sentMessages:                many(messages),
     likes:                       many(messageLiker),
     statistics:                  many(userStatistics),
@@ -457,18 +490,18 @@ export const messagesRelations = relations(messages, ({ one, many }) => ({
         references:              [ events.eventId ]
     }),
     sender:                      one(users, {
-        fields:                  [ messages.sender ],
+        fields:                  [ messages.senderId ],
         references:              [ users.userId ]
     }),
     replyTo:                     one(messages, {
         relationName:            "messageReply",
-        fields:                  [ messages.replyTo ],
+        fields:                  [ messages.replyToId ],
         references:              [ messages.messageId ]
     }),
     replies:                     many(messages, { relationName: "messageReply" }),
     predecessor:                 one(messages, {
         relationName:            "messagePredecessor",
-        fields:                  [ messages.predecessor ],
+        fields:                  [ messages.predecessorId ],
         references:              [ messages.messageId ]
     }),
     successors:                  many(messages, { relationName: "messagePredecessor" }),
@@ -479,7 +512,7 @@ export const messagesRelations = relations(messages, ({ one, many }) => ({
 
 export const messageTextsRelations = relations(messageTexts, ({ one }) => ({
     message:                     one(messages, {
-        fields:                  [ messageTexts.message ],
+        fields:                  [ messageTexts.messageId ],
         references:              [ messages.messageId ]
     })
 }))
@@ -528,22 +561,22 @@ export const messageLikerRelations = relations(messageLiker, ({ one }) => ({
 
 export const authorizationTokensRelations = relations(authorizationTokens, ({ one }) => ({
     user:                        one(users, {
-        fields:                  [ authorizationTokens.user ],
+        fields:                  [ authorizationTokens.userId ],
         references:              [ users.userId ]
     }),
     event:                       one(events, {
-        fields:                  [ authorizationTokens.event ],
+        fields:                  [ authorizationTokens.eventId ],
         references:              [ events.eventId ]
     })
 }))
 
 export const sessionTokensRelations = relations(sessionTokens, ({ one }) => ({
     user:                        one(users, {
-        fields:                  [ sessionTokens.user ],
+        fields:                  [ sessionTokens.userId ],
         references:              [ users.userId ]
     }),
     event:                       one(events, {
-        fields:                  [ sessionTokens.event ],
+        fields:                  [ sessionTokens.eventId ],
         references:              [ events.eventId ]
     })
 }))
@@ -563,41 +596,13 @@ export const channelStatisticsRelations = relations(channelStatistics, ({ one })
 }))
 
 export const userStatisticsRelations = relations(userStatistics, ({ one }) => ({
+    event:                       one(events, {
+        fields:                  [ userStatistics.eventId ],
+        references:              [ events.eventId ]
+    }),
     user:                        one(users, {
         fields:                  [ userStatistics.userId ],
         references:              [ users.userId ]
     })
 }))
 
-/*  ==== INFERRED ROW TYPES (independent of broadcast-common) =============  */
-
-export type Event                 = typeof events.$inferSelect
-export type NewEvent              = typeof events.$inferInsert
-export type AgendaPoint           = typeof agendaPoints.$inferSelect
-export type NewAgendaPoint        = typeof agendaPoints.$inferInsert
-export type Channel               = typeof channels.$inferSelect
-export type NewChannel            = typeof channels.$inferInsert
-export type Resource              = typeof resources.$inferSelect
-export type NewResource           = typeof resources.$inferInsert
-export type ResourceProviderParam = typeof resourceProviderParams.$inferSelect
-export type NewResourceProviderParam = typeof resourceProviderParams.$inferInsert
-export type Role                  = typeof roles.$inferSelect
-export type NewRole               = typeof roles.$inferInsert
-export type User                  = typeof users.$inferSelect
-export type NewUser               = typeof users.$inferInsert
-export type Message               = typeof messages.$inferSelect
-export type NewMessage            = typeof messages.$inferInsert
-export type MessageText           = typeof messageTexts.$inferSelect
-export type NewMessageText        = typeof messageTexts.$inferInsert
-export type QuestionTag           = typeof questionTags.$inferSelect
-export type NewQuestionTag        = typeof questionTags.$inferInsert
-export type AuthorizationToken    = typeof authorizationTokens.$inferSelect
-export type NewAuthorizationToken = typeof authorizationTokens.$inferInsert
-export type SessionToken          = typeof sessionTokens.$inferSelect
-export type NewSessionToken       = typeof sessionTokens.$inferInsert
-export type EventStatistic        = typeof eventStatistics.$inferSelect
-export type NewEventStatistic     = typeof eventStatistics.$inferInsert
-export type ChannelStatistic      = typeof channelStatistics.$inferSelect
-export type NewChannelStatistic   = typeof channelStatistics.$inferInsert
-export type UserStatistic         = typeof userStatistics.$inferSelect
-export type NewUserStatistic      = typeof userStatistics.$inferInsert
