@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Use Cases (UC)
@@ -12,7 +12,7 @@ USE-CASE: Join Event and Watch Stream {{join-event}}
 -   ACTOR:          [[ROLE:attendee]]
 -   JOURNEYS:       [[STEP:arrival]], [[STEP:participate]]
 -   ACTIVITIES:     [[ACTIVITY:attend-event]]
--   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:country-language]]
+-   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:access-recheck]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:country-language]]
 -   INCLUDES:       [[USE-CASE:authenticate]]
 -   PRE-CONDITION:  The attendee holds an event URL and their email is granted access.
 -   TRIGGER:        The attendee opens the individual event URL received by invitation.
@@ -28,7 +28,7 @@ attendee was invited.
 
 -   TYPE: Main
 
-1.  The attendee opens the individual event URL in any recent web browser, without installing software.
+1.  The attendee opens the individual event URL in a web browser supported by [[REQUIREMENT:browser-compat]], without installing software.
 2.  The attendee authenticates ([[USE-CASE:authenticate]]).
 3.  The system grants the attendee access to the live video stream.
 
@@ -48,7 +48,7 @@ attendee was invited.
 -   TYPE:         Alternative
 -   RESULT:       Success
 -   AT-MAIN-STEP: 1
--   OUTCOME:      The attendee watches the stream on the phone, with the interaction possibly restricted.
+-   OUTCOME:      The attendee watches the stream on the phone, while the interaction features need not be available there ([[REQUIREMENT:mobile]]).
 
 1.  The attendee opens the individual event URL in the browser of a mobile phone.
 2.  The attendee authenticates ([[USE-CASE:authenticate]]).
@@ -238,7 +238,7 @@ from silent viewers into an engaged community.
 1.  The attendee writes a chat message.
 2.  The attendee sends the message.
 3.  The system stores the message in state pending and accepts it at once, unless the event moderates chat messages and hence holds it for the moderator decision.
-4.  The system shows the message in the stream under the sender name in the form the event configures (full name, first name, or anonymous), exposing the email address on hover.
+4.  The system shows the message in the stream under the sender name in the form the event configures (full name, first name, or anonymous), keeping the email address of the sender available to the readers on request ([[REQUIREMENT:name-appearance]]).
 
 ### SCENARIO: Pending Message Stays Private {{chat-pending-private}}
 
@@ -391,7 +391,7 @@ USE-CASE: Moderate the Chat Conversation {{moderate-chat}}
 -   PERSONAS:       [[PERSONA:moderator-chat]]
 -   JOURNEYS:       [[STEP:support]]
 -   ACTIVITIES:     [[ACTIVITY:rehearse-event]], [[ACTIVITY:moderate-interaction]]
--   REQUIREMENTS:   [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:manage-app]]
+-   REQUIREMENTS:   [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:manage-app]], [[REQUIREMENT:support-requests]]
 -   RULES:          [[RULE:moderator-accept]], [[RULE:moderation-gate]]
 -   PRE-CONDITION:  The event runs with chat enabled and the moderator has the Moderator role.
 -   TRIGGER:        Attendee chat messages arrive which need an answer, a steer, or a seed from the moderator.
@@ -609,9 +609,10 @@ USE-CASE: Publish, Start, and Finish Event {{publish-start-finish}}
 -   ACTOR:          [[ROLE:manager]]
 -   JOURNEYS:       [[STEP:configure]]
 -   ACTIVITIES:     [[ACTIVITY:go-live]], [[ACTIVITY:finish-event]]
+-   REQUIREMENTS:   [[REQUIREMENT:event-lifecycle]]
 -   RULES:          [[RULE:anonymize]]
 -   PRE-CONDITION:  The event is configured and its access list is populated.
--   TRIGGER:        The scheduled date of the event approaches.
+-   TRIGGER:        The manager decides that the configured event is ready to be made visible to its invited attendees.
 -   POST-CONDITION: The event is finished, access is closed, and the personal data is anonymized.
 
 The manager publishes the configured event to make it visible to the

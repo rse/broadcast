@@ -1,13 +1,13 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 DATA: State Model (SM)
 ======================
 
 LIFECYCLE: Event {{event}}
---------------------------
+----------------
 
 -   ENTITY:  [[ENTITY:Event]]
 
@@ -46,7 +46,7 @@ LIFECYCLE: Event {{event}}
     The anonymization procedure runs and access is closed.
 
 LIFECYCLE: Message {{message}}
-------------------------------
+------------------
 
 -   ENTITY:  [[ENTITY:Message]]
 
@@ -127,7 +127,7 @@ LIFECYCLE: Message {{message}}
     The message is set aside for the live event.
 
 LIFECYCLE: AuthorizationToken {{authtoken}}
--------------------------------------------
+-----------------------------
 
 -   ENTITY:  [[ENTITY:AuthorizationToken]]
 
@@ -147,10 +147,10 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
 
 ### TRANSITION
 
--   send; FROM: [[STATE:Issued]]; TO: [[STATE:Sent]]; ACTOR: [[ROLE:attendee]];
-    GUARD: The email of the attendee is on the access list or matches the access pattern.;
-    RULES: [[RULE:access-grant]];
-    USE-CASES: [[SCENARIO:authenticate-token]];
+-   send; FROM: [[STATE:Issued]]; TO: [[STATE:Sent]]; ACTOR: [[ROLE:attendee]], [[ROLE:administrator]];
+    GUARD: The email is on the access list or matches the access pattern of the event, or it is the configured administrator email address.;
+    RULES: [[RULE:access-grant]], [[RULE:administrator-access]];
+    USE-CASES: [[SCENARIO:authenticate-token]], [[SCENARIO:administer-event-edit]];
     The token is emailed to the attendee requesting a login challenge.
 
 -   consume; FROM: [[STATE:Sent]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
@@ -177,8 +177,13 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
     USE-CASES: [[SCENARIO:authenticate-token]], [[SCENARIO:authenticate-auto]];
     The token is retired for good, right after its single use or once its validity has passed.
 
+-   expire {{expire-unused}}; FROM: [[STATE:Sent]]; TO: [[STATE:Dead]]; ACTOR: Time;
+    GUARD: The validity of the token has passed without a login attempt.;
+    RULES: [[RULE:token-format]];
+    The unused token is retired for good once its validity has passed.
+
 LIFECYCLE: UserStatistic {{userstatistic}}
-------------------------------------------
+------------------------
 
 -   ENTITY:  [[ENTITY:UserStatistic]]
 

@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 TEST: Test Cases (TC)
@@ -211,7 +211,7 @@ TEST: Test Cases (TC)
 -   PRE-CONDITION:  A running event with a manager role and a moderator role assigned.
 -   INPUT:          The manager exports the event data after having finished the event.
 -   EXPECTED:       The moderator role is deleted by the anonymization while the manager role remains and can still export the event data.
--   POST-CONDITION: The manager role exists until the event is deleted.
+-   POST-CONDITION: The manager role of the finished event still exists after the export.
 
 1.  The manager finishes the event.
 2.  The moderator attempts to open the event.
@@ -296,13 +296,13 @@ TEST: Test Cases (TC)
 -   EXPECTED:       The view lists the forwarded question only, while a direct request for any of the three other questions is refused.
 -   POST-CONDITION: The four questions remain in their states.
 
-##  TEST-CASE: Administrator Sees No Attendee Data {{administrator-data}}
+##  TEST-CASE: Administrator Reads Any Event Data {{administrator-data}}
 
--   VERIFIES:       [[REQUIREMENT:gdpr-eu]], [[RULE:no-accounts]], [[PERMISSION:administrator-events]]
+-   VERIFIES:       [[RULE:administrator-access]], [[PERMISSION:administrator-events]], [[PERMISSION:administrator-users]], [[PERMISSION:administrator-messages]]
 -   PRE-CONDITION:  A running event with a populated access list and messages exists, provisioned through the configuration.
--   INPUT:          The administrator reads the event through the configuration and requests its access list and messages.
--   EXPECTED:       The event settings are returned, while the requests for the access list and the messages are refused.
--   POST-CONDITION: No access list entry or message was disclosed to the administrator.
+-   INPUT:          The administrator, logged into the event, requests its settings, its access list, and its messages.
+-   EXPECTED:       The event settings, the access list, and the messages are returned, as the administrator may perform every operation on every entity of every event.
+-   POST-CONDITION: The event, its access list, and its messages remain unchanged.
 
 ##  TEST-CASE: Administrator Enters Without Access List Entry {{administrator-access}}
 

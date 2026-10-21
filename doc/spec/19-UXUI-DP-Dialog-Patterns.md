@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 UXUI: Dialog Patterns (DP)
@@ -37,11 +37,11 @@ attendee onward once accepted, BECAUSE explicit acknowledgement is both a legal 
 -   PROBLEM: The attendee must watch the stream and interact without either crowding the other.
 -   PRINCIPLES: [[PRINCIPLE:never-leave-stream]]
 -   USES: [[DIALOG-PATTERN:message-stream]], [[DIALOG-PATTERN:composer]]
--   TRADE-OFF: A smaller video area on wide screens and a sidebar hidden behind a toggle on small screens.
+-   TRADE-OFF: A smaller video area on wide screens and a sidebar hidden behind a toggle below the `md` breakpoint.
 
 The video occupies the primary area while a tabbed sidebar hosts the Q&A, Chat, Support, and embedded third-party app (e.g.
-"HUDS-Pad") tabs, collapsing responsively on small screens, BECAUSE co-locating stream and interaction keeps attention on
-the event while interaction stays reachable.
+"HUDS-Pad") tabs, collapsing responsively below the `md` breakpoint of [[ELEMENT:spacing]], BECAUSE co-locating stream
+and interaction keeps attention on the event while interaction stays reachable.
 
 ##  DIALOG-PATTERN: Live Message Stream {{message-stream}}
 
@@ -49,7 +49,7 @@ the event while interaction stays reachable.
 -   ACTORS: [[PERSONA:attendee]]
 -   CONTEXT: The chat and Q&A tabs where attendees read and post a continuous flow of messages.
 -   PROBLEM: Messages of mixed provenance and state arrive continuously and the attendee must follow them without losing their place.
--   PRINCIPLES: [[PRINCIPLE:live-reactivity]], [[PRINCIPLE:privacy-identity]], [[PRINCIPLE:familiar-conventions]]
+-   PRINCIPLES: [[PRINCIPLE:live-reactivity]], [[PRINCIPLE:privacy-identity]], [[PRINCIPLE:marked-translation]], [[PRINCIPLE:familiar-conventions]]
 -   TRADE-OFF: A dense visual vocabulary of alignments, tints, and indicators the attendee has to learn.
 
 Messages render as a scrolling list of bubbles distinguished by provenance and state, with own messages right-aligned, others
@@ -67,8 +67,8 @@ BECAUSE clear per-message styling and unread cues let attendees follow a fast, m
 -   TRADE-OFF: A permanently occupied strip of the sidebar, even while the attendee is only reading.
 
 A persistent input field with an emoji picker and send control sits below the message list, and the attendee's just-sent
-message appears in the stream marked "pending… / under review" until moderation resolves it, BECAUSE keeping the composer
-and the input's own state in one place makes posting and its consequence immediately legible.
+message appears in the stream below an "under review" divider, marked "pending…", until moderation resolves it, BECAUSE
+keeping the composer and the input's own state in one place makes posting and its consequence immediately legible.
 
 ##  DIALOG-PATTERN: Kanban Moderation Board {{kanban-board}}
 
@@ -80,8 +80,8 @@ and the input's own state in one place makes posting and its consequence immedia
 -   TRADE-OFF: A wide multi-lane board that needs a desktop-sized screen and drag-capable pointer input.
 
 Messages appear as cards in state lanes (rejected, pending, accepted, and for questions also suspended, forwarded, and
-answered) that the moderator advances by action, with filters and manual reordering, BECAUSE spatial state and drag
-actions make high-throughput triage fast and unambiguous.
+answered) that the moderator advances through the action buttons of a card or by dragging it into another lane, with
+filters and manual reordering, BECAUSE spatial state and drag actions make high-throughput triage fast and unambiguous.
 
 ##  DIALOG-PATTERN: Master-Detail Configuration {{master-detail}}
 
@@ -93,7 +93,8 @@ actions make high-throughput triage fast and unambiguous.
 -   TRADE-OFF: The horizontal space of two panes, cramped on small screens, and only one item editable at a time.
 
 A master list of channels and resources on one side drives a detail editor on the other, so selecting an item reveals its
-parameters for editing, BECAUSE master-detail keeps a large hierarchical configuration navigable and focused.
+parameters for editing, BECAUSE the manager sees the whole channel and resource hierarchy while editing a single item,
+instead of navigating back and forth between separate pages.
 
 ##  DIALOG-PATTERN: Live Statistics Dashboard {{stats-dashboard}}
 
@@ -102,7 +103,7 @@ parameters for editing, BECAUSE master-detail keeps a large hierarchical configu
 -   CONTEXT: A manager screen observing event health during the broadcast.
 -   PROBLEM: Operators need an at-a-glance, continuously updating view of audience and channels.
 -   PRINCIPLES: [[PRINCIPLE:live-reactivity]]
--   TRADE-OFF: A periodic snapshot cadence, so the charts lag the live state by up to one interval.
+-   TRADE-OFF: The snapshot cadence of [[REQUIREMENT:stats-snapshots]], so the charts lag the live state by up to one snapshot interval.
 
 A dashboard composes a time-series attendee curve with per-channel pie charts that refresh from periodic statistics
 snapshots, BECAUSE combined trend and distribution views convey event health without manual querying.

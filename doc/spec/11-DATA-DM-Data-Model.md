@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 #   DATA: Data Model (DM)
@@ -98,7 +98,7 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     Whether anonymous attendees may access the event without authorization,
     BECAUSE public events accept unauthenticated viewers.
 
--   ATTRIBUTE: accessEmailPattern; TYPE: `string`; DEFAULT: `""`;
+-   ATTRIBUTE: accessEmailPattern; TYPE: `string`; DEFAULT: `""`; CONSTRAINT: `regular expression tested against the email, empty for none`;
     Pattern that grants access to any matching email beyond the access list,
     BECAUSE events can admit whole email domains without enumerating users.
 
@@ -333,7 +333,7 @@ BECAUSE a channel must map to concrete provider endpoints to be playable.
 A key-value parameter belonging to exactly one resource and provider, defined in the event configuration file,
 BECAUSE provider endpoints are parameterized by values an administrator supplies.
 
--   ATTRIBUTE: resourceId; TYPE: `key uuid`; DEFAULT: `uuid()`;
+-   ATTRIBUTE: resourceId; TYPE: `key uuid`;
     Identifier of the owning resource,
     BECAUSE the parameter belongs to exactly one resource.
 
@@ -438,7 +438,7 @@ BECAUSE all event interaction is represented uniformly as messages with language
     The kind of message,
     BECAUSE each type has a distinct lifecycle and visibility.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
     Time the sender created the message,
     BECAUSE ordering and export require the creation time.
 
@@ -472,7 +472,7 @@ BECAUSE all event interaction is represented uniformly as messages with language
     BECAUSE the analysis result is stored for display and auto-moderation.
 
 -   ATTRIBUTE: edited; TYPE: `enum(none,insignificant,significant,deleted)?`;
-    Whether and how the message was changed or deleted,
+    Whether and how the message was changed or deleted, where `significant` denotes a changed text shown as edited to the other readers and `insignificant` a change leaving the text untouched (e.g. of its tags), which is not shown,
     BECAUSE edits must be marked for others and edits stop once forwarded.
 
 -   RELATION: sender; TARGET: [[ENTITY:User]]; KIND: Association; ARITY: `0..1`;
@@ -574,11 +574,11 @@ BECAUSE email-verified access is the core mechanism limiting the audience.
     The generated one-time token for the next login attempt,
     BECAUSE the attendee proves control of the email by returning this token.
 
--   ATTRIBUTE: validUntil; TYPE: `datetime?`; DEFAULT: `Date.now() + 5min`;
+-   ATTRIBUTE: validUntil; TYPE: `datetime?`; DEFAULT: `current time + Event.authTokenValidity`;
     Expiry time of the token, unset for pre-generated tokens,
     BECAUSE ordinary tokens expire within minutes while pre-generated ones last until event end.
 
--   ATTRIBUTE: state; TYPE: `enum(issued,sent,used)`; DEFAULT: `issued`;
+-   ATTRIBUTE: state; TYPE: `enum(issued,sent,used,dead)`; DEFAULT: `issued`;
     Lifecycle state of the token,
     BECAUSE debugging statistics and anonymized sums need the token state.
 
@@ -604,7 +604,7 @@ BECAUSE an active session must be tracked to enforce single concurrent access.
     Unique identifier of the session,
     BECAUSE the active session of a user for an event must be addressable.
 
--   ATTRIBUTE: issuedAt; TYPE: `datetime`; DEFAULT: `Date.now()`;
+-   ATTRIBUTE: issuedAt; TYPE: `datetime`; DEFAULT: `current time`;
     Time the user successfully entered the event,
     BECAUSE the session start time is recorded for tracking.
 
@@ -629,21 +629,21 @@ BECAUSE trend visualization of audience size and authentication flow requires re
     Unique identifier of the event statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
     Time the snapshot was created,
     BECAUSE statistics are plotted over time.
 
 -   ATTRIBUTE: numberOfIssuedAuthTokens (*); TYPE: `integer?`;
     Count of issued authorization tokens at the timestamp,
-    BECAUSE debugging statistics track issued tokens.
+    BECAUSE a gap between issued and sent tokens reveals a failing email delivery of the login challenges ([[REQUIREMENT:debug-stats]]).
 
 -   ATTRIBUTE: numberOfSentAuthTokens (*); TYPE: `integer?`;
     Count of sent authorization tokens at the timestamp,
-    BECAUSE debugging statistics track sent tokens.
+    BECAUSE a gap between sent and used tokens reveals attendees failing to complete their login challenge ([[REQUIREMENT:debug-stats]]).
 
 -   ATTRIBUTE: numberOfUsedAuthTokens (*); TYPE: `integer?`;
     Count of used authorization tokens at the timestamp,
-    BECAUSE debugging statistics track used tokens.
+    BECAUSE it counts the consumed login challenges the issued and sent tokens are compared against ([[REQUIREMENT:debug-stats]]).
 
 -   ATTRIBUTE: numberOfSessionTokens (*); TYPE: `integer?`;
     Count of session tokens at the timestamp,
@@ -666,7 +666,7 @@ BECAUSE organizers need per-channel popularity over time.
     Unique identifier of the channel statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
     Time the snapshot was created,
     BECAUSE channel statistics are plotted over time.
 
@@ -687,7 +687,7 @@ BECAUSE audience composition informs reporting and default localization.
     Unique identifier of the user statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
     Time the snapshot was created,
     BECAUSE user statistics are recorded over time.
 

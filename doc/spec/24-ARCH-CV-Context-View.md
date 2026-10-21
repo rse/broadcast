@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Context View (CV)
@@ -127,6 +127,8 @@ German and English on the fly.
 -   USE-CASES: [[USE-CASE:moderate-chat]]
 -   DATA:      Interactive app content and administration
 
-An optional third-party application is embedded into the event for
-additional interactivity, with a separate admin URL for moderators,
-BECAUSE some events integrate external interactive tooling.
+An optional third-party application is embedded into the event as a
+sidebar tab for the attendees, with a separate admin URL for the
+moderators, BECAUSE an event can thereby offer interactive tooling the
+solution itself does not provide, without the attendees leaving the
+stream.

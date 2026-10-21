@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Solution Vision (SV)
@@ -30,14 +30,16 @@ REQS: Solution Vision (SV)
     forward to the presenter, and export afterwards. Attendees reach
     the event through a single personal link in any of the browsers
     of [[REQUIREMENT:browser-compat]], without installation or accounts,
-    and see their questions reach the presenters within seconds.
+    and see their questions reach the presenters as soon as a moderator
+    forwards them ([[REQUIREMENT:forward-presenter]]).
 
 -   DIFFERENTIATORS:
     Compared to public streaming portals, **Broadcast** admits only
     invited (and optionally authenticated) attendees and enforces
-    per-attendee access limits. It stays independent of any single
-    streaming provider and switches providers live during a running
-    event without user interaction. Compared to the status quo of
+    a single active session per attendee ([[RULE:single-session]]). It
+    stays independent of any single streaming provider and switches
+    providers live during a running event without user interaction.
+    Compared to the status quo of
     renting a third-party event platform per event, it runs on
     self-operated infrastructure, keeps all personal data under the
     organization's own GDPR responsibility, and anonymizes it on event

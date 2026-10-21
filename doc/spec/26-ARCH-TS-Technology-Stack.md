@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-19 00:15
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Technology Stack (TS)
@@ -36,8 +36,8 @@ task runner gives every module a consistent developer entry point.
 -   PHASE:    Build-Time
 -   COVERAGE: Standardization
 
-ESLint enforces code quality and style for the client and server TypeScript, complemented by the faster OxLint, HTMLHint
-for HTML, and StyleLint for Stylus, BECAUSE multiple focused linters keep each language layer clean and consistent.
+ESLint enforces code quality and style for the client and server TypeScript, complemented by the faster OxLint, BECAUSE
+a focused linter per language layer keeps the TypeScript layer clean and consistent.
 
 ### COMPONENT: Messaging {{messaging}}
 
@@ -60,8 +60,8 @@ real-time relay layer and MQTT-Plus adds the needed request/response and event h
 -   USED-BY:  [[COMPONENT:client]], [[COMPONENT:auth]]
 
 OFetch provides the HTTP/REST request/response communication of the client and the call of the external GraphQL
-mail-sending API by the authentication service, BECAUSE REST calls complement the MQTT channel for request/response-style
-interactions on both tiers.
+mail-sending API by the authentication service, BECAUSE plain HTTP calls complement the MQTT channel for the
+request/response-style interactions of both tiers, REST on the client and GraphQL on the server alike.
 
 ### COMPONENT: Logging {{logging}}
 
@@ -133,6 +133,26 @@ styling speeds consistent UI work.
 
 Stylus is the preferred preprocessor for authoring the custom CSS of the client beyond the generated utility classes,
 BECAUSE bespoke styling which utility classes cannot express needs a concise authoring language.
+
+### COMPONENT: HTML Linting {{html-linting}}
+
+-   PRODUCT:  HTMLHint
+-   LICENSE:  MIT
+-   PHASE:    Build-Time
+-   COVERAGE: Standardization
+
+HTMLHint enforces code quality for the HTML markup of the client, BECAUSE a focused linter per language layer keeps
+the HTML layer clean and consistent.
+
+### COMPONENT: Style Linting {{style-linting}}
+
+-   PRODUCT:  StyleLint
+-   LICENSE:  MIT
+-   PHASE:    Build-Time
+-   COVERAGE: Standardization
+
+StyleLint enforces code quality and style for the Stylus sources of the client, BECAUSE a focused linter per language
+layer keeps the Stylus layer clean and consistent.
 
 ### COMPONENT: UI Framework {{ui-framework}}
 
@@ -283,8 +303,8 @@ preserves end-to-end TypeScript type-safety and full PostgreSQL feature access w
 -   COVERAGE: Server Networking, Request Processing
 -   USED-BY:  [[COMPONENT:junction]]
 
-Junction serves the static client content over MQTT+ from the backend, BECAUSE the client must be distributed alongside
-the same messaging infrastructure used for live data.
+Junction serves the static client content over MQTT-Plus from the backend, BECAUSE the client must be distributed
+alongside the same messaging infrastructure used for live data.
 
 ### COMPONENT: Argument Parsing {{argument-parsing}}
 

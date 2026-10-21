@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 00:49
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 APIS: Interface Datatypes (ID)
@@ -61,6 +61,14 @@ derivable unambiguously from the variable name.
 -   workers; TYPE: `integer`; DEFAULT: `1`; CONSTRAINT: `1..n`;
     The number of worker processes the primary process pre-forks,
     BECAUSE the load-balanced traffic of the broker has to be spread over several processes.
+
+-   providers; TYPE: `any`; ARITY: `*`;
+    The streaming providers, each with its `providerId` and the keys of the parameters a resource of it supplies ([[ENTITY:ResourceProviderParam]]),
+    BECAUSE a resource binds to a provider and its parameter keys defined in the configuration file.
+
+-   events; TYPE: `any`; ARITY: `*`;
+    The events provisioned through the configuration, each with its initial channels and resources and the email address of its first Manager,
+    BECAUSE the administrator provisions the events and their first Manager through the configuration ([[CONCERN:role-assignment]]).
 
 ### CONSTANT
 

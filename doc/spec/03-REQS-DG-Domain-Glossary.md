@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Domain Glossary (DG)
@@ -26,12 +26,8 @@ REQS: Domain Glossary (DG)
 -   TERM: User {{user}};
     TYPE: Entity;
     A person identified by their email address within a specific
-    [[TERM:Event]] and holding the [[TERM:Role]]s granted to them there.
-    A User exists only while granted a [[TERM:Role]], present on the
-    [[TERM:Access List]], or joining via the access email pattern of the
-    [[TERM:Event]], and is never a permanent account. The only exception
-    is the holder of the [[TERM:Administrator]] [[TERM:Role]], who exists
-    permanently and outside any [[TERM:Event]].
+    [[TERM:Event]] and holding the [[TERM:Role]]s granted to them there,
+    whose existence is bounded by [[RULE:no-accounts]].
 
 -   TERM: Manager {{manager}};
     TYPE: Actor;
@@ -179,16 +175,14 @@ REQS: Domain Glossary (DG)
     TYPE: Activity;
     SYNONYMS: Privacy by Design Finish;
     PREMISES: [[PREMISE:message-personal-data]];
-    The automated procedure on [[TERM:Event]] finish that reduces
-    [[TERM:Message]]s to like counts, anonymizes sender names, drops
-    personal relations, deletes tokens and Users, unlinks the viewer
-    statistics from their Users, and removes all roles except the
-    [[TERM:Manager]] roles.
+    The automated procedure on [[TERM:Event]] finish that removes or
+    unlinks the personal data of the [[TERM:Event]] as stated by
+    [[RULE:anonymize]].
 
 -   TERM: Sentiment Analysis {{sentiment}};
     TYPE: Activity;
     SYNONYMS: Profanity Check;
     PREMISES: [[PREMISE:interaction-abuse]];
     The optional client-side or server-side evaluation of
-    [[TERM:Message]] text yielding a sentiment score used to prevent,
-    auto-accept, or auto-reject improper input.
+    [[TERM:Message]] text yielding a sentiment score used to prevent or
+    auto-reject improper input and to auto-accept proper input.

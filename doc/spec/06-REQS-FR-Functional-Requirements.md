@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Functional Requirements (FR)
@@ -49,10 +49,16 @@ REQS: Functional Requirements (FR)
     The system MUST authenticate participants via their email address
     before showing the video stream or, where the event allows
     anonymous access, before allowing participation in questions and
-    chat, re-checking on every access that the event still lists the
-    user even when the user is already authenticated, BECAUSE access
-    must be restricted to invited participants to minimize foreign
-    viewers.
+    chat, BECAUSE access must be restricted to invited participants to
+    minimize foreign viewers.
+
+-   REQUIREMENT: Access Re-Check on Every Access {{access-recheck}}; PRIORITY: MUST;
+    GROUP: [[GROUP:access]];
+    DEPENDS-ON: [[REQUIREMENT:authentication]];
+    When an already authenticated user accesses an event again, the
+    system MUST re-check that the event still lists the user, BECAUSE a
+    user removed from the access list must lose the access granted
+    before.
 
 -   REQUIREMENT: Limit Parallel Access {{parallel-access}}; PRIORITY: MUST;
     GROUP: [[GROUP:access]];
@@ -130,8 +136,8 @@ REQS: Functional Requirements (FR)
     DEPENDS-ON: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]];
     The system SHOULD let attendees edit their own chat and question
     messages, mark edited messages for others, and re-run moderation on
-    edits where required, BECAUSE attendees must correct mistakes
-    without bypassing moderation.
+    edits where the event moderates messages of that type, BECAUSE
+    attendees must correct mistakes without bypassing moderation.
 
 -   REQUIREMENT: Delete Own Messages {{message-deletion}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:interaction]];
@@ -313,7 +319,7 @@ REQS: Functional Requirements (FR)
 -   REQUIREMENT: Import and Export Event {{event-portability}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:registration]];
     The system SHOULD export an event with its related entities to a
-    serialized format such as YAML and re-import it, BECAUSE this eases
+    self-contained file and re-import it, BECAUSE this eases
     development, demonstration, and creation of recurring production
     events.
 
@@ -327,8 +333,9 @@ REQS: Functional Requirements (FR)
     GROUP: [[GROUP:statistics]];
     DEPENDS-ON: [[REQUIREMENT:event-stats]];
     The system SHOULD record login-challenge statistics including
-    issued, sent, and used authorization tokens, BECAUSE operators need
-    visibility into the authentication flow for diagnosis.
+    issued, sent, and used authorization tokens, BECAUSE the
+    administrator needs visibility into the authentication flow for
+    diagnosis.
 
 -   REQUIREMENT: Channel Statistics {{channel-stats}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:statistics]];
@@ -367,6 +374,13 @@ REQS: Functional Requirements (FR)
     all connected participants, BECAUSE toggles such as enabling chat
     must take effect for the live audience without a reload.
 
+-   REQUIREMENT: Manager-Controlled Event Lifecycle {{event-lifecycle}}; PRIORITY: MUST;
+    The system MUST move an event through the states of
+    [[LIFECYCLE:event]] only upon an explicit action of a manager or
+    the administrator, BECAUSE the visibility, the live interaction, and
+    the anonymization of an event are deliberate decisions, not side
+    effects of the clock.
+
 -   REQUIREMENT: Presenter Dashboard {{presenter-dashboard}}; PRIORITY: COULD;
     GROUP: [[GROUP:moderating]];
     DEPENDS-ON: [[REQUIREMENT:forward-presenter]];
@@ -384,8 +398,8 @@ REQS: Functional Requirements (FR)
 -   REQUIREMENT: Mobile Device Support {{mobile}}; PRIORITY: COULD;
     GROUP: [[GROUP:client-experience]];
     The system COULD let participants watch the video stream on mobile
-    phones, even where the interaction features stay unavailable there,
-    BECAUSE many attendees join from mobile devices.
+    phones, without requiring the interaction features to be available
+    there, BECAUSE many attendees join from mobile devices.
 
 -   REQUIREMENT: In-Session Language Switching {{language-switch}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:client-experience]];
@@ -410,3 +424,10 @@ REQS: Functional Requirements (FR)
     position in the stream and show a "This message was deleted"
     placeholder instead of removing it, BECAUSE preserving the gap keeps
     the surrounding conversation coherent for readers.
+
+-   REQUIREMENT: Support Requests {{support-requests}}; PRIORITY: SHOULD;
+    GROUP: [[GROUP:interaction]];
+    Where support is enabled for an event, the system SHOULD let
+    attendees send support messages which only the sending attendee and
+    the moderators of the event see, BECAUSE attendees with a technical
+    problem need help without exposing it to the audience.

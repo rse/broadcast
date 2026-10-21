@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 00:49
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 APIS: Interface Endpoints (IE)
@@ -22,7 +22,10 @@ long-running daemon whose process model has to stay uniform even for a
 single worker.
 
 Before pre-forking, the command loads the layered configuration of the
-[[INTERFACE:server-cli]] and brings the database schema up to date,
+[[INTERFACE:server-cli]], BECAUSE all workers have to operate on the
+same parameters, validated once before any worker starts.
+
+Before pre-forking, the command brings the database schema up to date,
 BECAUSE no worker may operate on an outdated database schema.
 
 A dead worker is respawned after the [[RESPAWN_DELAY]], BECAUSE the

@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Domain Rules (DR)
@@ -125,7 +125,7 @@ A [[TERM:Message]] MUST use only the states its type permits:
 
 1.  The [[TERM:Message]] is a [[TERM:Question]]: pending, accepted, rejected, forwarded, answered, and suspended.
 2.  The [[TERM:Message]] is a [[TERM:Chat]]: pending, accepted, and rejected.
-3.  The [[TERM:Message]] is a [[TERM:Support]] message: accepted.
+3.  The [[TERM:Message]] is a [[TERM:Support]] message: pending (upon creation only) and accepted.
 
 No other combination of [[TERM:Message]] type and state is permitted, BECAUSE each [[TERM:Message]] type has a different
 interaction lifecycle.
@@ -177,8 +177,9 @@ bare [[TERM:Like]] count before the liker relations are removed, BECAUSE [[TERM:
 -   CONSTRAINS: [[REQUIREMENT:registration-export]], [[REQUIREMENT:automatic-url]]
 -   PREMISES:   [[PREMISE:email-at-hand]], [[PREMISE:email-delivery]]
 
-An [[TERM:Authorization Token]] MUST be formatted as six digits "NNN-NNN"; a normal login token MUST expire within 5 minutes
-while a token pre-generated for the [[TERM:Event Registration System]] lasts until the [[TERM:Event]] ends, expiring on
+An [[TERM:Authorization Token]] MUST be formatted as six digits "NNN-NNN"; a normal login token MUST expire after the
+token validity the [[TERM:Event]] configures (5 minutes by default), while a token pre-generated for the
+[[TERM:Event Registration System]] lasts until the [[TERM:Event]] ends, expiring on
 first use only if the [[TERM:Event]] so configures, BECAUSE token strength and lifetime balance security against convenient
 automated access.
 

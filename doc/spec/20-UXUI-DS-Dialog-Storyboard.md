@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 UXUI: Dialog Storyboard (DS)
@@ -47,7 +47,10 @@ STORYBOARD: Attendee Asks a Tagged Question {{ask-question}}
     The attendee picks one or more tags and submits the question.
 
 -   Pending Acknowledgement; SCENARIO-STEP: 4; PATTERNS: [[DIALOG-PATTERN:message-stream]];
-    The question appears in the attendee's own list marked as pending moderation, a rejected one tinted and visible to the author only.
+    The question appears in the attendee's own list marked as pending moderation.
+
+-   Rejected Variant; PATTERNS: [[DIALOG-PATTERN:message-stream]];
+    A rejected question instead stays tinted in the attendee's own list and visible to the author only.
 
 -   Becomes Visible; SCENARIO-STEP: 5; PATTERNS: [[DIALOG-PATTERN:message-stream]];
     After approval the question becomes visible and likeable for all attendees.
@@ -67,13 +70,13 @@ STORYBOARD: Attendee Reads and Posts Chat {{chat-interaction}}
     Others' messages show name, time, and like count, an amber moderator message stands out, and a quoted original links back to its source.
 
 -   Like and Reply; PATTERNS: [[DIALOG-PATTERN:message-stream]];
-    The attendee likes a message, raising its count, and follows a quoted original link back to its source.
+    The attendee likes a message, raising its count, and replies to it through its reply affordance.
 
 -   Compose and Send; SCENARIO-STEP: 2; PATTERNS: [[DIALOG-PATTERN:composer]];
     The attendee types in the bottom composer, optionally adds an emoji, and sends the message.
 
 -   Under Review; SCENARIO-STEP: 4; PATTERNS: [[DIALOG-PATTERN:composer]], [[DIALOG-PATTERN:message-stream]];
-    The attendee's own message appears right-aligned marked "pending… / under review" until moderation resolves it.
+    The attendee's own message appears right-aligned below an "under review" divider, marked "pending…", until moderation resolves it.
 
 STORYBOARD: Attendee Gets Support from a Moderator {{support-request}}
 --------------------------------------------------

@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Functionality View (FV)
@@ -12,7 +12,10 @@ ARCH: Functionality View (FV)
 
 -   KIND:           Subsystem
 -   REALIZES:       [[REQUIREMENT:name-appearance]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:individual-url]],
-                    [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]]
+                    [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:personalized-url]],
+                    [[REQUIREMENT:resource-url]], [[REQUIREMENT:display-options]], [[REQUIREMENT:info-messages]],
+                    [[REQUIREMENT:country-language]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:mc-feedback]],
+                    [[REQUIREMENT:mobile]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:manage-app]]
 -   DEPENDS-ON:     [[COMPONENT:relay]]
 
 The Vue.js single-page application renders the attendee and operator UI and drives all user interaction: it presents the
@@ -62,11 +65,18 @@ performance challenge.
 -   KIND:           Service
 -   PATTERNS:       [[PATTERN:modular-monolith]]
 -   REALIZES:       [[REQUIREMENT:questions]], [[REQUIREMENT:chat]], [[REQUIREMENT:moderation]],
-                    [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]]
+                    [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]], [[REQUIREMENT:likes]],
+                    [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]],
+                    [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:question-tags]], [[REQUIREMENT:server-sentiment]],
+                    [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:presenter-hints]],
+                    [[REQUIREMENT:presenter-alerts]], [[REQUIREMENT:sort-filter]], [[REQUIREMENT:export-inputs]],
+                    [[REQUIREMENT:multi-provider]], [[REQUIREMENT:registration-import]], [[REQUIREMENT:registration-export]],
+                    [[REQUIREMENT:event-portability]], [[REQUIREMENT:gdpr-eu]], [[REQUIREMENT:access-recheck]],
+                    [[REQUIREMENT:event-lifecycle]], [[REQUIREMENT:support-requests]]
 -   OWNS:           [[ENTITY:Event]], [[ENTITY:AgendaPoint]], [[ENTITY:Channel]], [[ENTITY:Resource]],
                     [[ENTITY:ResourceProviderParam]], [[ENTITY:Role]], [[ENTITY:Message]], [[ENTITY:MessageText]],
                     [[ENTITY:QuestionTag]]
--   PROVIDES:       [[INTERFACE:server-cli]]
+-   PROVIDES:       [[INTERFACE:server-cli]], [[INTERFACE:event-topics]]
 -   DEPENDS-ON:     [[FV.database]]
 
 The service layer executes all business logic for events, messages, authentication, and statistics: as the main server it
@@ -112,8 +122,8 @@ the event's lifetime.
 -   KIND:           Component
 -   REALIZES:       [[REQUIREMENT:browser-access]]
 
-The Junction component serves the static client bundle and orchestrates its delivery to the relay over MQTT+, BECAUSE the
-client must be distributed alongside the same messaging infrastructure used for live data.
+The Junction component serves the static client bundle and orchestrates its delivery to the relay over MQTT-Plus,
+BECAUSE the client must be distributed alongside the same messaging infrastructure used for live data.
 
 ##  COMPONENT: Database {{database}}
 

@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Deployment View (DV)
@@ -26,7 +26,8 @@ served close to a large, distributed audience instead of from the data center.
 -   LOCATION: Hetzner cloud (Nürnberg, DE), separated into dev, QA, and production environments
 
 The data center tier groups all server-side tiers within one EU-resident hosting location, BECAUSE EU-resident
-self-hosting satisfies GDPR and minimizes per-event cost versus public cloud.
+self-hosting satisfies [[REQUIREMENT:gdpr]] and keeps the per-event cost below Azure or AWS hosting as
+[[REQUIREMENT:cost]] demands.
 
 ##  TIER: Middleware {{middleware-tier}}
 
@@ -87,7 +88,8 @@ be delivered to the start surge of up to 10000 joining attendees within the time
 -   NETWORKS:    [[NETWORK:internet]], [[NETWORK:backend]]
 
 The edge router terminates inbound HTTP and WebSocket traffic and round-robins it to per-environment proxies, BECAUSE a
-single hardened entry point must balance load and isolate environments.
+single public entry point keeps the proxies of all environments on the private backend network, unreachable from the
+Internet.
 
 ##  NODE: Proxy Servers {{proxy}}
 

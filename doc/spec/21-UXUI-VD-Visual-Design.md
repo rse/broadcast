@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 UXUI: Visual Design (VD)
@@ -8,10 +8,10 @@ UXUI: Visual Design (VD)
 
 ##  ELEMENT: Brand Color Palette {{color-palette}}
 
--   CATEGORY: Color
+-   CATEGORY:   Color
 -   PRINCIPLES: [[PRINCIPLE:moderation-gated]], [[PRINCIPLE:privacy-identity]]
--   SOURCE: Tailwind theme configuration of the frontend (`tailwind.config.ts`), color section
--   TRADE-OFF: A palette bound to the corporate identity, leaving no room for event-specific branding.
+-   SOURCE:     Tailwind theme configuration of the frontend (`tailwind.config.ts`), color section
+-   TRADE-OFF:  A palette bound to the corporate identity, leaving no room for event-specific branding.
 
 The interface uses the msg corporate palette with a primary msg blue
 for actions, the active channel, and own outgoing messages, neutral
@@ -23,10 +23,10 @@ visual feedback.
 
 ##  ELEMENT: Light and Dark Theme {{theme}}
 
--   CATEGORY: Color
+-   CATEGORY:   Color
 -   PRINCIPLES: [[PRINCIPLE:familiar-conventions]]
--   SOURCE: Tailwind theme configuration of the frontend (`tailwind.config.ts`), dark mode section
--   TRADE-OFF: Every semantic color role has to be defined and checked twice, once per theme.
+-   SOURCE:     Tailwind theme configuration of the frontend (`tailwind.config.ts`), dark mode section
+-   TRADE-OFF:  Every semantic color role has to be defined and checked twice, once per theme.
 
 The application provides both a light and a dark theme, toggled from a
 sun/moon control in the header bar and applied consistently across video
@@ -35,7 +35,7 @@ varied lighting and expect to choose a comfortable appearance.
 
 ##  ELEMENT: Broadcast Wordmark {{wordmark}}
 
--   CATEGORY: Brand
+-   CATEGORY:  Brand
 -   TRADE-OFF: A reserved header strip on every screen, including the space-constrained mobile layouts.
 
 The product is represented by the "BROADCAST" wordmark with the circled
@@ -45,30 +45,40 @@ screen.
 
 ##  ELEMENT: Self-Hosted Typography {{typography}}
 
--   CATEGORY: Typography
--   ACTORS: [[PERSONA:attendee]], [[PERSONA:presenter]]
--   SOURCE: TypoPRO font package of the frontend (`@typopro/web-*`), subsetted at build time
+-   CATEGORY:  Typography
+-   ACTORS:    [[PERSONA:attendee]], [[PERSONA:presenter]]
+-   SOURCE:    TypoPRO font package of the frontend (`@typopro/web-*`), subsetted at build time
 -   TRADE-OFF: A larger initial download than a system font stack, as the font files ship with the application.
 
-Text is set in a self-hosted TypoPRO web font family, BECAUSE
-self-hosted fonts avoid third-party requests.
+Text is set in the self-hosted Source Sans Pro family of TypoPRO,
+BECAUSE self-hosted fonts avoid third-party requests.
 
 ##  ELEMENT: Studio-Legible Type Scale {{type-scale}}
 
--   CATEGORY: Typography
--   ACTORS: [[PERSONA:presenter]]
+-   CATEGORY:  Typography
+-   ACTORS:    [[PERSONA:presenter]]
 -   TRADE-OFF: Fewer forwarded questions fitting onto the studio screen at once, as the enlarged text takes more space.
 
-Text follows one type scale for headings, body, and captions, sized for
-legibility on the studio screen at 2-4 meters viewing distance, BECAUSE
-the studio view must remain readable from afar.
+The presenter view on the studio screen enlarges the type scale of
+[[ELEMENT:uniform-type-scale]] until its text is legible at 2-4 meters
+viewing distance, BECAUSE the presenter reads the forwarded questions
+and alerts from afar while presenting.
+
+##  ELEMENT: Uniform Type Scale {{uniform-type-scale}}
+
+-   CATEGORY:  Typography
+-   TRADE-OFF: Fewer text sizes to emphasize content with, as every text has to map onto one step of the scale.
+
+Text on every screen follows one type scale for headings, body, and
+captions, BECAUSE a fixed set of text sizes keeps the text hierarchy
+recognizable across all screens.
 
 ##  ELEMENT: Fontawesome Iconography {{iconography}}
 
--   CATEGORY: Iconography
+-   CATEGORY:   Iconography
 -   PRINCIPLES: [[PRINCIPLE:familiar-conventions]]
--   SOURCE: Fontawesome Free package of the frontend (`@fortawesome/fontawesome-free`)
--   TRADE-OFF: A vocabulary limited to the coverage of one icon set, so a missing metaphor is worked around with a text label.
+-   SOURCE:     Fontawesome Free package of the frontend (`@fortawesome/fontawesome-free`)
+-   TRADE-OFF:  A vocabulary limited to the coverage of one icon set, so a missing metaphor is worked around with a text label.
 
 Actions and message states are reinforced with a consistent Fontawesome
 icon set, pairing icons with text labels for moderation controls,
@@ -77,12 +87,12 @@ actions.
 
 ##  ELEMENT: Responsive Spacing Scale {{spacing}}
 
--   CATEGORY: Spacing
+-   CATEGORY:   Spacing
 -   PRINCIPLES: [[PRINCIPLE:never-leave-stream]]
--   SOURCE: Tailwind theme configuration of the frontend (`tailwind.config.ts`), spacing and screens sections
--   TRADE-OFF: Fixed breakpoints, so a layout jumps between its arrangements instead of scaling fluidly.
+-   SOURCE:     Tailwind theme configuration of the frontend (`tailwind.config.ts`), spacing and screens sections
+-   TRADE-OFF:  Fixed breakpoints, so a layout jumps between its arrangements instead of scaling fluidly.
 
-Spacing follows the Tailwind 4px-based scale with a 16px base gutter, and
+Spacing follows a 4px-based scale with a 16px base gutter, and
 the breakpoints `sm` (640px), `md` (768px), and `lg` (1024px) delimit the
 device classes, where the video-with-sidebar arrangement collapses into
 the stacked single column below `md`, BECAUSE one shared scale keeps the
@@ -91,7 +101,7 @@ classes attendees use.
 
 ##  ELEMENT: Card and Bubble Shape {{shape}}
 
--   CATEGORY: Shape
+-   CATEGORY:  Shape
 -   TRADE-OFF: A soft look which relies on subtle tints and hairline borders, demanding a well-tuned contrast in both themes.
 
 Messages, questions, and form fields use rounded rectangles with a 6px
@@ -102,10 +112,10 @@ language lets the color and iconography carry the meaning of an item.
 
 ##  ELEMENT: Stream Imagery Treatment {{imagery}}
 
--   CATEGORY: Imagery
--   ACTORS: [[PERSONA:attendee]]
+-   CATEGORY:   Imagery
+-   ACTORS:     [[PERSONA:attendee]]
 -   PRINCIPLES: [[PRINCIPLE:never-leave-stream]]
--   TRADE-OFF: Letterbox bars on screens whose aspect ratio differs from 16:9, wasting some display area.
+-   TRADE-OFF:  Letterbox bars on screens whose aspect ratio differs from 16:9, wasting some display area.
 
 The live video occupies a prominent 16:9 frame with a neutral letterbox
 and a subtle channel and language badge overlay, BECAUSE the stream
@@ -114,9 +124,9 @@ watching.
 
 ##  ELEMENT: Subtle State Transitions {{motion}}
 
--   CATEGORY: Motion
+-   CATEGORY:   Motion
 -   PRINCIPLES: [[PRINCIPLE:live-reactivity]]
--   TRADE-OFF: Transitions short enough to be missed when the user is not looking at the changed region.
+-   TRADE-OFF:  Transitions short enough to be missed when the user is not looking at the changed region.
 
 State and configuration changes animate with short, subtle transitions
 under 200ms, including the seamless cross-fade on a stream provider
@@ -125,10 +135,10 @@ from the event.
 
 ##  MOCKUP: Attendee Chat View {{mockup-attendee-chat}}
 
--   ACTORS: [[PERSONA:attendee]]
+-   ACTORS:     [[PERSONA:attendee]]
 -   STORYBOARD: [[STORYBOARD:chat-interaction]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:theme]], [[ELEMENT:wordmark]], [[ELEMENT:typography]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-1.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:theme]], [[ELEMENT:wordmark]], [[ELEMENT:typography]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-1.png)
 
 The main attendee screen with the Chat tab open, showing the blue own
 message, the amber moderator message, the "under review" divider, and
@@ -136,10 +146,10 @@ the new-messages badge above the letterboxed stream.
 
 ##  MOCKUP: Attendee Q&A View {{mockup-attendee-qa}}
 
--   ACTORS: [[PERSONA:attendee]]
+-   ACTORS:     [[PERSONA:attendee]]
 -   STORYBOARD: [[STORYBOARD:ask-question]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-2.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-2.png)
 
 The main attendee screen with the Q&A tab open, showing the filter pills,
 the tag chips below each question, the pending own question under review,
@@ -147,10 +157,10 @@ and the red-tinted rejected question.
 
 ##  MOCKUP: Attendee Support View {{mockup-attendee-support}}
 
--   ACTORS: [[PERSONA:attendee]]
+-   ACTORS:     [[PERSONA:attendee]]
 -   STORYBOARD: [[STORYBOARD:support-request]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-3.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-3.png)
 
 The main attendee screen with the Support tab open, showing the private
 exchange of a blue own message and an amber moderator reply above the
@@ -158,9 +168,9 @@ composer.
 
 ##  MOCKUP: Administrator Event Creation {{mockup-administrator-create}}
 
--   ACTORS: [[PERSONA:administrator]]
+-   ACTORS:   [[PERSONA:administrator]]
 -   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:wordmark]], [[ELEMENT:typography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-4.png)
+-   IMAGE:    ![](21-UXUI-VD-Visual-Design-4.png)
 
 The event creation form of the administrator, showing the type scale of the
 headings, the outlined form fields, the event type selector with the
@@ -168,10 +178,10 @@ filled selected profile, and the blue-tinted profile summary.
 
 ##  MOCKUP: Chat Moderation Board {{mockup-moderator-chat}}
 
--   ACTORS: [[PERSONA:moderator-chat]]
+-   ACTORS:     [[PERSONA:moderator-chat]]
 -   STORYBOARD: [[STORYBOARD:chat-moderation]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-5.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]], [[ELEMENT:imagery]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-5.png)
 
 The chat moderation board with the stream preview beside the rejected,
 pending, and accepted columns, showing the elevated pending cards with
@@ -180,10 +190,10 @@ chips.
 
 ##  MOCKUP: Q&A Moderation Board {{mockup-moderator-qa}}
 
--   ACTORS: [[PERSONA:moderator-qa]]
+-   ACTORS:     [[PERSONA:moderator-qa]]
 -   STORYBOARD: [[STORYBOARD:moderate-forward]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-6.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:iconography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-6.png)
 
 The all-in-one Q&A moderation board with the rejected, pending, accepted,
 suspended, forwarded, and answered columns, showing the amber moderator
@@ -191,10 +201,10 @@ annotations and the presenter alert composer.
 
 ##  MOCKUP: Presenter View {{mockup-presenter}}
 
--   ACTORS: [[PERSONA:presenter]]
+-   ACTORS:     [[PERSONA:presenter]]
 -   STORYBOARD: [[STORYBOARD:moderate-forward]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:type-scale]], [[ELEMENT:iconography]], [[ELEMENT:shape]]
--   IMAGE: ![](21-UXUI-VD-Visual-Design-7.png)
+-   ELEMENTS:   [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:type-scale]], [[ELEMENT:iconography]], [[ELEMENT:shape]]
+-   IMAGE:      ![](21-UXUI-VD-Visual-Design-7.png)
 
 The presenter view for the studio screen with the enlarged type scale,
 the amber presenter alert banner, the forwarded questions with their

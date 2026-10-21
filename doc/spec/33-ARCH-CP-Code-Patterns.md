@@ -1,6 +1,6 @@
 ---
 Created:  2026-10-04 12:00
-Modified: 2026-10-04 12:00
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Code Patterns (CP)
@@ -114,7 +114,7 @@ export class SessionTokenDAO {
 -   DECIDED-BY: [[DECISION:modular-service]]
 -   TOOLS:      [[COMPONENT:persistence-layer]]
 -   USES:       [[CODE-PATTERN:dao-per-entity]]
--   AVOID:      a last-writer-wins `UPDATE` of the whole row, or a read-modify-write across two statements
+-   AVOID:      a last-writer-wins `UPDATE` of the whole row, or an unversioned read-modify-write across two statements
 
 Every row carries a `version` column, and every update or deletion of a
 DAO loads the stored row, derives the changed attributes (`changesOf`),

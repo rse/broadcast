@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Quality Perspectives (QP)
@@ -51,7 +51,7 @@ accounts, BECAUSE minimizing retained personal data is the strongest guarantee a
 ##  TACTIC: Email-Verified Access {{access-security}}
 
 -   QUALITY:    Security
--   ADDRESSES:  [[REQUIREMENT:token-strength]]
+-   ADDRESSES:  [[REQUIREMENT:token-strength]], [[REQUIREMENT:url-strength]]
 -   GUIDED-BY:  [[PRINCIPLE:no-permanent-identity]]
 -   MECHANISM:  unguessable URLs plus time-limited one-time tokens and single sessions
 -   TRADES-OFF: Usability
@@ -94,7 +94,7 @@ BECAUSE combining rate limits with content filtering defends the interaction cha
 -   TOOLS:      [[COMPONENT:ui-framework]], [[COMPONENT:styling-framework]]
 
 The client is a standards-based responsive web application that adapts from desktop to mobile without plugins, BECAUSE a
-plugin-free web app reaches every recent browser on managed and unmanaged devices.
+plugin-free web app reaches every browser named by [[REQUIREMENT:browser-compat]] on managed and unmanaged devices.
 
 ##  TACTIC: Provider Stream Passthrough {{stream-passthrough}}
 

@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 10:00
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Domain Workflows (DW)
@@ -9,23 +9,27 @@ REQS: Domain Workflows (DW)
 WORKFLOW: Run Broadcast Event {{run-broadcast-event}}
 -----------------------------
 
--   ACTORS:   [[ROLE:manager]], [[ROLE:presenter]], [[ROLE:moderator]], [[ROLE:attendee]]
--   TRIGGER:  The manager receives the attendee list of an upcoming event, exported by the Event Registration System.
+-   ACTORS:   [[ROLE:administrator]], [[ROLE:manager]], [[ROLE:presenter]], [[ROLE:moderator]], [[ROLE:attendee]]
+-   TRIGGER:  The organization decides to hold an upcoming broadcast event.
 -   OUTCOME:  The event took place, its personal data is anonymized, and its interaction results are exported.
 -   JOURNEYS: [[JOURNEY:attend]], [[JOURNEY:operate]], [[JOURNEY:moderate]]
 -   TERMS:    [[TERM:anonymization]]
 -   RULES:    [[RULE:no-accounts]]
 
-The manager prepares and populates the event, the operators rehearse it,
-the audience attends it live while the moderators and the presenter
-handle the interaction, and the manager finishes and archives it
-afterwards, BECAUSE a broadcast event is a collaboration of several
-roles across days, of which each sitting with the solution covers
-only a part.
+The manager prepares and populates the event, the presenter and the
+moderators rehearse it, the audience attends it live while the
+moderators and the presenter handle the interaction, and the manager
+finishes and archives it afterwards, BECAUSE a broadcast event is a
+collaboration of several roles across days, of which each sitting with
+the solution covers only a part.
 
 ### ACTIVITY
 
--   Plan Event {{plan-event}}; ACTOR: [[ROLE:manager]]; INITIAL: true;
+-   Provision Event {{provision-event}}; ACTOR: [[ROLE:administrator]]; INITIAL: true;
+    The administrator creates the event through the configuration and
+    grants its first Manager role.
+
+-   Plan Event {{plan-event}}; ACTOR: [[ROLE:manager]];
     The manager configures the event and its channel and imports the
     attendee list of the Event Registration System, which yields the
     individual access URLs.
@@ -42,7 +46,8 @@ only a part.
 
 -   Start Event {{go-live}}; ACTOR: [[ROLE:manager]];
     The manager publishes and starts the event when the stream goes on
-    air and keeps the streaming resource healthy.
+    air and, whenever the active resource fails, activates a fallback
+    resource.
 
 -   Attend Event {{attend-event}}; ACTOR: [[ROLE:attendee]];
     The attendees join via their individual URLs, watch the stream, and
@@ -65,6 +70,10 @@ only a part.
     them over to the organizer.
 
 ### HANDOFF
+
+-   assign; FROM: [[ACTIVITY:provision-event]]; TO: [[ACTIVITY:plan-event]];
+    The administrator hands the provisioned event over to its first
+    manager, who learns about the granted Manager role by email.
 
 -   import; FROM: [[ACTIVITY:plan-event]]; TO: [[ACTIVITY:invite-attendees]];
     The generated individual access URLs are returned as a sheet the

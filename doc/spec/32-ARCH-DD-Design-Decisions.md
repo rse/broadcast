@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Design Decisions (DD)
@@ -33,15 +33,14 @@ ARCH: Design Decisions (DD)
 -   STATUS:       Accepted
 -   DRIVEN-BY:    [[REQUIREMENT:gdpr]], [[REQUIREMENT:cost]], [[PREMISE:eu-hosting]]
 -   GUIDED-BY:    [[MAXIM:simplicity]]
--   AFFECTS:      [[TIER:datacenter]], [[ASPECT:codeline]]
--   ALTERNATIVES: Azure, AWS, GitHub
+-   AFFECTS:      [[TIER:datacenter]]
+-   ALTERNATIVES: Azure, AWS
 -   WHEN:
     The solution must be GDPR-compliant with EU data residency, and a primary economic goal is to minimize recurring cost per
     event, the solution having been built specifically to replace a costlier third-party platform.
 -   WHAT:
     We operate all server tiers on self-managed Hetzner infrastructure in Nürnberg, Germany, separated into dev, QA, and
-    production environments, rather than on Azure or AWS, and keep the source on a self-administered Gitea rather than on
-    a hosted forge.
+    production environments, rather than on Azure or AWS.
 -   WHY:
     Hetzner delivers EU-resident hosting at a fraction of hyperscaler cost, satisfying both the data-residency and
     cost-minimization forces; public cloud was rejected because its per-event egress and compute pricing would undermine the
@@ -82,7 +81,7 @@ ARCH: Design Decisions (DD)
     automated joining for large distributions provisioned from the Event Registration System.
 -   WHAT:
     We authenticate via a one-time "NNN-NNN" token emailed to the attendee's address, with optionally pre-generated tokens
-    embeddable in the access URL for automatic entry, and we enforce a single active session per user per event.
+    embeddable in the access URL for automatic entry.
 -   WHY:
     An emailed token proves control of the authorized address with zero stored credentials and reuses email as a channel
     everyone already has, fitting the no-accounts stance; password accounts and external identity providers were rejected as

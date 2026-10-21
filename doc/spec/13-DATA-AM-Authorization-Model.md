@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 12:00
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 DATA: Authorization Model (AM)
@@ -74,6 +74,13 @@ DATA: Authorization Model (AM)
     USE-CASES: [[SCENARIO:chat-like]];
     The attendee likes the visible messages of others and revokes the like again until the event finishes.
 
+-   Write and Read Message Texts {{attendee-message-texts}}; ROLE: [[ROLE:attendee]]; ENTITY: [[ENTITY:MessageText]];
+    OPERATIONS: Create, Read, Update;
+    CONDITION: The text belongs to a message the attendee may create, read, or correct through the attendee permissions on the message.;
+    RULES: [[RULE:moderation-gate]], [[RULE:forward-lock]];
+    USE-CASES: [[SCENARIO:chat-post]], [[SCENARIO:ask-question-moderated]], [[SCENARIO:chat-edit]], [[SCENARIO:join-event-language]];
+    The attendee writes the texts of their own messages and reads the original and translated texts of every message they may read.
+
 -   Use Public Tags {{attendee-use-tags}}; ROLE: [[ROLE:attendee]]; ENTITY: [[ENTITY:QuestionTag]]; OPERATIONS: Read;
     CONDITION: The tag is not reserved for moderators.;
     USE-CASES: [[SCENARIO:ask-question-moderated]];
@@ -121,6 +128,13 @@ DATA: Authorization Model (AM)
     USE-CASES: [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
     The moderator answers attendees publicly or privately and seeds the conversation, where the messages are accepted at once upon creation under the sender name "Moderator" unless overridden.
 
+-   Read and Write Message Texts {{moderator-message-texts}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:MessageText]];
+    OPERATIONS: Create, Read;
+    CONDITION: The text belongs to a message of the event the moderator holds the Moderator role of, and a created text belongs to a message the moderator authors.;
+    RULES: [[RULE:moderator-accept]];
+    USE-CASES: [[SCENARIO:moderate-forward]], [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
+    The moderator reads the texts of every message of the event and writes the texts of their own messages.
+
 -   Use All Tags {{moderator-use-tags}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:QuestionTag]]; OPERATIONS: Read;
     USE-CASES: [[SCENARIO:moderate-forward]];
     The moderator uses every tag of the event on questions, including the ones reserved for moderators.
@@ -147,6 +161,12 @@ DATA: Authorization Model (AM)
     OPERATIONS: [[TRANSITION:answer]], [[TRANSITION:suspend]];
     USE-CASES: [[SCENARIO:present-answer]], [[SCENARIO:present-suspend]];
     The presenter marks a forwarded question answered once addressed on stage, or suspended when it will not be addressed.
+
+-   Read Forwarded Texts {{presenter-message-texts}}; ROLE: [[ROLE:presenter]]; ENTITY: [[ENTITY:MessageText]]; OPERATIONS: Read;
+    CONDITION: The text belongs to a forwarded, answered, or suspended question of the event the presenter holds the Presenter role of.;
+    RULES: [[RULE:forward-lock]];
+    USE-CASES: [[SCENARIO:present-answer]], [[SCENARIO:present-only-forwarded]];
+    The presenter reads the original and translated texts of the forwarded questions.
 
 -   Configure the Event {{manager-configure-event}}; ROLE: [[ROLE:manager]]; ENTITY: [[ENTITY:Event]]; OPERATIONS: Read, Update;
     CONDITION: The manager holds the Manager role of the event.;
@@ -212,6 +232,12 @@ DATA: Authorization Model (AM)
     RULES: [[RULE:like-count]], [[RULE:manager-retained]];
     USE-CASES: [[SCENARIO:export-data-after]];
     The manager reads every message of the event with its texts, timestamps, state, and like count, and exports them after the event has finished.
+
+-   Export the Message Texts {{manager-export-texts}}; ROLE: [[ROLE:manager]]; ENTITY: [[ENTITY:MessageText]]; OPERATIONS: Read;
+    CONDITION: The text belongs to a message of the event the manager holds the Manager role of.;
+    RULES: [[RULE:manager-retained]];
+    USE-CASES: [[SCENARIO:export-data-after]];
+    The manager reads the texts of every message of the event for the export.
 
 -   Inspect the Event Statistics {{manager-statistics-event}}; ROLE: [[ROLE:manager]]; ENTITY: [[ENTITY:EventStatistic]]; OPERATIONS: Read;
     CONDITION: The statistic belongs to the event the manager holds the Manager role of.;

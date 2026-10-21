@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Non-Functional Requirements (NR)
@@ -13,8 +13,9 @@ REQS: Non-Functional Requirements (NR)
 
 -   GROUP: Live Continuity {{live-continuity}};
     A running event proceeds without interruption and stays under the
-    control and insight of its operators, BECAUSE a live audience
-    tolerates neither a pause nor a problem nobody can see.
+    control and insight of its managers and the administrator, BECAUSE
+    a live audience tolerates neither a pause nor a problem nobody can
+    see.
 
 -   GROUP: Data Protection {{data-protection}};
     The personal data of the participants is processed lawfully,
@@ -54,11 +55,11 @@ REQS: Non-Functional Requirements (NR)
     GROUP: [[GROUP:live-continuity]];
     QUALIFIES: [[REQUIREMENT:provider-switch]];
     PREMISES: [[PREMISE:provider-delivery]];
-    METRIC: all attendee clients on the fallback provider within 10 seconds;
-    The system MUST switch to a fallback streaming provider during a
-    running event with attendee clients following the switch
-    automatically within 10 seconds and without user interaction, BECAUSE
-    provider outages must not interrupt the live audience.
+    METRIC: all attendee clients on the fallback provider within 10 seconds after the switch;
+    When a manager switches a running event to a fallback streaming
+    provider, the system MUST move all attendee clients onto it
+    automatically within 10 seconds and without user interaction,
+    BECAUSE provider outages must not interrupt the live audience.
 
 -   REQUIREMENT: Cross-Browser Compatibility {{browser-compat}};
     PRIORITY: MUST; CATEGORY: Compatibility;
@@ -83,22 +84,30 @@ REQS: Non-Functional Requirements (NR)
     PRIORITY: MUST; CATEGORY: Security;
     GROUP: [[GROUP:data-protection]];
     PREMISES: [[PREMISE:message-personal-data]];
-    METRIC: 0 attendee personal-data records retained after the event finish procedure;
-    The system MUST retain attendee personal data only while an event
-    runs, anonymizing or deleting all of it within the automated finish
-    procedure when the event finishes, BECAUSE minimizing personal-data
-    retention is the core privacy guarantee of the product.
+    METRIC: 0 attendee personal-data records retained in the database after the event finish procedure and 0 in the backups later than 7 days thereafter;
+    The system MUST retain attendee personal data only until its event
+    finishes, anonymizing or deleting all of it as [[RULE:anonymize]]
+    defines within the automated finish procedure, BECAUSE minimizing
+    personal-data retention is the core privacy guarantee of the product.
 
--   REQUIREMENT: Unguessable Access Tokens {{token-strength}};
+-   REQUIREMENT: Time-Limited Access Tokens {{token-strength}};
     PRIORITY: MUST; CATEGORY: Security;
     GROUP: [[GROUP:data-protection]];
-    QUALIFIES: [[REQUIREMENT:individual-url]], [[REQUIREMENT:automatic-url]];
-    PREMISES: [[PREMISE:email-at-hand]], [[PREMISE:email-delivery]], [[PREMISE:url-leakage]];
+    QUALIFIES: [[REQUIREMENT:authentication]], [[REQUIREMENT:automatic-url]];
+    PREMISES: [[PREMISE:email-at-hand]], [[PREMISE:email-delivery]];
     METRIC: token expiry <= 5 minutes by default;
-    The system MUST use unguessable event URLs and time-limited
-    authorization tokens that by default expire within 5 minutes,
-    BECAUSE weak access secrets would let unauthorized viewers join the
-    event.
+    The system MUST use time-limited authorization tokens that by
+    default expire within 5 minutes, BECAUSE a long-lived token would
+    let unauthorized viewers join the event.
+
+-   REQUIREMENT: Unguessable Event URLs {{url-strength}};
+    PRIORITY: MUST; CATEGORY: Security;
+    GROUP: [[GROUP:data-protection]];
+    QUALIFIES: [[REQUIREMENT:individual-url]];
+    PREMISES: [[PREMISE:url-leakage]];
+    METRIC: event identifier of the access URL drawn randomly with >= 122 bits of entropy;
+    The system MUST use unguessable event URLs, BECAUSE a guessable URL
+    would let unauthorized viewers reach the event.
 
 -   REQUIREMENT: Isolated Persistence Node {{data-isolation}};
     PRIORITY: MUST; CATEGORY: Security;
@@ -116,10 +125,10 @@ REQS: Non-Functional Requirements (NR)
     PRIORITY: MUST; CATEGORY: Reliability;
     GROUP: [[GROUP:live-continuity]];
     PREMISES: [[PREMISE:eu-hosting]];
-    METRIC: RPO <= 24 hours (<= 1 hour right before an event) and RTO <= 2 hours;
+    METRIC: RPO <= 24 hours (<= 1 hour at the start of an event) and RTO <= 2 hours;
     The system MUST allow the event setups and their messages to be
     restored after a database loss within 2 hours from a backup at most
-    24 hours old, and at most 1 hour old right before an event, BECAUSE
+    24 hours old, and at most 1 hour old at the start of an event, BECAUSE
     a prepared event must not have to be re-entered under time pressure
     on the day of the broadcast.
 
@@ -136,7 +145,7 @@ REQS: Non-Functional Requirements (NR)
     QUALIFIES: [[REQUIREMENT:config-propagation]];
     METRIC: propagation to all connected clients <= 2 seconds;
     The system SHOULD propagate an event configuration change to all
-    connected clients within 2 seconds, BECAUSE operators expect toggles
+    connected clients within 2 seconds, BECAUSE managers expect toggles
     such as enabling chat to take effect near-instantly for the live
     audience.
 
@@ -193,7 +202,7 @@ REQS: Non-Functional Requirements (NR)
 -   REQUIREMENT: Mobile Usability {{mobile-usability}};
     PRIORITY: COULD; CATEGORY: Usability;
     QUALIFIES: [[REQUIREMENT:mobile]];
-    METRIC: attendee screens fully usable at 360 px viewport width in portrait and landscape;
+    METRIC: every attendee screen rendered without horizontal scrolling or clipped controls at 360 px viewport width in portrait and landscape;
     The system COULD render the attendee experience responsively for
     mobile phones in landscape and portrait orientation, BECAUSE a
     substantial share of attendees join from mobile devices.

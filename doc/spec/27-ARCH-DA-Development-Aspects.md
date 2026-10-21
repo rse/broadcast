@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Development Aspects (DA)
@@ -80,7 +80,15 @@ and hence controls who may change the solution.
 -   CATEGORY: Standardization
 
 Data-model entities are named in PascalCase and their attributes in
-camelCase, and both are referred to by exactly these identifiers, set in
-code font, wherever code or documents mention them (e.g.
-`Event.accessList`, `Message.senderName`), BECAUSE a single identifier
-form lets a reader grep from a document straight into the code.
+camelCase, BECAUSE these are the prevailing TypeScript conventions for
+types and their members, so the entities map onto the code unrenamed.
+
+##  ASPECT: Identifier Referencing {{identifier-referencing}}
+
+-   CATEGORY: Standardization
+
+Data-model entities and attributes are referred to by exactly their
+identifiers, set in code font, wherever code or documents mention them
+(e.g. `Event.accessList`, `Message.senderName`), BECAUSE a single
+identifier form lets a reader grep from a document straight into the
+code.

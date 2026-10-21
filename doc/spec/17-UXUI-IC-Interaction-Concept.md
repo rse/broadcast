@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 17:58
 ---
 
 UXUI: Interaction Concept (IC)
@@ -20,12 +20,20 @@ UXUI: Interaction Concept (IC)
 -   PRINCIPLE: Privacy-Visible Identity {{privacy-identity}};
     CATEGORY: Self-Descriptiveness;
     MOTIVATED-BY: [[STEP:arrival]];
-    USE-CASES: [[SCENARIO:chat-post]], [[SCENARIO:join-event-language]], [[SCENARIO:moderate-chat-seed]];
+    USE-CASES: [[SCENARIO:chat-post]], [[SCENARIO:moderate-chat-seed]];
     TRADE-OFF: Full anonymity of all participants, which would spare the anonymity setting and the hover reveal;
     Names are shown according to the event's anonymity setting while the
-    email remains discoverable on hover, and AI-translated text is always
-    marked distinct from the human original, BECAUSE participants must
-    always know who said what and in which language.
+    email remains discoverable on hover, BECAUSE participants must always
+    know who said what.
+
+-   PRINCIPLE: Marked Machine Translation {{marked-translation}};
+    CATEGORY: Self-Descriptiveness;
+    MOTIVATED-BY: [[STEP:participate]];
+    USE-CASES: [[SCENARIO:join-event-language]];
+    TRADE-OFF: A seamless reading flow in which a translated message looks exactly like a human-written one;
+    AI-translated text is always marked distinct from its human-written
+    original, BECAUSE participants must always know in which language a
+    contribution was originally written.
 
 -   PRINCIPLE: Frictionless Joining {{frictionless-join}};
     CATEGORY: Task-Suitability;
@@ -68,7 +76,8 @@ UXUI: Interaction Concept (IC)
     Every adjustment available to the attendee, like language, theme, or
     the interaction tab, is made in place from the event screen, applies
     immediately, and can be reverted at any time, BECAUSE navigating away
-    from a live stream means missing part of the event.
+    from a live stream means missing part of the event, and an adjustment
+    the attendee cannot revert in place would force exactly that.
 
 -   PRINCIPLE: Correct over Confirm {{correct-over-confirm}};
     CATEGORY: Error-Robustness;

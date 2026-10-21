@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-02 12:28
+Modified: 2026-10-21 17:58
 ---
 
 ARCH: Concurrency View (CO)
@@ -23,7 +23,7 @@ instances, BECAUSE a stateless balancer can spread load without holding per-conn
 -   HOSTS:            [[COMPONENT:proxy]]
 -   MULTIPLICITY:     0..n instances per environment
 -   COORDINATES-WITH: [[UNIT:relay-pool]], [[UNIT:service-loop]]
--   COORDINATION:     shared-nothing behind the router
+-   COORDINATION:     HTTP and WebSocket request forwarding, shared-nothing among the instances
 
 The proxy layer runs as a pool of independent, stateless reverse-proxy instances per environment, BECAUSE request handling
 must scale out horizontally to absorb connection spikes.
@@ -58,7 +58,7 @@ races.
 -   HOSTS:            [[COMPONENT:statistics]]
 -   MULTIPLICITY:     1 active per running event
 -   COORDINATES-WITH: [[UNIT:database]]
--   COORDINATION:     timer-driven, writes via database transactions
+-   COORDINATION:     timer-driven on every service instance, with a per-event database advisory lock electing the single writer of each snapshot
 
 A scheduled task on the service event loop captures a statistics snapshot every five minutes for each running event, BECAUSE
 periodic cumulative counts must be produced on a fixed cadence independent of user activity.
@@ -68,7 +68,7 @@ periodic cumulative counts must be produced on a fixed cadence independent of us
 -   KIND:             Process
 -   HOSTS:            [[FV.database]]
 -   MULTIPLICITY:     1 primary per environment
--   COORDINATION:     ACID transactions with optimistic concurrency via the ORM
+-   COORDINATION:     ACID transactions with version-checked optimistic locking via the persistence layer
 
 PostgreSQL runs as the single authoritative persistence process per environment, serializing concurrent writes through
 transactions, BECAUSE a single source of truth with ACID guarantees keeps event state consistent under concurrency.

@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 14:00
-Modified: 2026-10-21 16:06
+Modified: 2026-10-21 17:58
 ---
 
 REQS: Solution Premises (SP)
@@ -86,7 +86,7 @@ these are the working languages of the organization.
 -   CONSEQUENCE:        Without a working provider resource there is no video, and the event
                         degrades to an interaction channel without a stream.
 -   MITIGATION:         Every event is configured with at least one fallback provider resource,
-                        and the operators switch providers live without user interaction.
+                        and a [[TERM:Manager]] switches providers live without user interaction.
 
 The external streaming providers (such as msg Filmstudio, YouTube, Cloudflare, or 3Q) ingest,
 encode, and deliver the video and expose an embeddable playback URL in the required 1080p30
@@ -108,7 +108,7 @@ accepts the generated access URLs in return, and sends the invitation emails its
 organization provisions its events from its existing registration system and the solution does
 not send invitations.
 
-##  PREMISE: Email Gateway Delivers Tokens Within Minutes {{email-delivery}}
+##  PREMISE: Email Gateway Delivers Tokens Within a Minute {{email-delivery}}
 
 -   TYPE:               Dependency
 -   FAILURE-LIKELIHOOD: Medium
@@ -149,7 +149,7 @@ language.
 -   MITIGATION:         The hosting contract fixes the data center location, and the
                         containerized deployment is portable to any other EU hoster.
 
-The Hetzner data center in Nürnberg, Germany, provides the virtual machines the solution runs on,
+The Hetzner data center in Nuremberg, Germany, provides the virtual machines the solution runs on,
 within the EU and at a price below the equivalent public cloud offerings, BECAUSE self-hosting
 within the EU is both the legal and the economic foundation of the solution.
 
