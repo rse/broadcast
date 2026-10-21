@@ -135,6 +135,16 @@ entitles the attendee to the event they were invited to.
 3.  The system finds the email neither on the access list nor matching the access pattern.
 4.  The system denies access and informs the attendee that they are not authorized.
 
+### SCENARIO: Token Wrong or Expired {{authenticate-expired}}
+
+-   TYPE:         Exceptional
+-   RESULT:       Resume
+-   AT-MAIN-STEP: 5
+-   OUTCOME:      No session exists, and the attendee may request a fresh token (resumes at step 3).
+
+5.  The system finds the entered token wrong or beyond its validity.
+6.  The system refuses the login and offers to send a fresh token.
+
 USE-CASE: Ask a Question {{ask-question}}
 ------------------------
 
