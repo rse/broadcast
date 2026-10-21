@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 16:20
+Modified: 2026-10-21 14:33
 ---
 
 REQS: Domain Glossary (DG)

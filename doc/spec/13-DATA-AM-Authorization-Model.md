@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 12:00
-Modified: 2026-09-14 14:01
+Modified: 2026-10-21 14:33
 ---
 
 DATA: Authorization Model (AM)

@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-05 12:38
+Modified: 2026-10-21 14:33
 ---
 
 UXUI: Interaction Concept (IC)
