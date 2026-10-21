@@ -16,7 +16,7 @@ DATA: Authorization Model (AM)
     The attendee sees the event with its login and interaction information, but none of its configuration.
 
 -   Prove the Email Address {{attendee-prove-email}}; ROLE: [[ROLE:attendee]]; ENTITY: [[ENTITY:AuthorizationToken]];
-    OPERATIONS: [[TRANSITION:send]], [[consume]], [[consume-automatic]];
+    OPERATIONS: [[TRANSITION:send]], [[consume]], [[consume-automatic]], [[consume-reuse]];
     CONDITION: The token was issued for the email address of the attendee.;
     RULES: [[RULE:token-format]], [[RULE:single-session]];
     USE-CASES: [[USE-CASE:authenticate]];
@@ -277,7 +277,7 @@ DATA: Authorization Model (AM)
     The administrator curates the tag vocabulary of every event, including the tags reserved for moderators.
 
 -   Administer the Authorization Tokens {{administrator-auth-tokens}}; ROLE: [[ROLE:administrator]]; ENTITY: [[ENTITY:AuthorizationToken]];
-    OPERATIONS: Create, Read, Update, Delete, [[TRANSITION:send]], [[consume]], [[consume-automatic]];
+    OPERATIONS: Create, Read, Update, Delete, [[TRANSITION:send]], [[consume]], [[consume-automatic]], [[consume-reuse]];
     RULES: [[RULE:administrator-access]], [[RULE:token-format]];
     USE-CASES: [[USE-CASE:administer-event]];
     The administrator passes the login challenge of the configured administrator email address without any access list check, and issues, inspects, and revokes the tokens of every event.

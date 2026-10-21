@@ -139,8 +139,11 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
 -   `Sent`;
     The token has been delivered to the user by email.
 
--   `Used`; FINAL: true;
+-   `Used`;
     The token has been consumed in a login attempt.
+
+-   `Dead`; FINAL: true;
+    The token can no longer admit anybody, as it was single-use or its validity has passed.
 
 ### TRANSITION
 
@@ -161,6 +164,18 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
     RULES: [[RULE:token-format]];
     USE-CASES: [[SCENARIO:authenticate-auto]];
     The pre-generated token is marked spent by the use of an automatic-access URL carrying it.
+
+-   `consume {{consume-reuse}}`; FROM: [[STATE:Used]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
+    GUARD: The event allows automatic-access URLs and does not expire pre-generated tokens on first use.;
+    RULES: [[RULE:token-format]];
+    USE-CASES: [[SCENARIO:authenticate-auto]];
+    The reusable pre-generated token admits its user again through the automatic-access URL carrying it.
+
+-   `expire`; FROM: [[STATE:Used]]; TO: [[STATE:Dead]]; ACTOR: System;
+    GUARD: The token is single-use, i.e., it was sent by email or the event expires pre-generated tokens on first use, or its validity has passed.;
+    RULES: [[RULE:token-format]];
+    USE-CASES: [[SCENARIO:authenticate-token]], [[SCENARIO:authenticate-auto]];
+    The token is retired for good, right after its single use or once its validity has passed.
 
 LIFECYCLE: UserStatistic {{userstatistic}}
 ------------------------------------------
