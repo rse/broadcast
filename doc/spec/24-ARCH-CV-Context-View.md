@@ -38,6 +38,21 @@ same browser-based web client as the attendees, BECAUSE the solution
 joins attendance and its moderated interaction in a single web
 application, sparing the operators any separate tool or installation.
 
+##  ENTITY: Administrator {{administrator}}
+
+-   KIND:      Person
+-   DIRECTION: Bidirectional
+-   TERMS:     [[TERM:administrator]]
+-   INTERFACE: [[INTERFACE:server-cli]]
+-   ACTORS:    [[ROLE:administrator]]
+-   USE-CASES: [[USE-CASE:administer-event]]
+-   DATA:      Software configuration, event provisioning, corrections of any event
+
+The administrator provisions the events and streaming providers through
+the configuration and the command line of the server and corrects any
+event through the web client, BECAUSE the operation of the solution
+needs one role which depends on no event-specific grant.
+
 ##  ENTITY: Streaming Provider {{provider}}
 
 -   KIND:      System
