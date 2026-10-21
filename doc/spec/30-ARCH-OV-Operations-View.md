@@ -95,8 +95,9 @@ to 10000 require capacity provisioned per environment.
 
 The PostgreSQL database and the filesystem assets are dumped nightly and
 before each event onto the backup storage of the same data center,
-BECAUSE event setups must survive a database loss without leaving the
-EU hosting boundary.
+which deletes every dump after at most 7 days, BECAUSE event setups must
+survive a database loss without leaving the EU hosting boundary, while
+the personal data of a finished event must not outlive it for long.
 
 ##  CONCERN: Database Restore {{restore}}
 
