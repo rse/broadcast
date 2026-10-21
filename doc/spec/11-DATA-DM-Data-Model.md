@@ -182,6 +182,10 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     Whether pre-generated authorization tokens expire after first use,
     BECAUSE events choose between one-time and reusable pre-generated tokens.
 
+-   ATTRIBUTE: authTokenValidity; TYPE: `integer`; DEFAULT: `5`;
+    Validity in minutes of an ordinary login authorization token of the event,
+    BECAUSE audiences reading their email with a delay need a longer validity than the default.
+
 -   ATTRIBUTE: sentimentSenderAnalysis; TYPE: `boolean`; DEFAULT: `false`;
     Whether lightweight client-side sentiment analysis is enabled,
     BECAUSE the event can check input at the source before sending.
