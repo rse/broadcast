@@ -20,6 +20,7 @@
     ],
     "devDependencies": {
         "@rse/stx":                         "1.1.6",
+        "@rse/specbook":                    "1.5.2",
         "shx":                              "0.4.0",
         "delay-cli":                        "3.0.0",
         "patch-package":                    "8.0.1",
