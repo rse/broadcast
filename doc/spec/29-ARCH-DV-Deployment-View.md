@@ -73,7 +73,7 @@ no installation and must run on both managed and unmanaged devices.
 -   NETWORKS:    [[NETWORK:internet]]
 
 A Cloudflare CDN edge distributes the static client bundle and static resources close to users, BECAUSE static content must
-be delivered quickly and stably to a large, distributed audience.
+be delivered to the start surge of up to 10000 joining attendees within the time [[REQUIREMENT:asset-delivery]] demands.
 
 ##  NODE: Edge Router {{router}}
 
@@ -98,8 +98,8 @@ single hardened entry point must balance load and isolate environments.
 -   CONNECTS-TO: [[NODE:relay]]
 -   NETWORKS:    [[NETWORK:backend]]
 
-The proxy servers run several reverse proxy instances per environment forwarding to the relay brokers, BECAUSE
-per-environment scaling of request handling needs multiple proxy instances.
+The proxy servers run several reverse proxy instances per environment forwarding to the relay brokers, BECAUSE a
+single proxy instance cannot forward the 10000 concurrent connections per event of [[REQUIREMENT:scalability]].
 
 ##  NODE: Relay Brokers {{relay}}
 
@@ -162,6 +162,6 @@ BECAUSE the internal hops must stay unreachable from the Internet while remainin
 -   PROTOCOLS:  TCP 5432
 -   ADDRESSING: Hetzner private vSwitch, database subnet
 
-The data network connects the service containers to the database server only, BECAUSE the persistence node must be
-reachable from the business services alone.
+The data network connects the service containers to the database server only, BECAUSE a compromised node of the
+Internet-facing backend network then still has no route to the persisted personal data.
 

@@ -15,7 +15,7 @@ Modified: 2026-09-05 01:00
 
 The Vue.js single-page application renders the attendee and operator UI and drives all user interaction: it presents the
 panel, attendee, studio, moderator, and manager screens, plays the video stream, and exchanges live data over MQTT,
-BECAUSE msg.Broadcast delivers its entire experience in the browser.
+BECAUSE Broadcast delivers its entire experience in the browser.
 
 ##  COMPONENT: Client NLP {{client-nlp}}
 
@@ -23,8 +23,9 @@ BECAUSE msg.Broadcast delivers its entire experience in the browser.
 -   PART-OF:        [[COMPONENT:client]]
 -   REALIZES:       [[REQUIREMENT:client-sentiment]]
 
-The client NLP module performs lightweight client-side sentiment analysis and language identification on attendee input
-before it is sent, BECAUSE filtering at the source reduces server load and can prevent improper submissions.
+The client NLP module pre-processes attendee input in the browser before it is sent, analyzing its sentiment and
+identifying its language, BECAUSE processing input at its source both relieves the server from filtering improper
+submissions and spares it an initial round-trip for detecting the message language.
 
 ##  COMPONENT: Router {{router}}
 
@@ -32,8 +33,8 @@ before it is sent, BECAUSE filtering at the source reduces server load and can p
 -   PATTERNS:       [[PATTERN:reverse-proxy-edge]]
 
 The router (HAProxy with NFTables) routes incoming HTTP and WebSocket traffic across the proxy instances of an environment
-using round-robin and separates the dev, QA, and production environments, BECAUSE traffic must be balanced and environments
-isolated at the edge.
+using round-robin and separates the dev, QA, and production environments, BECAUSE a single controlled entry point is easier
+to secure and to scale than many, while separated environments keep dev and QA traffic away from running production events.
 
 ##  COMPONENT: Proxy {{proxy}}
 

@@ -42,12 +42,19 @@ UXUI: Language Conventions (LC)
     CATEGORY: Vocabulary;
     ACTORS: [[PERSONA:attendee]];
     PRINCIPLES: [[PRINCIPLE:privacy-identity]];
-    TERMS: [[TERM:anonymization]], [[TERM:moderator]];
+    TERMS: [[TERM:anonymization]];
     EXAMPLE: "Anonymous", not "anonymous user" or "N/A";
     When identity is hidden, the displayed sender name is exactly
-    "Anonymous", and moderator-authored messages default to the sender name
-    "Moderator", BECAUSE a fixed placeholder reads as a deliberate choice
+    "Anonymous", BECAUSE a fixed placeholder reads as a deliberate choice
     while an ad-hoc wording reads as missing data.
+
+-   CONVENTION: Moderator Sender Name {{moderator-name}};
+    CATEGORY: Vocabulary;
+    TERMS: [[TERM:moderator]];
+    EXAMPLE: "Moderator", not "Admin" or "System";
+    Moderator-authored messages default to the sender name "Moderator",
+    BECAUSE a fixed role name tells attendees that a message comes from
+    the moderation of the event rather than from a fellow attendee.
 
 -   CONVENTION: Token Display Format {{token-format}};
     CATEGORY: Formatting;

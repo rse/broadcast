@@ -8,7 +8,7 @@ ARCH: Development Aspects (DA)
 
 ##  ASPECT: Client/Common/Server Split {{module-split}}
 
--   CATEGORY: Structure
+-   CATEGORY:  Structure
 -   GUIDED-BY: [[PRINCIPLE:shared-contracts]]
 
 The codebase is organized into `src/client`, `src/common`, and
@@ -18,7 +18,7 @@ agree on contracts without duplicating them.
 
 ##  ASPECT: TypeScript Everywhere {{typescript}}
 
--   CATEGORY: Standardization
+-   CATEGORY:  Standardization
 -   GUIDED-BY: [[PRINCIPLE:shared-contracts]]
 
 All client-side and server-side code is written in strongly typed
@@ -39,8 +39,9 @@ every module a consistent developer entry point.
 
 The client is built and served in development by Vite, bundling the
 Vue, Pinia, Reka UI, Tailwind, and Stylus stack into the static client
-artifact, BECAUSE Vite provides fast HMR development and an optimized
-production bundle.
+artifact, BECAUSE one build configuration for development and
+production keeps the developed client equal to the delivered static
+bundle.
 
 ##  ASPECT: Layered Linting {{linting}}
 
@@ -63,9 +64,16 @@ dependency keeps the shared contract free of platform-specific concerns.
 -   CATEGORY: Codeline
 
 The project is versioned in a single Git repository hosted on the
-self-administered Gitea, with the Software Administrator granting
-repository access, BECAUSE self-hosted version control keeps source
-under full organizational control.
+self-administered Gitea, BECAUSE self-hosted version control keeps
+source under full organizational control.
+
+##  ASPECT: Repository Access {{repository-access}}
+
+-   CATEGORY: Codeline
+
+Access to the repository is granted by the Software Administrator,
+BECAUSE the Software Administrator manages the software configuration
+and hence controls who may change the solution.
 
 ##  ASPECT: Identifier Naming {{identifier-naming}}
 

@@ -255,8 +255,8 @@ TEST: Test Cases (TC)
 ##  TEST-CASE: Client-Side Check Holds Back Improper Input {{client-block}}
 
 -   VERIFIES:       [[REQUIREMENT:client-sentiment]], [[SCENARIO:ask-question-client]]
--   PRE-CONDITION:  A running event with client-side sentiment analysis enabled.
--   INPUT:          An attendee submits a question with clearly improper wording.
+-   PRE-CONDITION:  A running event with client-side sentiment analysis and client-side auto-prevention enabled.
+-   INPUT:          An attendee submits the insulting question "You are all idiots and this talk is garbage."
 -   EXPECTED:       The client prevents the submission and informs the attendee, and no request reaches the server.
 -   POST-CONDITION: No message exists for the submission.
 
@@ -334,5 +334,5 @@ TEST: Test Cases (TC)
 
 -   VERIFIES:      [[REQUIREMENT:attendee-scale]], [[REQUIREMENT:scalability]]
 -   PRE-CONDITION: A running event deployed with scaled proxy, relay, and server instances.
--   INPUT:         10000 simulated attendees connect simultaneously and interact.
+-   INPUT:         10000 simulated attendees connect to the event simultaneously.
 -   EXPECTED:      All 10000 attendees hold a served WebSocket connection at the same time, meeting the upper bound of the 2500 to 10000 attendees per event metric.

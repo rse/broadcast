@@ -17,9 +17,9 @@ STORYBOARD: Attendee Joins and Watches {{attendee-join}}
 -   Event Landing; SCENARIO-STEP: 1; PATTERNS: [[DIALOG-PATTERN:two-factor-login]];
     The attendee opens the event URL and sees the event title, login message, and an email field.
 -   Email Entry; SCENARIO-STEP: 2; PATTERNS: [[DIALOG-PATTERN:two-factor-login]];
-    The attendee enters their email; the system confirms a token has been sent to that address.
+    The attendee enters their email, and the system confirms that a token has been sent to that address.
 -   Token Challenge; SCENARIO-STEP: 2; PATTERNS: [[DIALOG-PATTERN:two-factor-login]];
-    A token field appears with the email read-only; the attendee types the six-digit token.
+    A token field appears with the email read-only, and the attendee types the six-digit token.
 -   Consent Gate; SCENARIO-STEP: 2; PATTERNS: [[DIALOG-PATTERN:consent-gate]];
     The required login information is shown and the attendee accepts the conditions.
 -   Main Screen; SCENARIO-STEP: 3; PATTERNS: [[DIALOG-PATTERN:video-sidebar]];
@@ -114,9 +114,9 @@ STORYBOARD: Moderator Forwards to Presenter {{moderate-forward}}
 -   Approve Card; SCENARIO-STEP: 2; ACTOR: [[PERSONA:moderator-qa]]; PATTERNS: [[DIALOG-PATTERN:kanban-board]];
     The moderator approves a relevant question, moving it to the accepted lane.
 -   Forward with Hint; SCENARIO-STEP: 3; ACTOR: [[PERSONA:moderator-qa]]; PATTERNS: [[DIALOG-PATTERN:kanban-board]];
-    The moderator forwards the card to the presenter and attaches a routing hint in the presenter alert.
+    The moderator forwards the card to the presenter and attaches a routing hint as its presenter annotation.
 -   Presenter Basket; SCENARIO-STEP: 5; ACTOR: [[PERSONA:presenter]];
-    The card appears in the presenter's ordered work basket below the acknowledgeable hint and is locked from attendee edits.
+    The card appears in the presenter's ordered work basket with its hint and is locked from attendee edits.
 
 STORYBOARD: Manager Switches Provider Live {{switch-provider}}
 ------------------------------------------

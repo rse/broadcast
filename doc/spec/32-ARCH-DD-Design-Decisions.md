@@ -62,8 +62,8 @@ ARCH: Design Decisions (DD)
     Events handle personal attendee data under GDPR, yet attendance is transient and the operator wants to carry as little
     personal-data liability as possible while still supporting per-event identity for chat and moderation.
 -   WHAT:
-    We hold no permanent user accounts: users exist only via an event access list, role grant, or pattern match, and on event
-    finish an automated procedure anonymizes messages and deletes users, tokens, and Moderator roles.
+    We hold no permanent user accounts ([[RULE:no-accounts]]), and on event finish the automated procedure of
+    [[RULE:anonymize]] removes the personal data of the event.
 -   WHY:
     Deleting personal data the moment it is no longer needed minimizes both breach impact and compliance burden, which
     outweighs the convenience of persistent accounts; a conventional account model was rejected because standing personal data
@@ -179,8 +179,9 @@ ARCH: Design Decisions (DD)
 -   DECIDES:      [[TACTIC:portability]], [[COMPONENT:ui-framework]], [[COMPONENT:widget-framework]], [[COMPONENT:build-tool]]
 -   ALTERNATIVES: React, Svelte, server-rendered pages with progressive enhancement
 -   WHEN:
-    The attendee and operator screens run in any recent browser on managed and unmanaged desktop and mobile devices, react
-    to server-pushed changes within seconds, and are styled to the corporate design without a native look.
+    The attendee and operator screens run in the browsers named by [[REQUIREMENT:browser-compat]] on managed and unmanaged
+    desktop and mobile devices, react to server-pushed changes within the latency bound of [[REQUIREMENT:config-latency]],
+    and are styled to the corporate design without a native look.
 -   WHAT:
     We build the client as a Vue.js single-page application composed of headless Reka UI widgets styled with Tailwind CSS,
     bundled by Vite into static files.

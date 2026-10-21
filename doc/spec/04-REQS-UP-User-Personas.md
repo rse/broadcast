@@ -23,10 +23,13 @@ the moderation or on the personal data of other attendees.
 
 The moderator gatekeeps the interaction of a running event by deciding,
 answering, forwarding, and seeding messages and by steering the
-presenter, where the Q&A moderator and the chat moderator hold the very
-same role and split the work by message type by convention only, BECAUSE
-the audience has to see only what the organizers approve while the
-presenter receives a curated selection.
+presenter, BECAUSE the audience has to see only what the organizers
+approve while the presenter receives a curated selection.
+
+The Q&A moderator and the chat moderator hold this very same role and
+split the work by message type by convention only, BECAUSE both need
+the identical rights on every message of the event, which two separate
+roles would merely duplicate.
 
 ##  ROLE: Presenter {{presenter}}
 

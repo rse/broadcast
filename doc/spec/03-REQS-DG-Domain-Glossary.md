@@ -26,19 +26,18 @@ REQS: Domain Glossary (DG)
 -   TERM: User {{user}};
     TYPE: Entity;
     A person identified by their email address within a specific
-    [[TERM:Event]], holding the [[TERM:Role]]s granted to them and
-    existing only while granted a [[TERM:Role]], present on the
+    [[TERM:Event]] and holding the [[TERM:Role]]s granted to them there.
+    A User exists only while granted a [[TERM:Role]], present on the
     [[TERM:Access List]], or joining via the access email pattern of the
-    [[TERM:Event]], except the holder of the [[TERM:Administrator]]
-    [[TERM:Role]], who exists permanently and outside any [[TERM:Event]];
-    any other User is never a permanent account, and an
-    [[TERM:Attendee]] is a User logged into the [[TERM:Event]].
+    [[TERM:Event]], and is never a permanent account. The only exception
+    is the holder of the [[TERM:Administrator]] [[TERM:Role]], who exists
+    permanently and outside any [[TERM:Event]].
 
 -   TERM: Manager {{manager}};
     TYPE: Actor;
     BROADER: [[TERM:Role]];
     DISTINCT-FROM: [[TERM:Administrator]];
-    An event-level [[TERM:Role]] that can edit, start, stop, and delete an
+    An event-level [[TERM:Role]] that can edit, publish, start, finish, and delete an
     [[TERM:Event]] and export its anonymized data; the Manager role is
     retained after the [[TERM:Event]] finishes until the [[TERM:Event]]
     is deleted.
@@ -56,8 +55,8 @@ REQS: Domain Glossary (DG)
     TYPE: Actor;
     BROADER: [[TERM:Role]];
     DISTINCT-FROM: [[TERM:Moderator]];
-    An event-specific [[TERM:Role]] held by the person on stage in a
-    recorded video [[TERM:Event]], receiving the [[TERM:Message]]s
+    An event-specific [[TERM:Role]] held by the person on stage in the
+    video production of an [[TERM:Event]], receiving the [[TERM:Message]]s
     forwarded by the [[TERM:Moderator]] and marking them answered or
     suspended after processing them live; unlike the [[TERM:Moderator]],
     the Presenter curates nothing and sees only the forwarded subset.
@@ -65,22 +64,23 @@ REQS: Domain Glossary (DG)
 -   TERM: Administrator {{administrator}};
     TYPE: Actor;
     BROADER: [[TERM:Role]];
-    SYNONYMS: Software Administrator, Hardware Administrator;
+    SYNONYMS: Software Administrator;
     DISTINCT-FROM: [[TERM:Manager]];
     A permanent [[TERM:Role]] independent of any [[TERM:Event]] and
     bootstrapped from the software configuration, whose holder needs no
     [[TERM:Access List]] entry and may perform every operation on every
-    entity of every [[TERM:Event]]; the Hardware Administrator manages
-    the physical server while the Software Administrator manages the
-    software configuration and creates [[TERM:Event]]s.
+    entity of every [[TERM:Event]]. Its holder manages the software
+    configuration and creates [[TERM:Event]]s, while managing the
+    physical server is the separate duty of a Hardware Administrator.
 
 -   TERM: Role {{role}};
     TYPE: Entity;
     SYNONYMS: Event Role;
-    A grant of rights held by a [[TERM:User]] (usually within a specific
-    [[TERM:Event]]), of type [[TERM:Attendee]], [[TERM:Manager]],
-    [[TERM:Moderator]], [[TERM:Presenter]] or [[TERM:Administrator]].
-    A role is a permanent entity.
+    A grant of rights held by a [[TERM:User]] within a specific
+    [[TERM:Event]] or, as the [[TERM:Administrator]] role, permanently
+    and outside any [[TERM:Event]], of type [[TERM:Attendee]],
+    [[TERM:Manager]], [[TERM:Moderator]], [[TERM:Presenter]] or
+    [[TERM:Administrator]].
 
 -   TERM: Channel {{channel}};
     TYPE: Entity;

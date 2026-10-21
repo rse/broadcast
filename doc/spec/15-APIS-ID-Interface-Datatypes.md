@@ -22,20 +22,24 @@ TYPE: Configuration
 
 The structure of the YAML configuration file, whose keys are also
 the surface of the recognized `BROADCAST_*` environment variables
-(`BROADCAST_ADMIN_USERNAME` maps onto `adminUsername`) and of the
-corresponding command-line options, where an unrecognized key is a fatal
-startup error, BECAUSE one schema has to define all three configuration
-layers consistently.
+(`BROADCAST_ADMIN_EMAIL` maps onto `adminEmail`) and of the
+corresponding command-line options, BECAUSE one schema has to define all
+three configuration layers consistently.
+
+An unrecognized key is a fatal startup error, BECAUSE a mistyped key
+would otherwise be silently ignored and let the server run with an
+unintended default.
+
+Within the name of such an environment variable, a double underscore
+separates the nesting path segments and a single underscore the words
+of one camel-cased segment, BECAUSE every configuration key has to be
+derivable unambiguously from the variable name.
 
 ### FIELD
 
--   adminUsername; TYPE: `string`; CONSTRAINT: `non-empty`;
-    The user name of the administrator account,
-    BECAUSE the administrator has to be able to log in without any event-specific token.
-
--   adminPassword; TYPE: `string`; CONSTRAINT: `non-empty`;
-    The password of the administrator account,
-    BECAUSE the administrator account has to be protected.
+-   adminEmail; TYPE: `string`; CONSTRAINT: `email address`;
+    The email address the configuration grants the Administrator role to ([[RULE:administrator-bootstrap]]),
+    BECAUSE the administrator enters every event through the ordinary login challenge of this address ([[RULE:administrator-access]]).
 
 -   mqttUrl; TYPE: `string`; DEFAULT: [[DEFAULT_MQTT_URL]];
     The URL of the MQTT broker the server connects to, including the credentials and the topic prefix,
@@ -60,9 +64,7 @@ layers consistently.
 ### CONSTANT
 
 -   ENV_PREFIX; TYPE: `string`; VALUE: `BROADCAST_`;
-    The prefix of all environment variables overriding configuration parameters, where a double
-    underscore separates the nesting path segments and a single underscore the words of one
-    camel-cased segment,
+    The prefix of all environment variables overriding configuration parameters,
     BECAUSE the server has to ignore the unrelated variables of the ambient environment.
 
 -   DEFAULT_MQTT_URL; TYPE: `string`; VALUE: `wss://example:example@127.0.0.1:1883/pr/api/server/?topic=broadcast`;

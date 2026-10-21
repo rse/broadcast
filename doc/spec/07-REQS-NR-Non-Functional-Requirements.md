@@ -25,21 +25,20 @@ REQS: Non-Functional Requirements (NR)
     PRIORITY: MUST; CATEGORY: Performance;
     GROUP: [[GROUP:audience-scale]];
     PREMISES: [[PREMISE:audience-bound]], [[PREMISE:start-surge]];
-    METRIC: 2500 to 10000 concurrently connected attendees per event;
-    The system MUST support between 2500 and 10000 attendees connected
-    to a single event at the same time, BECAUSE msg Filmstudio video
-    productions must reach an audience of this size simultaneously.
+    METRIC: 10000 concurrently connected attendees per event supported;
+    The system MUST support up to 10000 attendees connected to a single
+    event at the same time, BECAUSE msg Filmstudio video productions
+    must reach an audience of 2500 to 10000 attendees simultaneously.
 
 -   REQUIREMENT: Horizontal Scalability {{scalability}};
     PRIORITY: MUST; CATEGORY: Performance;
     GROUP: [[GROUP:audience-scale]];
     PREMISES: [[PREMISE:audience-bound]], [[PREMISE:start-surge]];
     METRIC: 10000 concurrent WebSocket connections per event;
-    The system MUST scale horizontally by running multiple proxy, relay,
-    and server instances per runtime environment so that 10000
-    concurrent WebSocket connections are served per event, BECAUSE a
-    single instance cannot handle the required connection volume and
-    response times.
+    The system MUST scale horizontally, serving 10000 concurrent
+    WebSocket connections per event by adding instances instead of
+    enlarging a single one, BECAUSE a single instance cannot handle the
+    required connection volume and response times.
 
 -   REQUIREMENT: Streaming Quality {{streaming-quality}};
     PRIORITY: MUST; CATEGORY: Performance;
@@ -58,7 +57,7 @@ REQS: Non-Functional Requirements (NR)
     METRIC: all attendee clients on the fallback provider within 10 seconds;
     The system MUST switch to a fallback streaming provider during a
     running event with attendee clients following the switch
-    automatically within seconds and without user interaction, BECAUSE
+    automatically within 10 seconds and without user interaction, BECAUSE
     provider outages must not interrupt the live audience.
 
 -   REQUIREMENT: Cross-Browser Compatibility {{browser-compat}};
@@ -66,9 +65,9 @@ REQS: Non-Functional Requirements (NR)
     QUALIFIES: [[REQUIREMENT:browser-access]];
     PREMISES: [[PREMISE:websocket-passage]];
     METRIC: the last 2 major versions of Chrome, Edge, Firefox, and Safari;
-    The system MUST run in any reasonably recent version of the major
-    web browsers (Chrome, Edge, Firefox, Safari) without plugins,
-    BECAUSE attendees use heterogeneous managed and unmanaged devices.
+    The system MUST run in the last 2 major versions of the web browsers
+    Chrome, Edge, Firefox, and Safari without plugins, BECAUSE attendees
+    use heterogeneous managed and unmanaged devices.
 
 -   REQUIREMENT: GDPR Compliance {{gdpr}};
     PRIORITY: MUST; CATEGORY: Compliance;
@@ -76,10 +75,9 @@ REQS: Non-Functional Requirements (NR)
     QUALIFIES: [[REQUIREMENT:gdpr-eu]];
     PREMISES: [[PREMISE:eu-hosting]], [[PREMISE:message-personal-data]];
     METRIC: 100 % of personal data processed and hosted within the EU;
-    The system MUST process all personal data in compliance with GDPR
-    and host it exclusively within the EU (data center in Nürnberg,
-    Germany), BECAUSE the operator is legally bound to European
-    data-protection requirements.
+    The system MUST process and host all personal data exclusively
+    within the EU, BECAUSE the operator is legally bound to the European
+    data-protection requirements of the GDPR.
 
 -   REQUIREMENT: Privacy by Design {{privacy}};
     PRIORITY: MUST; CATEGORY: Security;

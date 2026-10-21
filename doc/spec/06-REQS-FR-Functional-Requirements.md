@@ -42,15 +42,17 @@ REQS: Functional Requirements (FR)
     The client adapts its appearance and language to the participant and
     the device, BECAUSE a captive audience brings every device and language
     it has.
+
 -   REQUIREMENT: User Authentication {{authentication}}; PRIORITY: MUST;
     GROUP: [[GROUP:access]];
     PREMISES: [[PREMISE:email-at-hand]], [[PREMISE:email-delivery]], [[PREMISE:start-surge]];
     The system MUST authenticate participants via their email address
-    before showing the video stream or, at minimum, before allowing
-    participation in questions and chat, re-checking on every access
-    that the event still lists the user even when the user is already
-    authenticated, BECAUSE access must be restricted to invited
-    participants to minimize foreign viewers.
+    before showing the video stream or, where the event allows
+    anonymous access, before allowing participation in questions and
+    chat, re-checking on every access that the event still lists the
+    user even when the user is already authenticated, BECAUSE access
+    must be restricted to invited participants to minimize foreign
+    viewers.
 
 -   REQUIREMENT: Limit Parallel Access {{parallel-access}}; PRIORITY: MUST;
     GROUP: [[GROUP:access]];
@@ -108,26 +110,35 @@ REQS: Functional Requirements (FR)
     GROUP: [[GROUP:moderating]];
     DEPENDS-ON: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]];
     The system COULD perform configurable client-side sentiment analysis
-    that checks attendee input before it is sent and may prevent
-    improper submissions, BECAUSE filtering at the source reduces server
-    moderation load and discourages misconduct.
+    that checks attendee input before it is sent and, where the event
+    enables automatic prevention, prevents improper submissions, BECAUSE
+    filtering at the source reduces server moderation load and
+    discourages misconduct.
 
 -   REQUIREMENT: Server-Side Sentiment Analysis {{server-sentiment}}; PRIORITY: COULD;
     GROUP: [[GROUP:moderating]];
     DEPENDS-ON: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]];
     PREMISES: [[PREMISE:interaction-abuse]];
     The system COULD perform configurable server-side sentiment analysis
-    that checks attendee input before it is stored, auto-accepting
-    positive and auto-rejecting negative input, BECAUSE automated triage
-    assists moderators with high message volume.
+    that checks attendee input before it is stored, auto-accepting proper
+    and auto-rejecting improper input as classified by
+    [[RULE:sentiment-threshold]], each where the event enables it,
+    BECAUSE automated triage assists moderators with high message volume.
 
--   REQUIREMENT: Edit and Delete Messages {{message-editing}}; PRIORITY: SHOULD;
+-   REQUIREMENT: Edit Own Messages {{message-editing}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:interaction]];
     DEPENDS-ON: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]];
-    The system SHOULD let attendees edit and delete their own chat and
-    question messages, mark edited messages for others, and re-run
-    moderation on edits where required, BECAUSE attendees must correct
-    mistakes without bypassing moderation.
+    The system SHOULD let attendees edit their own chat and question
+    messages, mark edited messages for others, and re-run moderation on
+    edits where required, BECAUSE attendees must correct mistakes
+    without bypassing moderation.
+
+-   REQUIREMENT: Delete Own Messages {{message-deletion}}; PRIORITY: SHOULD;
+    GROUP: [[GROUP:interaction]];
+    DEPENDS-ON: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]];
+    The system SHOULD let attendees delete their own chat and question
+    messages, BECAUSE attendees must be able to withdraw a contribution
+    they posted by mistake.
 
 -   REQUIREMENT: Tag Question Messages {{question-tags}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:interaction]];
@@ -177,12 +188,18 @@ REQS: Functional Requirements (FR)
     likes, and message text, BECAUSE organizers need a durable record of
     audience interaction.
 
--   REQUIREMENT: Presenter Hints and Alerts {{presenter-hints}}; PRIORITY: SHOULD;
+-   REQUIREMENT: Presenter Hints {{presenter-hints}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:moderating]];
     DEPENDS-ON: [[REQUIREMENT:forward-presenter]];
-    The system SHOULD let moderators send textual hints to the presenter
-    and raise an alert the presenter can confirm, BECAUSE the moderator
-    must steer the live presenter with timing and routing guidance.
+    The system SHOULD let moderators attach textual hints for the
+    presenter to forwarded inputs, BECAUSE the moderator must steer the
+    live presenter with routing guidance.
+
+-   REQUIREMENT: Presenter Alerts {{presenter-alerts}}; PRIORITY: SHOULD;
+    GROUP: [[GROUP:moderating]];
+    The system SHOULD let moderators raise an alert the presenter can
+    confirm, BECAUSE the moderator must signal urgent timing guidance to
+    the presenter on stage.
 
 -   REQUIREMENT: Sort and Filter Messages {{sort-filter}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:moderating]];
@@ -200,9 +217,10 @@ REQS: Functional Requirements (FR)
 -   REQUIREMENT: Browser Access {{browser-access}}; PRIORITY: MUST;
     GROUP: [[GROUP:access]];
     PREMISES: [[PREMISE:websocket-passage]];
-    The system MUST be accessible from any reasonably recent web browser
-    without installation, BECAUSE attendees use both managed and
-    unmanaged devices with no common client software.
+    The system MUST be accessible without installation from every web
+    browser version listed by [[REQUIREMENT:browser-compat]], BECAUSE
+    attendees use both managed and unmanaged devices with no common
+    client software.
 
 -   REQUIREMENT: Individual Event Access URL {{individual-url}}; PRIORITY: MUST;
     GROUP: [[GROUP:access]];
@@ -247,9 +265,9 @@ REQS: Functional Requirements (FR)
     GROUP: [[GROUP:privacy-controls]];
     DEPENDS-ON: [[REQUIREMENT:authentication]];
     PREMISES: [[PREMISE:message-personal-data]];
-    The system MUST require event attendees to give explicit consent
-    before participating under defined conditions, in addition to prior
-    platform consent, BECAUSE consent is both a legal safeguard and a
+    Where an event requires its login information to be accepted, the
+    system MUST require attendees to explicitly accept it before
+    participating, BECAUSE consent is both a legal safeguard and a
     psychological hurdle against prohibited stream sharing.
 
 -   REQUIREMENT: Login and Interaction Messages {{info-messages}}; PRIORITY: SHOULD;
@@ -280,7 +298,8 @@ REQS: Functional Requirements (FR)
     The system MUST import an Excel sheet of the Event Registration
     System to populate an event's access list and generate authorization
     tokens, avoiding duplicate invitations on repeated imports, BECAUSE
-    events are provisioned from the Event Registration System.
+    the Event Registration System already holds the registered audience
+    and entering hundreds of attendees by hand is error-prone.
 
 -   REQUIREMENT: Return Access URLs to Registration {{registration-export}}; PRIORITY: MUST;
     GROUP: [[GROUP:registration]];
@@ -315,16 +334,24 @@ REQS: Functional Requirements (FR)
     GROUP: [[GROUP:statistics]];
     DEPENDS-ON: [[REQUIREMENT:event-stats]];
     The system SHOULD show the number of viewers per channel of an
-    event, BECAUSE organizers want to know the relative popularity of
-    language and resolution variants.
+    event, BECAUSE organizers want to know how many viewers each channel
+    reached while it was the active one.
 
 -   REQUIREMENT: User Statistics {{user-stats}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:statistics]];
     DEPENDS-ON: [[REQUIREMENT:event-stats]];
     The system SHOULD record viewer statistics including country,
-    browser, device, and viewport, using country to select the default
-    application language on first use, BECAUSE audience composition
-    informs both reporting and localization.
+    browser, device, and viewport, BECAUSE audience composition informs
+    the reporting of an event.
+
+-   REQUIREMENT: Country-Based Default Language {{country-language}}; PRIORITY: SHOULD;
+    GROUP: [[GROUP:client-experience]];
+    DEPENDS-ON: [[REQUIREMENT:user-stats]];
+    PREMISES: [[PREMISE:two-languages]];
+    The system SHOULD select the default application language of an
+    attendee on first use from the recorded country of the attendee,
+    BECAUSE the country is the best available hint at which of the two
+    supported languages the attendee prefers.
 
 -   REQUIREMENT: Periodic Statistics Snapshots {{stats-snapshots}}; PRIORITY: MUST;
     GROUP: [[GROUP:statistics]];
@@ -356,29 +383,29 @@ REQS: Functional Requirements (FR)
 
 -   REQUIREMENT: Mobile Device Support {{mobile}}; PRIORITY: COULD;
     GROUP: [[GROUP:client-experience]];
-    The system COULD let participants take part on mobile phones, at
-    least for video with possible interaction restrictions, BECAUSE many
-    attendees join from mobile devices.
+    The system COULD let participants watch the video stream on mobile
+    phones, even where the interaction features stay unavailable there,
+    BECAUSE many attendees join from mobile devices.
 
 -   REQUIREMENT: In-Session Language Switching {{language-switch}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:client-experience]];
     PREMISES: [[PREMISE:two-languages]], [[PREMISE:translation-service]];
     The system SHOULD let an attendee switch the display and content
-    language between German and English at any time from the header,
+    language between German and English at any time,
     applying the change immediately, BECAUSE attendees expect to read
     the interface and translated messages in their preferred one of the
     two supported languages.
 
 -   REQUIREMENT: Light and Dark Theme {{theme-toggle}}; PRIORITY: COULD;
     GROUP: [[GROUP:client-experience]];
-    The system COULD let an attendee toggle a light or dark theme from
-    the header, applying it immediately across the interface, BECAUSE
+    The system COULD let an attendee toggle a light or dark theme at any
+    time, applying it immediately across the interface, BECAUSE
     attendees view events under varied lighting and prefer a comfortable
     appearance.
 
 -   REQUIREMENT: Deleted Message Placeholder {{deleted-placeholder}}; PRIORITY: SHOULD;
     GROUP: [[GROUP:interaction]];
-    DEPENDS-ON: [[REQUIREMENT:message-editing]];
+    DEPENDS-ON: [[REQUIREMENT:message-deletion]];
     When an attendee deletes a message, the system SHOULD retain its
     position in the stream and show a "This message was deleted"
     placeholder instead of removing it, BECAUSE preserving the gap keeps

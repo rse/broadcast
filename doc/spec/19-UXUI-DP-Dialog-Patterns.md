@@ -39,7 +39,7 @@ attendee onward once accepted, BECAUSE explicit acknowledgement is both a legal 
 -   USES: [[DIALOG-PATTERN:message-stream]], [[DIALOG-PATTERN:composer]]
 -   TRADE-OFF: A smaller video area on wide screens and a sidebar hidden behind a toggle on small screens.
 
-The video occupies the primary area while a tabbed sidebar hosts the Q&A, Hudspad, Chat, and Support tabs, collapsing
+The video occupies the primary area while a tabbed sidebar hosts the Q&A, Chat, Support, and embedded third-party app tabs, collapsing
 responsively on small screens, BECAUSE co-locating stream and interaction keeps attention on the event while interaction
 stays reachable.
 
@@ -79,8 +79,9 @@ and the input's own state in one place makes posting and its consequence immedia
 -   PRINCIPLES: [[PRINCIPLE:live-reactivity]], [[PRINCIPLE:moderation-gated]]
 -   TRADE-OFF: A wide multi-lane board that needs a desktop-sized screen and drag-capable pointer input.
 
-Messages appear as cards in state lanes (pending, accepted, forwarded, answered) that the moderator advances by action, with
-filters and manual reordering, BECAUSE spatial state and drag actions make high-throughput triage fast and unambiguous.
+Messages appear as cards in state lanes (rejected, pending, accepted, and for questions also suspended, forwarded, and
+answered) that the moderator advances by action, with filters and manual reordering, BECAUSE spatial state and drag
+actions make high-throughput triage fast and unambiguous.
 
 ##  DIALOG-PATTERN: Master-Detail Configuration {{master-detail}}
 
@@ -97,8 +98,8 @@ parameters for editing, BECAUSE master-detail keeps a large hierarchical configu
 ##  DIALOG-PATTERN: Live Statistics Dashboard {{stats-dashboard}}
 
 -   CATEGORY: Data
--   ACTORS: [[PERSONA:manager]], [[PERSONA:presenter]]
--   CONTEXT: A manager or studio screen observing event health during the broadcast.
+-   ACTORS: [[PERSONA:manager]]
+-   CONTEXT: A manager screen observing event health during the broadcast.
 -   PROBLEM: Operators need an at-a-glance, continuously updating view of audience and channels.
 -   PRINCIPLES: [[PRINCIPLE:live-reactivity]]
 -   TRADE-OFF: A periodic snapshot cadence, so the charts lag the live state by up to one interval.

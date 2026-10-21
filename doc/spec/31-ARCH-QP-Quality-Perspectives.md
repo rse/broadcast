@@ -32,7 +32,8 @@ environment, BECAUSE a single broker cannot hold the required attendee count whi
 -   TOOLS:      [[COMPONENT:messaging]]
 
 Each channel carries multiple configured resources and the service pushes the active-resource change over MQTT so clients
-follow automatically, BECAUSE provider outages must be survived without attendee action.
+follow automatically, BECAUSE a standby resource configured in advance turns a provider outage into a pushed state change
+instead of a reconfiguration every attendee would have to perform by hand.
 
 ##  TACTIC: Privacy by Design {{privacy}}
 
@@ -56,8 +57,9 @@ accounts, BECAUSE minimizing retained personal data is the strongest guarantee a
 -   TRADES-OFF: Usability
 -   AFFECTS:    [[COMPONENT:auth]], [[ENTITY:AuthorizationToken]], [[ENTITY:SessionToken]]
 
-Access requires an unguessable URL and a short-lived one-time token, with only one active session enforced per user per event,
-BECAUSE layered, expiring secrets keep unauthorized viewers out without permanent credentials.
+Access passes three layered barriers, an unguessable URL, a short-lived one-time token, and only one active session per
+user per event, BECAUSE each barrier stops a guessed, leaked, or forwarded access the others let through, without any
+permanent credential.
 
 ##  TACTIC: Real-Time Reactivity {{reactivity}}
 
@@ -133,7 +135,7 @@ chance to stop them.
 -   OPERATED-BY: [[CONCERN:backup]], [[CONCERN:restore]]
 -   TOOLS:       [[COMPONENT:database-backup]]
 
-The database is dumped logically on a schedule tightened before each event and rebuilt from the latest dump onto a fresh
+The database is dumped logically every night and once more before each event and rebuilt from the latest dump onto a fresh
 server by a rehearsed procedure, BECAUSE a portable dump plus a drilled restore meets the recovery objectives without
 operating a standby database.
 

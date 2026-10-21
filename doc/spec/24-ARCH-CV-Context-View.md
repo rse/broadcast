@@ -34,8 +34,9 @@ concurrent attendees.
 
 The event operator is a manager, moderator, or presenter who configures
 events, moderates input, and presents forwarded questions, through the
-same browser-based web client as the attendees, BECAUSE all event
-operation happens through the same web application as attendance.
+same browser-based web client as the attendees, BECAUSE the solution
+joins attendance and its moderated interaction in a single web
+application, sparing the operators any separate tool or installation.
 
 ##  ENTITY: Streaming Provider {{provider}}
 
@@ -58,9 +59,10 @@ provider endpoints rather than hosting video.
 -   USE-CASES: [[USE-CASE:join-event]]
 -   DATA:      Static client assets and static resources
 
-A Cloudflare content delivery network fronts static content for fast,
-stable distribution, BECAUSE static assets must load quickly and
-reliably for a global, large-scale audience.
+A Cloudflare content delivery network serves the static client assets
+and static resources, BECAUSE the start surge has to receive the client
+bundle as [[REQUIREMENT:asset-delivery]] demands, without competing with
+the live connections for the single entry point of the data center.
 
 ##  ENTITY: Event Registration System {{registration-system}}
 

@@ -28,7 +28,7 @@ LIFECYCLE: Event {{event}}
 ### TRANSITION
 
 -   publish; FROM: [[STATE:Planning]]; TO: [[STATE:Published]]; ACTOR: [[ROLE:manager]];
-    GUARD: The event is fully configured.;
+    GUARD: The event has at least one channel with at least one resource, and its access list is populated, its access email pattern is set, or it allows anonymous access.;
     USE-CASES: [[SCENARIO:publish-start-finish-main]];
     The event becomes visible to invited attendees.
 
@@ -56,10 +56,10 @@ LIFECYCLE: Message {{message}}
     The attendee has submitted the message and it awaits moderation.
 
 -   `Accepted`; FINAL: true;
-    The message is approved and visible to the audience if configured.
+    The message is approved and visible to the audience, unless it is a question of an event keeping its questions private or a support message visible to its own conversation only.
 
 -   `Rejected`; FINAL: true;
-    The message is declined and will be deleted entirely on event finish.
+    The message is declined and hidden from the audience.
 
 -   `Forwarded`;
     The accepted message is handed to the presenter as a work item.
@@ -98,13 +98,13 @@ LIFECYCLE: Message {{message}}
 -   `reject`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: [[ROLE:moderator]];
     RULES: [[RULE:moderation-gate]];
     USE-CASES: [[SCENARIO:moderate-reject]];
-    The message is hidden and marked for deletion.
+    The message is hidden from the audience.
 
 -   `reject {{reject-sentiment}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: System;
     GUARD: The server-side sentiment analysis scores the message below the threshold and auto-reject is enabled.;
     RULES: [[RULE:moderation-gate]], [[RULE:sentiment-threshold]];
     USE-CASES: [[SCENARIO:ask-question-auto-reject]];
-    The message is hidden and marked for deletion without a moderator decision.
+    The message is hidden from the audience without a moderator decision.
 
 -   `resubmit`; FROM: [[STATE:Accepted]]; TO: [[STATE:Pending]]; ACTOR: [[ROLE:attendee]];
     GUARD: The event moderates messages of this type.;
@@ -134,7 +134,7 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
 ### STATE
 
 -   `Issued`; INITIAL: true;
-    The token has been generated, typically at event creation.
+    The token has been generated, either for a login challenge the attendee requested or in advance by the attendee import of the event.
 
 -   `Sent`;
     The token has been delivered to the user by email.

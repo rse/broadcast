@@ -44,7 +44,7 @@ UXUI: Interaction Concept (IC)
     USE-CASES: [[SCENARIO:configure-event-channels]], [[USE-CASE:switch-provider]], [[USE-CASE:steer-presenter]], [[SCENARIO:moderate-forward]], [[USE-CASE:present]];
     TRADE-OFF: Lower server load and simpler clients through polling or a manual reload;
     Every configuration change, provider switch, and moderation outcome is
-    pushed to connected clients over WebSockets so the UI updates without a
+    pushed to connected clients so the UI updates without a
     reload, BECAUSE a live event demands that all participants see a single,
     current state at all times.
 

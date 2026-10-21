@@ -40,11 +40,11 @@ for HTML, and StyleLint for Stylus, BECAUSE multiple focused linters keep each l
 
 ### COMPONENT: Messaging {{messaging}}
 
--   PRODUCT:    MQTT-Plus
--   LICENSE:    MIT
--   PHASE:      Run-Time
--   COVERAGE:   Client Networking, Dialog Communication, Server Networking, Component Communication
--   USED-BY:    [[COMPONENT:client]], [[COMPONENT:relay]], [[COMPONENT:service]]
+-   PRODUCT:  MQTT-Plus
+-   LICENSE:  MIT
+-   PHASE:    Run-Time
+-   COVERAGE: Client Networking, Dialog Communication, Server Networking, Component Communication
+-   USED-BY:  [[COMPONENT:client]], [[COMPONENT:relay]], [[COMPONENT:service]]
 
 MQTT-Plus handles the MQTT-over-WebSocket communication of the client with the relay layer and the MQTT messaging of the
 service and relay layers on top of the base MQTT.js functionality, BECAUSE MQTT is the messaging protocol for the
@@ -83,7 +83,7 @@ server keeps the tracing consistent.
 -   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
 
 Luxon handles date and time parsing, formatting, and localization across the client UI and the timestamps emitted by
-the server services, BECAUSE robust, locale-aware date handling is required for event schedules and timestamps in
+the server services, BECAUSE locale-aware date handling is required for event schedules and timestamps in
 German and English on client and server alike.
 
 ### COMPONENT: Unique Identifier Generation {{unique-id}}
@@ -94,9 +94,9 @@ German and English on client and server alike.
 -   COVERAGE: Business Model, Peer Information
 -   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
 
-nanoid generates the compact, collision-resistant unique identifiers for the messaging peers of client and server and
-for the entities the client creates, BECAUSE short URL-safe identifiers are needed on both tiers without the size and
-overhead of full UUIDs.
+nanoid generates the compact, collision-resistant unique identifiers for the messaging peers of client and server,
+while the entities keep the UUID keys of the data model, BECAUSE short URL-safe peer identifiers are needed on both
+tiers without the size and overhead of full UUIDs.
 
 ##  TIER: Client
 
@@ -108,7 +108,8 @@ overhead of full UUIDs.
 -   COVERAGE: Build
 
 Vite serves the client in development with fast HMR and bundles the runtime stack into the optimized static client
-artifact, BECAUSE it provides a fast development server and an optimized production bundle for the Vue stack.
+artifact, BECAUSE a single tool for both development serving and production bundling keeps the build configuration of
+the Vue stack in one place for the static bundle delivered from the CDN.
 
 ### COMPONENT: Styling Framework {{styling-framework}}
 
@@ -118,9 +119,19 @@ artifact, BECAUSE it provides a fast development server and an optimized product
 -   COVERAGE: Build, Interface Theme, Interface Layouting, Interface Effects
 -   USED-BY:  [[COMPONENT:client]]
 
-Tailwind CSS generates the utility-first styling for theme, layout, and effects at build time, with Stylus as the
-preferred preprocessor for authoring custom CSS, BECAUSE utility-first styling speeds consistent UI work while Stylus
-covers bespoke styling.
+Tailwind CSS generates the utility-first styling for theme, layout, and effects at build time, BECAUSE utility-first
+styling speeds consistent UI work.
+
+### COMPONENT: CSS Preprocessor {{css-preprocessor}}
+
+-   PRODUCT:  Stylus
+-   LICENSE:  MIT
+-   PHASE:    Build-Time
+-   COVERAGE: Build, Interface Theme
+-   USED-BY:  [[COMPONENT:client]]
+
+Stylus is the preferred preprocessor for authoring the custom CSS of the client beyond the generated utility classes,
+BECAUSE bespoke styling which utility classes cannot express needs a concise authoring language.
 
 ### COMPONENT: UI Framework {{ui-framework}}
 
@@ -227,11 +238,11 @@ entry point and the horizontally scaled per-environment forwarding.
 
 ### COMPONENT: Message Broker {{message-broker}}
 
--   PRODUCT:    Mosquitto
--   LICENSE:    EPL-2.0
--   PHASE:      Run-Time
--   COVERAGE:   Message Brokering
--   USED-BY:    [[COMPONENT:relay]]
+-   PRODUCT:  Mosquitto
+-   LICENSE:  EPL-2.0
+-   PHASE:    Run-Time
+-   COVERAGE: Message Brokering
+-   USED-BY:  [[COMPONENT:relay]]
 
 Mosquitto brokers the MQTT messages between the thousands of WebSocket connections of the clients and the service
 layer as a pool of instances per environment, BECAUSE a lightweight, proven MQTT broker sustains the connection count of

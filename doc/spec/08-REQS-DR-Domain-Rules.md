@@ -100,15 +100,15 @@ once upon creation, BECAUSE organizers must control what the audience sees.
 -   GOVERNS:    [[TERM:message]], [[TERM:moderator]]
 -   CONSTRAINS: [[REQUIREMENT:moderator-messages]]
 
-A [[TERM:Message]] authored by a [[TERM:Moderator]] MUST be accepted at once upon creation and carry the sender name
-"Moderator" unless overridden, BECAUSE [[TERM:Moderator]]-authored content is trusted and needs no further approval.
+A [[TERM:Message]] authored by a [[TERM:Moderator]] MUST be accepted at once upon creation, BECAUSE
+[[TERM:Moderator]]-authored content is trusted and needs no further approval.
 
 ##  RULE: Forwarded Messages Are Immutable {{forward-lock}}
 
 -   CATEGORY:   Constraint
 -   SOURCE:     Business
 -   GOVERNS:    [[TERM:message]], [[TERM:attendee]], [[TERM:presenter]]
--   CONSTRAINS: [[REQUIREMENT:message-editing]], [[REQUIREMENT:forward-presenter]]
+-   CONSTRAINS: [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]], [[REQUIREMENT:forward-presenter]]
 
 Once a [[TERM:Message]] reaches state forwarded, the [[TERM:Attendee]] MUST NOT edit or delete it, BECAUSE the
 [[TERM:Presenter]] relies on the forwarded content remaining stable for live processing.

@@ -12,7 +12,7 @@ USE-CASE: Join Event and Watch Stream {{join-event}}
 -   ACTOR:          [[ROLE:attendee]]
 -   JOURNEYS:       [[STEP:arrival]], [[STEP:participate]]
 -   ACTIVITIES:     [[ACTIVITY:attend-event]]
--   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]]
+-   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:country-language]]
 -   INCLUDES:       [[USE-CASE:authenticate]]
 -   PRE-CONDITION:  The attendee holds an event URL and their email is granted access.
 -   TRIGGER:        The attendee opens the individual event URL received by invitation.
@@ -62,7 +62,7 @@ attendee was invited.
 -   OUTCOME:      The attendee sees the interface and the translated messages in the chosen language.
 
 3.  The system grants the attendee access to the live video stream in the default language.
-4.  The attendee switches the language between German and English in the header.
+4.  The attendee switches the language between German and English.
 5.  The system applies the language immediately to the interface and the translated messages.
 
 ### SCENARIO: Toggle the Theme {{join-event-theme}}
@@ -73,7 +73,7 @@ attendee was invited.
 -   OUTCOME:      The attendee sees the interface in the chosen light or dark theme.
 
 3.  The system grants the attendee access to the live video stream in the default theme.
-4.  The attendee toggles between the light and the dark theme in the header.
+4.  The attendee toggles between the light and the dark theme.
 5.  The system applies the theme immediately across the whole interface.
 
 USE-CASE: Authenticate via Email Token {{authenticate}}
@@ -209,7 +209,7 @@ USE-CASE: Chat During the Event {{chat-during-event}}
 -   ACTOR:          [[ROLE:attendee]]
 -   JOURNEYS:       [[STEP:participate]]
 -   ACTIVITIES:     [[ACTIVITY:attend-event]]
--   REQUIREMENTS:   [[REQUIREMENT:chat]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:display-options]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:mc-feedback]]
+-   REQUIREMENTS:   [[REQUIREMENT:chat]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]], [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:display-options]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:mc-feedback]]
 -   RULES:          [[RULE:moderation-gate]], [[RULE:type-states]], [[RULE:forward-lock]]
 -   PRE-CONDITION:  The attendee has an active session and chat is enabled for the event.
 -   TRIGGER:        The attendee wants to comment on the running event.
@@ -428,7 +428,7 @@ USE-CASE: Steer the Presenter {{steer-presenter}}
 -   PERSONAS:       [[PERSONA:moderator-qa]]
 -   JOURNEYS:       [[STEP:support]]
 -   ACTIVITIES:     [[ACTIVITY:moderate-interaction]]
--   REQUIREMENTS:   [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:config-propagation]]
+-   REQUIREMENTS:   [[REQUIREMENT:presenter-alerts]], [[REQUIREMENT:config-propagation]]
 -   PRE-CONDITION:  The event is running and the moderator has the Moderator role.
 -   TRIGGER:        The presenter needs timing or routing guidance during the live event.
 -   POST-CONDITION: The presenter alert is raised or the active agenda point is advanced, and the presenter sees it.
@@ -511,7 +511,7 @@ audience set up before anyone can rehearse it.
 -   AT-MAIN-STEP: 2
 -   OUTCOME:      The moderators and the presenter can enter the unpublished event for the rehearsal.
 
-2.  The manager grants the Attendee, Moderator, and Presenter roles to the users of the event by email address, or revokes them again.
+2.  The manager grants the Attendee, Manager, Moderator, and Presenter roles to the users of the event by email address, or revokes them again.
 3.  The system creates the users of the roles without permanent accounts and admits them to the unpublished event.
 
 ### SCENARIO: Maintain the Access List {{configure-event-access}}
@@ -664,7 +664,7 @@ USE-CASE: Present Forwarded Questions {{present}}
 
 -   ACTOR:          [[ROLE:presenter]]
 -   ACTIVITIES:     [[ACTIVITY:rehearse-event]], [[ACTIVITY:present-talk]]
--   REQUIREMENTS:   [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:presenter-hints]]
+-   REQUIREMENTS:   [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:presenter-alerts]]
 -   RULES:          [[RULE:forward-lock]]
 -   PRE-CONDITION:  The event is running and questions have been forwarded.
 -   TRIGGER:        The moderator forwards a question to the presenter.

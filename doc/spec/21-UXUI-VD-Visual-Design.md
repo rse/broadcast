@@ -49,11 +49,18 @@ screen.
 -   SOURCE: TypoPRO font package of the frontend (`@typopro/web-*`), subsetted at build time
 -   TRADE-OFF: A larger initial download than a system font stack, as the font files ship with the application.
 
-Text is set in a self-hosted TypoPRO web font family with a clear type
-scale for headings, body, and captions, sized for legibility on the
-studio screen at 2-4 meters viewing distance, BECAUSE self-hosted fonts
-avoid third-party requests and the studio view must remain readable from
-afar.
+Text is set in a self-hosted TypoPRO web font family, BECAUSE
+self-hosted fonts avoid third-party requests.
+
+##  ELEMENT: Studio-Legible Type Scale {{type-scale}}
+
+-   CATEGORY: Typography
+-   ACTORS: [[PERSONA:presenter]]
+-   TRADE-OFF: Fewer forwarded questions fitting onto the studio screen at once, as the enlarged text takes more space.
+
+Text follows one type scale for headings, body, and captions, sized for
+legibility on the studio screen at 2-4 meters viewing distance, BECAUSE
+the studio view must remain readable from afar.
 
 ##  ELEMENT: Fontawesome Iconography {{iconography}}
 
@@ -75,11 +82,11 @@ actions.
 -   TRADE-OFF: Fixed breakpoints, so a layout jumps between its arrangements instead of scaling fluidly.
 
 Spacing follows the Tailwind 4px-based scale with a 16px base gutter, and
-the breakpoints `sm` (640px), `md` (768px), and `lg` (1024px) decide at
-which widths the video-with-sidebar arrangement collapses into the
-stacked single column, BECAUSE one shared scale keeps the density of
-video, sidebar, and boards consistent across the device classes
-attendees use.
+the breakpoints `sm` (640px), `md` (768px), and `lg` (1024px) delimit the
+device classes, where the video-with-sidebar arrangement collapses into
+the stacked single column below `md`, BECAUSE one shared scale keeps the
+density of video, sidebar, and boards consistent across the device
+classes attendees use.
 
 ##  ELEMENT: Card and Bubble Shape {{shape}}
 
@@ -185,7 +192,7 @@ annotations and the presenter alert composer.
 
 -   ACTORS: [[PERSONA:presenter]]
 -   STORYBOARD: [[STORYBOARD:moderate-forward]]
--   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:iconography]], [[ELEMENT:shape]]
+-   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:typography]], [[ELEMENT:type-scale]], [[ELEMENT:iconography]], [[ELEMENT:shape]]
 -   IMAGE: ![](21-UXUI-VD-Visual-Design-7.png)
 
 The presenter view for the studio screen with the enlarged type scale,

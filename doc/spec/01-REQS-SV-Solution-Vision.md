@@ -28,7 +28,8 @@ REQS: Solution Vision (SV)
     Organizers keep full control over who watches and who may interact,
     and receive all attendee input in a form they can moderate,
     forward to the presenter, and export afterwards. Attendees reach
-    the event through a single personal link in any recent browser,
+    the event through a single personal link in any of the browsers
+    of [[REQUIREMENT:browser-compat]],
     without installation or accounts, and see their questions reach the
     presenters within seconds.
 

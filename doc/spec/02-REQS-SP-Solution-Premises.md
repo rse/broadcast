@@ -64,8 +64,8 @@ organization and its registration figures.
                         and the client reports a failed real-time connection to the attendee.
 
 The corporate and home networks of the attendees permit long-lived WebSocket connections over
-HTTPS, BECAUSE the live interaction and the configuration propagation are carried over
-MQTT-over-WebSocket rather than over plain HTTP requests.
+HTTPS, BECAUSE these connections use the standard HTTPS port, which corporate proxies and home
+routers already pass for ordinary web browsing.
 
 ##  PREMISE: German and English Cover All Events {{two-languages}}
 
@@ -119,8 +119,9 @@ not send invitations.
 -   MITIGATION:         The token validity is configurable per event, and automatic access URLs
                         let pre-verified attendees enter without a token email.
 
-The external email gateway accepts the one-time authorization token emails at the burst rate of an
-event start and delivers them to the attendees within a minute, BECAUSE the email token is the
+The external email gateway accepts the one-time authorization token emails of up to 10,000
+attendees logging in within the same minute of an event start ([[PREMISE:start-surge]]) and
+delivers them to the attendees within a minute, BECAUSE the email token is the
 first-factor authentication of the solution.
 
 ##  PREMISE: Translation Service Available During Events {{translation-service}}
@@ -164,7 +165,7 @@ within the EU is both the legal and the economic foundation of the solution.
                         personalized and automatic access URLs let most attendees bypass the
                         token step.
 
-The audience of a large event connects within a very short window around the announced start
+The audience of a large event connects within the same minute around the announced start
 rather than spread over time, BECAUSE attendees open their invitation link only when the event
 begins.
 

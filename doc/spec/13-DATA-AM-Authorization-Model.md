@@ -53,11 +53,11 @@ DATA: Authorization Model (AM)
     The attendee reads the messages which passed the moderation, with their texts and like counts, under the sender name the event configures.
 
 -   Track Own Messages {{attendee-track-own}}; ROLE: [[ROLE:attendee]]; ENTITY: [[ENTITY:Message]]; OPERATIONS: Read;
-    STATES: [[STATE:Pending]];
+    STATES: [[STATE:Pending]], [[STATE:Rejected]];
     CONDITION: The attendee is the sender of the message.;
     RULES: [[RULE:moderation-gate]];
     USE-CASES: [[SCENARIO:ask-question-moderated]], [[SCENARIO:chat-pending-private]];
-    The attendee sees their own messages while they still await the moderation decision.
+    The attendee sees their own messages while they still await the moderation decision and after their rejection.
 
 -   Correct Own Messages {{attendee-edit-own}}; ROLE: [[ROLE:attendee]]; ENTITY: [[ENTITY:Message]];
     OPERATIONS: Update, Delete, [[TRANSITION:resubmit]];
