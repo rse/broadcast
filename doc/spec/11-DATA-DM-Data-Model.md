@@ -207,8 +207,8 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     BECAUSE an event delivers content through one or more logical channels.
 
 -   RELATION: accessList; TARGET: [[ENTITY:User]]; KIND: Composition; ARITY: `0..n`;
-    Invited attendees identified by email,
-    BECAUSE access is granted to an explicit list of users.
+    All users of the event, i.e., the invited attendees and the holders of its roles, each identified by email,
+    BECAUSE access and roles are granted to explicit users, each of whom exists within exactly one event.
 
 -   RELATION: messages; TARGET: [[ENTITY:Message]]; KIND: Composition; ARITY: `0..n`;
     Messages written during the event,
