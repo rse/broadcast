@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Functional Requirements (FR)
@@ -391,10 +391,10 @@ REQS: Functional Requirements (FR)
     GROUP: [[GROUP:client-experience]];
     PREMISES: [[PREMISE:two-languages]], [[PREMISE:translation-service]];
     The system SHOULD let an attendee switch the display and content
-    language between German and English at any time,
-    applying the change immediately, BECAUSE attendees expect to read
-    the interface and translated messages in their preferred one of the
-    two supported languages.
+    language between German and English at any time, applying the
+    change immediately, BECAUSE attendees expect to read the interface
+    and translated messages in their preferred one of the two supported
+    languages.
 
 -   REQUIREMENT: Light and Dark Theme {{theme-toggle}}; PRIORITY: COULD;
     GROUP: [[GROUP:client-experience]];

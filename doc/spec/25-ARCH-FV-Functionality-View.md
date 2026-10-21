@@ -1,16 +1,18 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
-#   ARCH: Functionality View (FV)
+ARCH: Functionality View (FV)
+=============================
 
 ![](25-ARCH-FV-Functionality-View-1.svg)
 
 ##  COMPONENT: Web Client {{client}}
 
 -   KIND:           Subsystem
--   REALIZES:       [[REQUIREMENT:name-appearance]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:individual-url]], [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]]
+-   REALIZES:       [[REQUIREMENT:name-appearance]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:individual-url]],
+                    [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]]
 -   DEPENDS-ON:     [[COMPONENT:relay]]
 
 The Vue.js single-page application renders the attendee and operator UI and drives all user interaction: it presents the
@@ -59,8 +61,11 @@ performance challenge.
 
 -   KIND:           Service
 -   PATTERNS:       [[PATTERN:modular-monolith]]
--   REALIZES:       [[REQUIREMENT:questions]], [[REQUIREMENT:chat]], [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]]
--   OWNS:           [[ENTITY:Event]], [[ENTITY:AgendaPoint]], [[ENTITY:Channel]], [[ENTITY:Resource]], [[ENTITY:ResourceProviderParam]], [[ENTITY:Role]], [[ENTITY:Message]], [[ENTITY:MessageText]], [[ENTITY:QuestionTag]]
+-   REALIZES:       [[REQUIREMENT:questions]], [[REQUIREMENT:chat]], [[REQUIREMENT:moderation]],
+                    [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]]
+-   OWNS:           [[ENTITY:Event]], [[ENTITY:AgendaPoint]], [[ENTITY:Channel]], [[ENTITY:Resource]],
+                    [[ENTITY:ResourceProviderParam]], [[ENTITY:Role]], [[ENTITY:Message]], [[ENTITY:MessageText]],
+                    [[ENTITY:QuestionTag]]
 -   PROVIDES:       [[INTERFACE:server-cli]]
 -   DEPENDS-ON:     [[FV.database]]
 
@@ -93,7 +98,8 @@ languages on the fly while preserving the original, BECAUSE chat and questions m
 
 -   KIND:           Module
 -   PART-OF:        [[COMPONENT:service]]
--   REALIZES:       [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]], [[REQUIREMENT:channel-stats]], [[REQUIREMENT:user-stats]], [[REQUIREMENT:stats-snapshots]]
+-   REALIZES:       [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]], [[REQUIREMENT:channel-stats]],
+                    [[REQUIREMENT:user-stats]], [[REQUIREMENT:stats-snapshots]]
 -   OWNS:           [[ENTITY:EventStatistic]], [[ENTITY:ChannelStatistic]], [[ENTITY:UserStatistic]]
 -   DEPENDS-ON:     [[FV.database]]
 

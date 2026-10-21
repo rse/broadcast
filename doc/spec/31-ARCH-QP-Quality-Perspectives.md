@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 ARCH: Quality Perspectives (QP)
@@ -110,15 +110,15 @@ the video through the solution would cap the quality at the solution's own capac
 
 ##  TACTIC: Network Segmentation {{network-isolation}}
 
--   QUALITY:     Security
--   ADDRESSES:   [[REQUIREMENT:data-isolation]], [[REQUIREMENT:gdpr]]
--   GUIDED-BY:   [[PRINCIPLE:isolated-persistence]]
--   PATTERNS:    [[PATTERN:reverse-proxy-edge]]
--   MECHANISM:   TLS-only public ingress, private backend VLAN, and an isolated database subnet
--   TRADES-OFF:  Maintainability
--   AFFECTS:     [[TIER:middleware-tier]], [[TIER:database-tier]], [[NODE:router]], [[NODE:database]], [[NETWORK:internet]],
-                 [[NETWORK:backend]], [[NETWORK:data]]
--   TOOLS:       [[COMPONENT:reverse-proxy]]
+-   QUALITY:    Security
+-   ADDRESSES:  [[REQUIREMENT:data-isolation]], [[REQUIREMENT:gdpr]]
+-   GUIDED-BY:  [[PRINCIPLE:isolated-persistence]]
+-   PATTERNS:   [[PATTERN:reverse-proxy-edge]]
+-   MECHANISM:  TLS-only public ingress, private backend VLAN, and an isolated database subnet
+-   TRADES-OFF: Maintainability
+-   AFFECTS:    [[TIER:middleware-tier]], [[TIER:database-tier]], [[NODE:router]], [[NODE:database]], [[NETWORK:internet]],
+                [[NETWORK:backend]], [[NETWORK:data]]
+-   TOOLS:      [[COMPONENT:reverse-proxy]]
 
 Traffic passes three segments, the TLS-only public Internet up to the hardened router, the private backend VLAN between
 the connection-handling tiers and the services, and the isolated data subnet reaching the database from the service

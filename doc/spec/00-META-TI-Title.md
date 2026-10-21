@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-19 00:15
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 #   META: Title (TI)
@@ -40,9 +40,10 @@ certain list of people (identified by their e-mail addresses) to join. It
 seamlessly switches to an alternative video stream provider if requested by the
 people overseeing the event production. This helps to overcome video quality or
 scaling issues without interrupting the broadcasting of the program. It supports
-an audience of up to 10,000 simultaneous attendees ([[REQUIREMENT:attendee-scale]]),
-delivering its client to each of them within 3 seconds even when all of them join
-within the same minute ([[REQUIREMENT:asset-delivery]]).
+an audience of up to 10,000 simultaneous attendees
+([[REQUIREMENT:attendee-scale]]), delivering its client to each of them within 3
+seconds even when all of them join within the same minute
+([[REQUIREMENT:asset-delivery]]).
 
 **Broadcast** provides several statistics to assess the technical reception
 of the event program by the audience (number of viewers, used client setup,

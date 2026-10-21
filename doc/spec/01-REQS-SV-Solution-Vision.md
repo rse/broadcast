@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Solution Vision (SV)
@@ -29,9 +29,8 @@ REQS: Solution Vision (SV)
     and receive all attendee input in a form they can moderate,
     forward to the presenter, and export afterwards. Attendees reach
     the event through a single personal link in any of the browsers
-    of [[REQUIREMENT:browser-compat]],
-    without installation or accounts, and see their questions reach the
-    presenters within seconds.
+    of [[REQUIREMENT:browser-compat]], without installation or accounts,
+    and see their questions reach the presenters within seconds.
 
 -   DIFFERENTIATORS:
     Compared to public streaming portals, **Broadcast** admits only

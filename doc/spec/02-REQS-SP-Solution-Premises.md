@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 14:00
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Solution Premises (SP)
@@ -121,8 +121,8 @@ not send invitations.
 
 The external email gateway accepts the one-time authorization token emails of up to 10,000
 attendees logging in within the same minute of an event start ([[PREMISE:start-surge]]) and
-delivers them to the attendees within a minute, BECAUSE the email token is the
-first-factor authentication of the solution.
+delivers them to the attendees within a minute, BECAUSE the email token is the first-factor
+authentication of the solution.
 
 ##  PREMISE: Translation Service Available During Events {{translation-service}}
 

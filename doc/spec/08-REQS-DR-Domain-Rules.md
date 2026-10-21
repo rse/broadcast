@@ -1,9 +1,10 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
-#   REQS: Domain Rules (DR)
+REQS: Domain Rules (DR)
+=======================
 
 ##  RULE: Single Active Session per Event {{single-session}}
 
@@ -154,8 +155,8 @@ When an [[TERM:Event]] finishes, its [[TERM:Anonymization]] MUST reduce its [[TE
 with [[TERM:Chat]] and [[TERM:Question]] sender names set to "Anonymous" and liker and sender relations dropped, delete its
 [[TERM:Authorization Token]]s and [[TERM:Session Token]]s, delete the [[TERM:User]]s of its [[TERM:Access List]] not holding a
 [[TERM:Manager]] [[TERM:Role]] while retaining their viewer statistics unlinked from any [[TERM:User]], and delete all its
-[[TERM:Role]]s except its [[TERM:Manager]] [[TERM:Role]]s,
-BECAUSE personal data must not be retained beyond the [[TERM:Event]] (GDPR Art. 5(1)(e), storage limitation).
+[[TERM:Role]]s except its [[TERM:Manager]] [[TERM:Role]]s, BECAUSE personal data must not be retained beyond the
+[[TERM:Event]] (GDPR Art. 5(1)(e), storage limitation).
 
 ##  RULE: Likes Conserved as Count on Finish {{like-count}}
 

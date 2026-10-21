@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 00:49
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 APIS: Interface Datatypes (ID)
@@ -12,8 +12,9 @@ TYPE: LogLevel
 -   INTERFACES: [[INTERFACE:server-cli]]
 -   BASE:       `enum(error,warning,info,debug)`
 
-The verbosity level of the server log, from errors only up to debugging details,
-BECAUSE the amount of log output has to be tuned per environment.
+The verbosity level of the server log, from errors only up to debugging
+details, BECAUSE the amount of log output has to be tuned per
+environment.
 
 TYPE: Configuration
 -------------------

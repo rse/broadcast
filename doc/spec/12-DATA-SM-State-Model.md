@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 DATA: State Model (SM)
@@ -52,77 +52,77 @@ LIFECYCLE: Message {{message}}
 
 ### STATE
 
--   `Pending`; INITIAL: true;
+-   Pending; INITIAL: true;
     The attendee has submitted the message and it awaits moderation.
 
--   `Accepted`; FINAL: true;
+-   Accepted; FINAL: true;
     The message is approved and visible to the audience, unless it is a question of an event keeping its questions private or a support message visible to its own conversation only.
 
--   `Rejected`; FINAL: true;
+-   Rejected; FINAL: true;
     The message is declined and hidden from the audience.
 
--   `Forwarded`;
+-   Forwarded;
     The accepted message is handed to the presenter as a work item.
 
--   `Answered`; FINAL: true;
+-   Answered; FINAL: true;
     The presenter has processed and answered the message in the live event.
 
--   `Suspended`; FINAL: true;
+-   Suspended; FINAL: true;
     The presenter will not process the message in the live event.
 
 ### TRANSITION
 
--   `accept`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: [[ROLE:moderator]];
+-   accept; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: [[ROLE:moderator]];
     RULES: [[RULE:moderation-gate]];
     USE-CASES: [[SCENARIO:moderate-forward]];
     The message becomes visible to the audience.
 
--   `accept {{accept-sentiment}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
+-   accept {{accept-sentiment}}; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
     GUARD: The server-side sentiment analysis scores the message at or above the threshold and auto-accept is enabled.;
     RULES: [[RULE:moderation-gate]], [[RULE:sentiment-threshold]];
     USE-CASES: [[SCENARIO:ask-question-auto]];
     The message becomes visible to the audience without a moderator decision.
 
--   `accept {{accept-unmoderated}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
+-   accept {{accept-unmoderated}}; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
     GUARD: The event does not moderate messages of this type.;
     RULES: [[RULE:moderation-gate]];
     USE-CASES: [[SCENARIO:chat-post]], [[SCENARIO:chat-reply]];
     The message becomes visible to the audience at once, right after its creation.
 
--   `accept {{accept-moderator}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
+-   accept {{accept-moderator}}; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
     GUARD: The message is authored by a moderator.;
     RULES: [[RULE:moderator-accept]];
     USE-CASES: [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
     The moderator-authored message becomes visible at once, right after its creation.
 
--   `reject`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: [[ROLE:moderator]];
+-   reject; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: [[ROLE:moderator]];
     RULES: [[RULE:moderation-gate]];
     USE-CASES: [[SCENARIO:moderate-reject]];
     The message is hidden from the audience.
 
--   `reject {{reject-sentiment}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: System;
+-   reject {{reject-sentiment}}; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: System;
     GUARD: The server-side sentiment analysis scores the message below the threshold and auto-reject is enabled.;
     RULES: [[RULE:moderation-gate]], [[RULE:sentiment-threshold]];
     USE-CASES: [[SCENARIO:ask-question-auto-reject]];
     The message is hidden from the audience without a moderator decision.
 
--   `resubmit`; FROM: [[STATE:Accepted]]; TO: [[STATE:Pending]]; ACTOR: [[ROLE:attendee]];
+-   resubmit; FROM: [[STATE:Accepted]]; TO: [[STATE:Pending]]; ACTOR: [[ROLE:attendee]];
     GUARD: The event moderates messages of this type.;
     RULES: [[RULE:moderation-gate]], [[RULE:forward-lock]];
     USE-CASES: [[SCENARIO:chat-edit]];
     The edited message is hidden from the audience again until it passes the moderation anew.
 
--   `forward`; FROM: [[STATE:Accepted]]; TO: [[STATE:Forwarded]]; ACTOR: [[ROLE:moderator]];
+-   forward; FROM: [[STATE:Accepted]]; TO: [[STATE:Forwarded]]; ACTOR: [[ROLE:moderator]];
     GUARD: The message is a question.;
     RULES: [[RULE:type-states]], [[RULE:forward-lock]];
     USE-CASES: [[SCENARIO:moderate-forward]];
     The message enters the presenter's work basket and becomes immutable.
 
--   `answer`; FROM: [[STATE:Forwarded]]; TO: [[STATE:Answered]]; ACTOR: [[ROLE:presenter]], [[ROLE:moderator]];
+-   answer; FROM: [[STATE:Forwarded]]; TO: [[STATE:Answered]]; ACTOR: [[ROLE:presenter]], [[ROLE:moderator]];
     USE-CASES: [[SCENARIO:present-answer]], [[SCENARIO:moderate-settle]];
     The answered timestamp is recorded.
 
--   `suspend`; FROM: [[STATE:Forwarded]]; TO: [[STATE:Suspended]]; ACTOR: [[ROLE:presenter]], [[ROLE:moderator]];
+-   suspend; FROM: [[STATE:Forwarded]]; TO: [[STATE:Suspended]]; ACTOR: [[ROLE:presenter]], [[ROLE:moderator]];
     USE-CASES: [[SCENARIO:present-suspend]], [[SCENARIO:moderate-settle]];
     The message is set aside for the live event.
 
@@ -133,45 +133,45 @@ LIFECYCLE: AuthorizationToken {{authtoken}}
 
 ### STATE
 
--   `Issued`; INITIAL: true;
+-   Issued; INITIAL: true;
     The token has been generated, either for a login challenge the attendee requested or in advance by the attendee import of the event.
 
--   `Sent`;
+-   Sent;
     The token has been delivered to the user by email.
 
--   `Used`;
+-   Used;
     The token has been consumed in a login attempt.
 
--   `Dead`; FINAL: true;
+-   Dead; FINAL: true;
     The token can no longer admit anybody, as it was single-use or its validity has passed.
 
 ### TRANSITION
 
--   `send`; FROM: [[STATE:Issued]]; TO: [[STATE:Sent]]; ACTOR: [[ROLE:attendee]];
+-   send; FROM: [[STATE:Issued]]; TO: [[STATE:Sent]]; ACTOR: [[ROLE:attendee]];
     GUARD: The email of the attendee is on the access list or matches the access pattern.;
     RULES: [[RULE:access-grant]];
     USE-CASES: [[SCENARIO:authenticate-token]];
     The token is emailed to the attendee requesting a login challenge.
 
--   `consume`; FROM: [[STATE:Sent]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
+-   consume; FROM: [[STATE:Sent]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
     GUARD: The token has not expired.;
     RULES: [[RULE:token-format]], [[RULE:single-session]];
     USE-CASES: [[SCENARIO:authenticate-token]];
     The token is marked spent by a successful or unsuccessful login attempt.
 
--   `consume {{consume-automatic}}`; FROM: [[STATE:Issued]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
+-   consume {{consume-automatic}}; FROM: [[STATE:Issued]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
     GUARD: The event allows automatic-access URLs.;
     RULES: [[RULE:token-format]];
     USE-CASES: [[SCENARIO:authenticate-auto]];
     The pre-generated token is marked spent by the use of an automatic-access URL carrying it.
 
--   `consume {{consume-reuse}}`; FROM: [[STATE:Used]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
+-   consume {{consume-reuse}}; FROM: [[STATE:Used]]; TO: [[STATE:Used]]; ACTOR: [[ROLE:attendee]];
     GUARD: The event allows automatic-access URLs and does not expire pre-generated tokens on first use.;
     RULES: [[RULE:token-format]];
     USE-CASES: [[SCENARIO:authenticate-auto]];
     The reusable pre-generated token admits its user again through the automatic-access URL carrying it.
 
--   `expire`; FROM: [[STATE:Used]]; TO: [[STATE:Dead]]; ACTOR: System;
+-   expire; FROM: [[STATE:Used]]; TO: [[STATE:Dead]]; ACTOR: System;
     GUARD: The token is single-use, i.e., it was sent by email or the event expires pre-generated tokens on first use, or its validity has passed.;
     RULES: [[RULE:token-format]];
     USE-CASES: [[SCENARIO:authenticate-token]], [[SCENARIO:authenticate-auto]];
@@ -184,15 +184,15 @@ LIFECYCLE: UserStatistic {{userstatistic}}
 
 ### STATE
 
--   `Linked`; INITIAL: true;
+-   Linked; INITIAL: true;
     The statistic is attributed to the user it was recorded for.
 
--   `Unlinked`; FINAL: true;
+-   Unlinked; FINAL: true;
     The statistic is retained without any reference to a user.
 
 ### TRANSITION
 
--   `unlink`; FROM: [[STATE:Linked]]; TO: [[STATE:Unlinked]]; ACTOR: System;
+-   unlink; FROM: [[STATE:Linked]]; TO: [[STATE:Unlinked]]; ACTOR: System;
     RULES: [[RULE:anonymize]];
     USE-CASES: [[SCENARIO:publish-start-finish-main]];
     The anonymization drops the user reference of the statistic on event finish.

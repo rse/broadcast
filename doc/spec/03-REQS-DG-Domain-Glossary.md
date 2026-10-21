@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Domain Glossary (DG)
@@ -11,8 +11,8 @@ REQS: Domain Glossary (DG)
     PREMISES: [[PREMISE:audience-bound]], [[PREMISE:two-languages]], [[PREMISE:start-surge]];
     The central, organizer-defined live broadcast occasion to which an
     audience is invited; it carries all configuration, [[TERM:Channel]]s,
-    the [[TERM:Access List]], and [[TERM:Message]]s, and
-    progresses from planning through running to finished.
+    the [[TERM:Access List]], and [[TERM:Message]]s, and progresses from
+    planning through running to finished.
 
 -   TERM: Attendee {{attendee}};
     TYPE: Actor;
@@ -37,10 +37,10 @@ REQS: Domain Glossary (DG)
     TYPE: Actor;
     BROADER: [[TERM:Role]];
     DISTINCT-FROM: [[TERM:Administrator]];
-    An event-level [[TERM:Role]] that can edit, publish, start, finish, and delete an
-    [[TERM:Event]] and export its anonymized data; the Manager role is
-    retained after the [[TERM:Event]] finishes until the [[TERM:Event]]
-    is deleted.
+    An event-level [[TERM:Role]] that can edit, publish, start, finish,
+    and delete an [[TERM:Event]] and export its anonymized data; the
+    Manager role is retained after the [[TERM:Event]] finishes until the
+    [[TERM:Event]] is deleted.
 
 -   TERM: Moderator {{moderator}};
     TYPE: Actor;

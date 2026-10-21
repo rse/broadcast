@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 10:00
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Domain Workflows (DW)
@@ -16,10 +16,12 @@ WORKFLOW: Run Broadcast Event {{run-broadcast-event}}
 -   TERMS:    [[TERM:anonymization]]
 -   RULES:    [[RULE:no-accounts]]
 
-The manager prepares and populates the event, the operators rehearse it, the audience attends it live while the
-moderators and the presenter handle the interaction, and the manager finishes and archives it afterwards, BECAUSE a
-broadcast event is a collaboration of several roles across days, of which each sitting with the solution covers only a
-part.
+The manager prepares and populates the event, the operators rehearse it,
+the audience attends it live while the moderators and the presenter
+handle the interaction, and the manager finishes and archives it
+afterwards, BECAUSE a broadcast event is a collaboration of several
+roles across days, of which each sitting with the solution covers
+only a part.
 
 ### ACTIVITY
 

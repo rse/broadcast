@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 14:33
+Modified: 2026-10-21 16:06
 ---
 
 REQS: Use Cases (UC)
@@ -157,9 +157,10 @@ USE-CASE: Ask a Question {{ask-question}}
 -   TRIGGER:        The attendee decides to raise a question during the running event.
 -   POST-CONDITION: The question is stored in state pending and awaits moderation.
 
-The attendee writes a question, optionally tags it, and submits it; the system stores it and routes it through moderation if
-the event requires approval before it becomes visible, BECAUSE getting their own question answered turns the attendee from a
-passive viewer into a participant.
+The attendee writes a question, optionally tags it, and submits it; the
+system stores it and routes it through moderation if the event requires
+approval before it becomes visible, BECAUSE getting their own question
+answered turns the attendee from a passive viewer into a participant.
 
 ### SCENARIO: Submit Moderated Question {{ask-question-moderated}}
 
@@ -337,9 +338,11 @@ USE-CASE: Moderate and Forward Messages {{moderate}}
 -   TRIGGER:        An attendee message arrives in state pending for moderation.
 -   POST-CONDITION: Messages are accepted, rejected, forwarded with optional hints, or settled on behalf of the presenter.
 
-The moderator reviews the pending messages by state, approves or rejects them, forwards selected approved questions to the
-presenter in a chosen order, and may attach hints or raise a presenter alert, BECAUSE the presenter can only handle a
-curated, ordered selection of the audience input while on stage.
+The moderator reviews the pending messages by state, approves or rejects
+them, forwards selected approved questions to the presenter in a chosen
+order, and may attach hints or raise a presenter alert, BECAUSE the
+presenter can only handle a curated, ordered selection of the audience
+input while on stage.
 
 ### SCENARIO: Approve and Forward Question {{moderate-forward}}
 
@@ -432,7 +435,7 @@ an unattended chat drowns in spam and off-topic noise.
 3.  The system passes the control on to the application without interrupting the stream.
 
 USE-CASE: Steer the Presenter {{steer-presenter}}
----------------------------------
+-----------------------------
 
 -   ACTOR:          [[ROLE:moderator]]
 -   PERSONAS:       [[PERSONA:moderator-qa]]
@@ -556,9 +559,10 @@ USE-CASE: Switch Streaming Provider {{switch-provider}}
 -   TRIGGER:        The active streaming resource shows problems during a running event.
 -   POST-CONDITION: A new resource is active and all clients follow it automatically.
 
-When a provider has problems, the manager activates a fallback resource on the channel and the system propagates the change
-so attendee clients switch streams without any user interaction, BECAUSE a live event cannot be paused while a streaming
-provider recovers.
+When a provider has problems, the manager activates a fallback resource
+on the channel and the system propagates the change so attendee clients
+switch streams without any user interaction, BECAUSE a live event cannot
+be paused while a streaming provider recovers.
 
 ### SCENARIO: Live Failover {{switch-provider-failover}}
 
@@ -582,9 +586,12 @@ USE-CASE: Create Event from Registration Import {{create-event}}
 -   TRIGGER:        The manager receives the Excel sheet of the attendees of an upcoming event, exported by the Event Registration System.
 -   POST-CONDITION: The access list and tokens are created and the URL sheet is ready for the manager to hand back to the Event Registration System.
 
-The manager imports the Excel sheet of the Event Registration System to fill the event access list and generate authorization
-tokens, then exports an Excel sheet of personal access URLs back to the Event Registration System, avoiding duplicate
-invitations on repeated imports, BECAUSE provisioning hundreds of attendees by hand is error-prone and does not scale.
+The manager imports the Excel sheet of the Event Registration System to
+fill the event access list and generate authorization tokens, then
+exports an Excel sheet of personal access URLs back to the Event
+Registration System, avoiding duplicate invitations on repeated imports,
+BECAUSE provisioning hundreds of attendees by hand is error-prone and
+does not scale.
 
 ### SCENARIO: Import and Return URLs {{create-event-import}}
 
@@ -607,9 +614,11 @@ USE-CASE: Publish, Start, and Finish Event {{publish-start-finish}}
 -   TRIGGER:        The scheduled date of the event approaches.
 -   POST-CONDITION: The event is finished, access is closed, and the personal data is anonymized.
 
-The manager publishes the configured event to make it visible to the invited attendees, starts it when the live stream goes
-on air, and finishes it afterwards, BECAUSE the visibility, the live interaction, and the anonymization of an event are
-deliberate decisions of the manager, not side effects of the clock.
+The manager publishes the configured event to make it visible to the
+invited attendees, starts it when the live stream goes on air, and
+finishes it afterwards, BECAUSE the visibility, the live interaction,
+and the anonymization of an event are deliberate decisions of the
+manager, not side effects of the clock.
 
 ### SCENARIO: Publish, Start, and Finish {{publish-start-finish-main}}
 
@@ -644,9 +653,11 @@ USE-CASE: Export Anonymized Event Data {{export-data}}
 -   TRIGGER:        The manager is asked to hand over the recorded interaction of a finished event.
 -   POST-CONDITION: An export file of anonymized messages and statistics is produced.
 
-After the event finishes and personal data is anonymized, the manager exports all attendee inputs with timestamps, states,
-like counts, and texts, together with the event statistics, BECAUSE the organizer evaluates the event and answers open
-questions afterwards from this record.
+After the event finishes and personal data is anonymized, the manager
+exports all attendee inputs with timestamps, states, like counts, and
+texts, together with the event statistics, BECAUSE the organizer
+evaluates the event and answers open questions afterwards from this
+record.
 
 ### SCENARIO: Export After Finish {{export-data-after}}
 
@@ -680,9 +691,10 @@ USE-CASE: Present Forwarded Questions {{present}}
 -   TRIGGER:        The moderator forwards a question to the presenter.
 -   POST-CONDITION: Processed questions are marked answered or suspended.
 
-The presenter views the forwarded questions in their intended order with any moderator hints, addresses them on stage, and
-marks each as answered or suspended, BECAUSE the presenter needs to keep track of what was already addressed while staying
-focused on the audience.
+The presenter views the forwarded questions in their intended order with
+any moderator hints, addresses them on stage, and marks each as answered
+or suspended, BECAUSE the presenter needs to keep track of what was
+already addressed while staying focused on the audience.
 
 ### SCENARIO: Answer Forwarded Question {{present-answer}}
 
