@@ -35,7 +35,8 @@ part.
 
 -   Rehearse Event {{rehearse-event}}; ACTOR: [[ROLE:presenter]], [[ROLE:moderator]];
     The presenter and the moderators walk through the unpublished event
-    together, checking the stream, the question flow, and the chat.
+    together, checking the stream, the moderation board, and the
+    presenter view.
 
 -   Start Event {{go-live}}; ACTOR: [[ROLE:manager]];
     The manager publishes and starts the event when the stream goes on
