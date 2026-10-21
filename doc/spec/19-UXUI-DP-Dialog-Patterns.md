@@ -39,9 +39,9 @@ attendee onward once accepted, BECAUSE explicit acknowledgement is both a legal 
 -   USES: [[DIALOG-PATTERN:message-stream]], [[DIALOG-PATTERN:composer]]
 -   TRADE-OFF: A smaller video area on wide screens and a sidebar hidden behind a toggle on small screens.
 
-The video occupies the primary area while a tabbed sidebar hosts the Q&A, Chat, Support, and embedded third-party app tabs, collapsing
-responsively on small screens, BECAUSE co-locating stream and interaction keeps attention on the event while interaction
-stays reachable.
+The video occupies the primary area while a tabbed sidebar hosts the Q&A, Chat, Support, and embedded third-party app (e.g.
+"HUDS-Pad") tabs, collapsing responsively on small screens, BECAUSE co-locating stream and interaction keeps attention on
+the event while interaction stays reachable.
 
 ##  DIALOG-PATTERN: Live Message Stream {{message-stream}}
 
