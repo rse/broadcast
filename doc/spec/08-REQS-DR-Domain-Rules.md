@@ -153,8 +153,8 @@ makes automated moderation predictable.
 When an [[TERM:Event]] finishes, its [[TERM:Anonymization]] MUST reduce its [[TERM:Message]]s to a bare [[TERM:Like]] count
 with [[TERM:Chat]] and [[TERM:Question]] sender names set to "Anonymous" and liker and sender relations dropped, delete its
 [[TERM:Authorization Token]]s and [[TERM:Session Token]]s, clear its [[TERM:Access List]] and delete the referenced
-[[TERM:User]]s while retaining their viewer statistics unlinked from any [[TERM:User]], and delete its [[TERM:Moderator]]
-[[TERM:Role]]s while retaining its [[TERM:Manager]] [[TERM:Role]]s,
+[[TERM:User]]s while retaining their viewer statistics unlinked from any [[TERM:User]], and delete all its
+[[TERM:Role]]s except its [[TERM:Manager]] [[TERM:Role]]s,
 BECAUSE personal data must not be retained beyond the [[TERM:Event]] (GDPR Art. 5(1)(e), storage limitation).
 
 ##  RULE: Likes Conserved as Count on Finish {{like-count}}

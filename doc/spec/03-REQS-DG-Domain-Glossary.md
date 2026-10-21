@@ -182,7 +182,8 @@ REQS: Domain Glossary (DG)
     The automated procedure on [[TERM:Event]] finish that reduces
     [[TERM:Message]]s to like counts, anonymizes sender names, drops
     personal relations, deletes tokens and Users, unlinks the viewer
-    statistics from their Users, and removes [[TERM:Moderator]] roles.
+    statistics from their Users, and removes all roles except the
+    [[TERM:Manager]] roles.
 
 -   TERM: Sentiment Analysis {{sentiment}};
     TYPE: Activity;

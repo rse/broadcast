@@ -186,7 +186,7 @@ TEST: Test Cases (TC)
 -   VERIFIES:       [[REQUIREMENT:user-consent]], [[RULE:anonymize]]
 -   PRE-CONDITION:  A running event with messages, likes, tokens, and an access list.
 -   INPUT:          The manager finishes the event.
--   EXPECTED:       Sender names become "Anonymous", likes become bare counts, and tokens, users, and Moderator roles are deleted.
+-   EXPECTED:       Sender names become "Anonymous", likes become bare counts, and tokens, users, and all roles except the Manager roles are deleted.
 -   POST-CONDITION: No personal attendee data remains and Manager roles are retained.
 
 ##  TEST-CASE: User Vanishes Without Role or Access {{no-accounts}}
