@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-05 13:10
 ---
 
 ARCH: Operations View (OV)
@@ -74,18 +74,15 @@ find out why an attendee fails to authenticate while the event runs.
 ##  CONCERN: Horizontal Scaling {{scaling}}
 
 -   CATEGORY:  Capacity
--   TRIGGER:   before each event whose expected audience exceeds the
-               attendee count the environment was last load-tested for
+-   TRIGGER:   ahead of large events
 -   OPERATOR:  [[PERSONA:administrator]]
 -   ADDRESSES: [[REQUIREMENT:scalability]], [[REQUIREMENT:attendee-scale]]
 -   ELEMENTS:  [[NODE:proxy]], [[NODE:relay]], [[NODE:service]]
 -   TOOLS:     [[COMPONENT:container-orchestration]]
 
 Operators scale an environment by adding proxy, relay, and service
-instances before each event whose expected audience exceeds the
-attendee count the environment was last load-tested for, BECAUSE
-townhall-scale audiences of up to 10000 require capacity provisioned
-per environment.
+instances ahead of large events, BECAUSE townhall-scale audiences of up
+to 10000 require capacity provisioned per environment.
 
 ##  CONCERN: Database Backup {{backup}}
 
@@ -98,20 +95,8 @@ per environment.
 
 The PostgreSQL database and the filesystem assets are dumped nightly and
 before each event onto the backup storage of the same data center,
-BECAUSE event setups must survive a database loss without leaving the EU
-hosting boundary.
-
-##  CONCERN: Backup Expiry {{backup-expiry}}
-
--   CATEGORY:  Administration
--   TRIGGER:   7 days after each dump
--   OPERATOR:  [[PERSONA:administrator]]
--   ADDRESSES: [[REQUIREMENT:privacy]]
--   TOOLS:     [[COMPONENT:database-backup]]
-
-The backup storage is configured to delete every dump at most 7 days
-after it was taken, BECAUSE the personal data of a finished event must
-not outlive its anonymization in a backup for more than a week.
+BECAUSE event setups must survive a database loss without leaving the
+EU hosting boundary.
 
 ##  CONCERN: Database Restore {{restore}}
 

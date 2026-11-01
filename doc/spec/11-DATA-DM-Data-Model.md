@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-14 16:20
 ---
 
 #   DATA: Data Model (DM)
@@ -38,14 +38,14 @@ BECAUSE all of them are recorded over time and exported together for trend visua
 ##  ENTITY: Event (*)
 
 -   REQUIREMENTS: [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:automatic-url]],
-                  [[REQUIREMENT:user-consent]], [[REQUIREMENT:info-messages]], [[REQUIREMENT:name-appearance]],
-                  [[REQUIREMENT:chat]], [[REQUIREMENT:replies]], [[REQUIREMENT:questions]], [[REQUIREMENT:moderation]],
-                  [[REQUIREMENT:client-sentiment]], [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:presenter-hints]],
-                  [[REQUIREMENT:manage-app]], [[REQUIREMENT:config-propagation]], [[REQUIREMENT:event-portability]]
--   USE-CASES:    [[USE-CASE:create-event]], [[USE-CASE:publish-start-finish]], [[USE-CASE:join-event]],
-                  [[USE-CASE:switch-provider]], [[USE-CASE:moderate]], [[USE-CASE:export-data]]
--   TERMS:        [[TERM:event]]
--   GROUP:        [[GROUP:Events]]
+    [[REQUIREMENT:user-consent]], [[REQUIREMENT:info-messages]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:chat]],
+    [[REQUIREMENT:replies]], [[REQUIREMENT:questions]], [[REQUIREMENT:moderation]], [[REQUIREMENT:client-sentiment]],
+    [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:manage-app]],
+    [[REQUIREMENT:config-propagation]], [[REQUIREMENT:event-portability]]
+-   USE-CASES: [[USE-CASE:create-event]], [[USE-CASE:publish-start-finish]], [[USE-CASE:join-event]],
+    [[USE-CASE:switch-provider]], [[USE-CASE:moderate]], [[USE-CASE:export-data]]
+-   TERMS: [[TERM:event]]
+-   GROUP: [[GROUP:Events]]
 
 The master entity describing a single live broadcast event and all of its configuration,
 BECAUSE the entire data model is event-centric and every other entity hangs off an event.
@@ -98,7 +98,7 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     Whether anonymous attendees may access the event without authorization,
     BECAUSE public events accept unauthenticated viewers.
 
--   ATTRIBUTE: accessEmailPattern; TYPE: `string`; DEFAULT: `""`; CONSTRAINT: `regular expression tested against the email, empty for none`;
+-   ATTRIBUTE: accessEmailPattern; TYPE: `string`; DEFAULT: `""`;
     Pattern that grants access to any matching email beyond the access list,
     BECAUSE events can admit whole email domains without enumerating users.
 
@@ -118,7 +118,7 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     Whether chat messages may be replied to,
     BECAUSE threaded replies are appropriate only for some events.
 
--   ATTRIBUTE: chatThrottling; TYPE: `integer`; DEFAULT: `10`;
+-   ATTRIBUTE: chatThrottling; TYPE: `integer`; DEFAULT: `1`;
     Maximum chat messages per user per minute,
     BECAUSE rate limiting prevents denial-of-service abuse.
 
@@ -166,8 +166,8 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     How the attendee name appears on questions,
     BECAUSE the event controls the displayed question identity.
 
--   ATTRIBUTE: questionsThrottling; TYPE: `integer`; DEFAULT: `10`;
-    Maximum questions per user per minute,
+-   ATTRIBUTE: questionsThrottling; TYPE: `integer`; DEFAULT: `1`;
+    Maximum questions per user per time window,
     BECAUSE rate limiting prevents abuse of the question channel.
 
 -   ATTRIBUTE: questionsPrivate; TYPE: `boolean`; DEFAULT: `false`;
@@ -181,10 +181,6 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
 -   ATTRIBUTE: expireAuthTokenOnFirstUse; TYPE: `boolean`; DEFAULT: `true`;
     Whether pre-generated authorization tokens expire after first use,
     BECAUSE events choose between one-time and reusable pre-generated tokens.
-
--   ATTRIBUTE: authTokenValidity; TYPE: `integer`; DEFAULT: `5`;
-    Validity in minutes of an ordinary login authorization token of the event,
-    BECAUSE audiences reading their email with a delay need a longer validity than the default.
 
 -   ATTRIBUTE: sentimentSenderAnalysis; TYPE: `boolean`; DEFAULT: `false`;
     Whether lightweight client-side sentiment analysis is enabled,
@@ -211,8 +207,8 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
     BECAUSE an event delivers content through one or more logical channels.
 
 -   RELATION: accessList; TARGET: [[ENTITY:User]]; KIND: Composition; ARITY: `0..n`;
-    All users of the event, i.e., the invited attendees and the holders of its roles, each identified by email,
-    BECAUSE access and roles are granted to explicit users, each of whom exists within exactly one event.
+    Invited attendees identified by email,
+    BECAUSE access is granted to an explicit list of users.
 
 -   RELATION: messages; TARGET: [[ENTITY:Message]]; KIND: Composition; ARITY: `0..n`;
     Messages written during the event,
@@ -241,8 +237,8 @@ BECAUSE the entire data model is event-centric and every other entity hangs off 
 ##  ENTITY: AgendaPoint
 
 -   REQUIREMENTS: [[REQUIREMENT:question-tags]]
--   USE-CASES:    [[USE-CASE:join-event]], [[USE-CASE:moderate]]
--   GROUP:        [[GROUP:Events]]
+-   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:moderate]]
+-   GROUP: [[GROUP:Events]]
 
 The textual description of a phase in an event,
 BECAUSE attendees and moderators track which part of the event is currently active.
@@ -266,9 +262,9 @@ BECAUSE attendees and moderators track which part of the event is currently acti
 ##  ENTITY: Channel
 
 -   REQUIREMENTS: [[REQUIREMENT:multi-provider]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:channel-stats]]
--   USE-CASES:    [[USE-CASE:join-event]], [[USE-CASE:switch-provider]]
--   TERMS:        [[TERM:channel]]
--   GROUP:        [[GROUP:Channels]]
+-   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:switch-provider]]
+-   TERMS: [[TERM:channel]]
+-   GROUP: [[GROUP:Channels]]
 
 A logical content delivery stream linking video streams to an event,
 BECAUSE an event groups its streams by language and resolution into channels.
@@ -279,7 +275,7 @@ BECAUSE an event groups its streams by language and resolution into channels.
 
 -   ATTRIBUTE: name (*); TYPE: `string?`;
     Display name of the channel such as "Digital Townhall",
-    BECAUSE attendees and operators recognize the active channel by its name.
+    BECAUSE attendees choose between named channels.
 
 -   ATTRIBUTE: active; TYPE: `boolean`; DEFAULT: `false`;
     Whether the channel is the currently active one, derived to true for the first channel of an event ([[RULE:initial-channel]]),
@@ -300,9 +296,9 @@ BECAUSE an event groups its streams by language and resolution into channels.
 ##  ENTITY: Resource
 
 -   REQUIREMENTS: [[REQUIREMENT:multi-provider]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:resource-url]]
--   USE-CASES:    [[USE-CASE:join-event]], [[USE-CASE:switch-provider]]
--   TERMS:        [[TERM:resource]], [[TERM:provider]]
--   GROUP:        [[GROUP:Channels]]
+-   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:switch-provider]]
+-   TERMS: [[TERM:resource]], [[TERM:provider]]
+-   GROUP: [[GROUP:Channels]]
 
 A physical content delivery resource such as a provider stream or static website linked to a channel,
 BECAUSE a channel must map to concrete provider endpoints to be playable.
@@ -326,14 +322,14 @@ BECAUSE a channel must map to concrete provider endpoints to be playable.
 ##  ENTITY: ResourceProviderParam
 
 -   REQUIREMENTS: [[REQUIREMENT:multi-provider]]
--   USE-CASES:    [[USE-CASE:switch-provider]]
--   TERMS:        [[TERM:provider]]
--   GROUP:        [[GROUP:Channels]]
+-   USE-CASES: [[USE-CASE:switch-provider]]
+-   TERMS: [[TERM:provider]]
+-   GROUP: [[GROUP:Channels]]
 
 A key-value parameter belonging to exactly one resource and provider, defined in the event configuration file,
 BECAUSE provider endpoints are parameterized by values an administrator supplies.
 
--   ATTRIBUTE: resourceId; TYPE: `key uuid`;
+-   ATTRIBUTE: resourceId; TYPE: `key uuid`; DEFAULT: `uuid()`;
     Identifier of the owning resource,
     BECAUSE the parameter belongs to exactly one resource.
 
@@ -352,11 +348,11 @@ BECAUSE provider endpoints are parameterized by values an administrator supplies
 ##  ENTITY: Role
 
 -   REQUIREMENTS: [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:export-inputs]]
--   USE-CASES:    [[USE-CASE:authenticate]], [[USE-CASE:publish-start-finish]], [[USE-CASE:export-data]],
-                  [[USE-CASE:administer-event]]
--   TERMS:        [[TERM:role]], [[TERM:attendee]], [[TERM:manager]], [[TERM:moderator]], [[TERM:presenter]],
-                  [[TERM:administrator]]
--   GROUP:        [[GROUP:Users]]
+-   USE-CASES: [[USE-CASE:authenticate]], [[USE-CASE:publish-start-finish]], [[USE-CASE:export-data]],
+    [[USE-CASE:administer-event]]
+-   TERMS: [[TERM:role]], [[TERM:attendee]], [[TERM:manager]], [[TERM:moderator]], [[TERM:presenter]],
+    [[TERM:administrator]]
+-   GROUP: [[GROUP:Users]]
 
 A grant of rights to a user, who exists within a specific event or, as the holder of the Administrator role, permanently and outside any event,
 BECAUSE the application is role-based and rights are granted through roles.
@@ -372,11 +368,11 @@ BECAUSE the application is role-based and rights are granted through roles.
 ##  ENTITY: User
 
 -   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:likes]],
-                  [[REQUIREMENT:personalized-url]], [[REQUIREMENT:registration-import]]
--   USE-CASES:    [[USE-CASE:authenticate]], [[USE-CASE:create-event]], [[USE-CASE:chat-during-event]],
-                  [[USE-CASE:publish-start-finish]], [[USE-CASE:administer-event]]
--   TERMS:        [[TERM:user]], [[TERM:accesslist]]
--   GROUP:        [[GROUP:Users]]
+    [[REQUIREMENT:personalized-url]], [[REQUIREMENT:registration-import]]
+-   USE-CASES: [[USE-CASE:authenticate]], [[USE-CASE:create-event]], [[USE-CASE:chat-during-event]],
+    [[USE-CASE:publish-start-finish]], [[USE-CASE:administer-event]]
+-   TERMS: [[TERM:user]], [[TERM:accesslist]]
+-   GROUP: [[GROUP:Users]]
 
 A helper entity identifying a person within an event for event-based logins and for the roles granted to them, or permanently and outside any event as the holder of the Administrator role,
 BECAUSE the system holds no permanent accounts except the administrator yet must identify attendees and role holders per event.
@@ -417,15 +413,14 @@ BECAUSE the system holds no permanent accounts except the administrator yet must
 ##  ENTITY: Message
 
 -   REQUIREMENTS: [[REQUIREMENT:chat]], [[REQUIREMENT:questions]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]],
-                  [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:answer-inputs]],
-                  [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:message-editing]],
-                  [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:sort-filter]],
-                  [[REQUIREMENT:question-tags]], [[REQUIREMENT:export-inputs]]
--   USE-CASES:    [[USE-CASE:ask-question]], [[USE-CASE:chat-during-event]], [[USE-CASE:moderate]],
-                  [[USE-CASE:moderate-chat]], [[USE-CASE:present]], [[USE-CASE:export-data]]
--   TERMS:        [[TERM:message]], [[TERM:chat]], [[TERM:question]], [[TERM:support]], [[TERM:like]],
-                  [[TERM:sentiment]]
--   GROUP:        [[GROUP:Messages]]
+    [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:answer-inputs]],
+    [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:deleted-placeholder]],
+    [[REQUIREMENT:server-sentiment]], [[REQUIREMENT:sort-filter]], [[REQUIREMENT:question-tags]], [[REQUIREMENT:export-inputs]]
+-   USE-CASES: [[USE-CASE:ask-question]], [[USE-CASE:chat-during-event]], [[USE-CASE:moderate]],
+    [[USE-CASE:moderate-chat]], [[USE-CASE:present]], [[USE-CASE:export-data]]
+-   TERMS: [[TERM:message]], [[TERM:chat]], [[TERM:question]], [[TERM:support]], [[TERM:like]],
+    [[TERM:sentiment]]
+-   GROUP: [[GROUP:Messages]]
 
 A single chat, support, or question item tracked for attendees and moderators,
 BECAUSE all event interaction is represented uniformly as messages with language-specific texts.
@@ -438,11 +433,11 @@ BECAUSE all event interaction is represented uniformly as messages with language
     The kind of message,
     BECAUSE each type has a distinct lifecycle and visibility.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the sender created the message,
     BECAUSE ordering and export require the creation time.
 
--   ATTRIBUTE: timestampAnswered; TYPE: `datetime?`;
+-   ATTRIBUTE: timestampAnswered; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the message was answered,
     BECAUSE the presenter records when a question was answered.
 
@@ -472,7 +467,7 @@ BECAUSE all event interaction is represented uniformly as messages with language
     BECAUSE the analysis result is stored for display and auto-moderation.
 
 -   ATTRIBUTE: edited; TYPE: `enum(none,insignificant,significant,deleted)?`;
-    Whether and how the message was changed or deleted, where `significant` denotes a changed text shown as edited to the other readers and `insignificant` a change leaving the text untouched (e.g. of its tags), which is not shown,
+    Whether and how the message was changed or deleted,
     BECAUSE edits must be marked for others and edits stop once forwarded.
 
 -   RELATION: sender; TARGET: [[ENTITY:User]]; KIND: Association; ARITY: `0..1`;
@@ -506,9 +501,9 @@ BECAUSE all event interaction is represented uniformly as messages with language
 ##  ENTITY: MessageText
 
 -   REQUIREMENTS: [[REQUIREMENT:language-switch]], [[REQUIREMENT:export-inputs]]
--   USE-CASES:    [[USE-CASE:join-event]], [[USE-CASE:chat-during-event]], [[USE-CASE:export-data]]
--   TERMS:        [[TERM:message]]
--   GROUP:        [[GROUP:Messages]]
+-   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:chat-during-event]], [[USE-CASE:export-data]]
+-   TERMS: [[TERM:message]]
+-   GROUP: [[GROUP:Messages]]
 
 A language-specific text of a message,
 BECAUSE a message is translated into multiple languages while retaining one original.
@@ -528,8 +523,8 @@ BECAUSE a message is translated into multiple languages while retaining one orig
 ##  ENTITY: QuestionTag
 
 -   REQUIREMENTS: [[REQUIREMENT:question-tags]]
--   USE-CASES:    [[USE-CASE:ask-question]], [[USE-CASE:moderate]]
--   GROUP:        [[GROUP:Events]]
+-   USE-CASES: [[USE-CASE:ask-question]], [[USE-CASE:moderate]]
+-   GROUP: [[GROUP:Events]]
 
 A named tag attachable to question messages,
 BECAUSE questions are categorized by topic or addressed person for routing and grouping.
@@ -561,10 +556,10 @@ BECAUSE questions are categorized by topic or addressed person for routing and g
 ##  ENTITY: AuthorizationToken
 
 -   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:automatic-url]], [[REQUIREMENT:registration-import]],
-                  [[REQUIREMENT:registration-export]], [[REQUIREMENT:debug-stats]]
--   USE-CASES:    [[USE-CASE:authenticate]], [[USE-CASE:create-event]], [[USE-CASE:export-data]]
--   TERMS:        [[TERM:authtoken]]
--   GROUP:        [[GROUP:Tokens]]
+    [[REQUIREMENT:registration-export]], [[REQUIREMENT:debug-stats]]
+-   USE-CASES: [[USE-CASE:authenticate]], [[USE-CASE:create-event]], [[USE-CASE:export-data]]
+-   TERMS: [[TERM:authtoken]]
+-   GROUP: [[GROUP:Tokens]]
 
 A one-time second factor proving an attendee controls the email address used as the first factor,
 BECAUSE email-verified access is the core mechanism limiting the audience.
@@ -574,11 +569,11 @@ BECAUSE email-verified access is the core mechanism limiting the audience.
     The generated one-time token for the next login attempt,
     BECAUSE the attendee proves control of the email by returning this token.
 
--   ATTRIBUTE: validUntil; TYPE: `datetime?`; DEFAULT: `current time + Event.authTokenValidity`;
+-   ATTRIBUTE: validUntil; TYPE: `datetime`; DEFAULT: `Date.now() + 1d`;
     Expiry time of the token, unset for pre-generated tokens,
     BECAUSE ordinary tokens expire within minutes while pre-generated ones last until event end.
 
--   ATTRIBUTE: state; TYPE: `enum(issued,sent,used,dead)`; DEFAULT: `issued`;
+-   ATTRIBUTE: state; TYPE: `enum(issued,sent,used)`; DEFAULT: `issued`;
     Lifecycle state of the token,
     BECAUSE debugging statistics and anonymized sums need the token state.
 
@@ -593,9 +588,9 @@ BECAUSE email-verified access is the core mechanism limiting the audience.
 ##  ENTITY: SessionToken
 
 -   REQUIREMENTS: [[REQUIREMENT:authentication]], [[REQUIREMENT:parallel-access]], [[REQUIREMENT:event-stats]]
--   USE-CASES:    [[USE-CASE:authenticate]], [[USE-CASE:join-event]]
--   TERMS:        [[TERM:sessiontoken]]
--   GROUP:        [[GROUP:Tokens]]
+-   USE-CASES: [[USE-CASE:authenticate]], [[USE-CASE:join-event]]
+-   TERMS: [[TERM:sessiontoken]]
+-   GROUP: [[GROUP:Tokens]]
 
 The result of a successful login of a user to an event,
 BECAUSE an active session must be tracked to enforce single concurrent access.
@@ -604,7 +599,7 @@ BECAUSE an active session must be tracked to enforce single concurrent access.
     Unique identifier of the session,
     BECAUSE the active session of a user for an event must be addressable.
 
--   ATTRIBUTE: issuedAt; TYPE: `datetime`; DEFAULT: `current time`;
+-   ATTRIBUTE: issuedAt; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the user successfully entered the event,
     BECAUSE the session start time is recorded for tracking.
 
@@ -619,8 +614,8 @@ BECAUSE an active session must be tracked to enforce single concurrent access.
 ##  ENTITY: EventStatistic
 
 -   REQUIREMENTS: [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]], [[REQUIREMENT:stats-snapshots]]
--   USE-CASES:    [[USE-CASE:export-data]]
--   GROUP:        [[GROUP:Statistics]]
+-   USE-CASES: [[USE-CASE:export-data]]
+-   GROUP: [[GROUP:Statistics]]
 
 A periodic cumulative snapshot of event-wide counts,
 BECAUSE trend visualization of audience size and authentication flow requires regular snapshots.
@@ -629,35 +624,35 @@ BECAUSE trend visualization of audience size and authentication flow requires re
     Unique identifier of the event statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the snapshot was created,
     BECAUSE statistics are plotted over time.
 
 -   ATTRIBUTE: numberOfIssuedAuthTokens (*); TYPE: `integer?`;
     Count of issued authorization tokens at the timestamp,
-    BECAUSE a gap between issued and sent tokens reveals a failing email delivery of the login challenges ([[REQUIREMENT:debug-stats]]).
+    BECAUSE debugging statistics track issued tokens.
 
 -   ATTRIBUTE: numberOfSentAuthTokens (*); TYPE: `integer?`;
     Count of sent authorization tokens at the timestamp,
-    BECAUSE a gap between sent and used tokens reveals attendees failing to complete their login challenge ([[REQUIREMENT:debug-stats]]).
+    BECAUSE debugging statistics track sent tokens.
 
 -   ATTRIBUTE: numberOfUsedAuthTokens (*); TYPE: `integer?`;
     Count of used authorization tokens at the timestamp,
-    BECAUSE it counts the consumed login challenges the issued and sent tokens are compared against ([[REQUIREMENT:debug-stats]]).
+    BECAUSE debugging statistics track used tokens.
 
 -   ATTRIBUTE: numberOfSessionTokens (*); TYPE: `integer?`;
     Count of session tokens at the timestamp,
     BECAUSE logged-in users are derived from session tokens.
 
 -   ATTRIBUTE: numberOfConnections (*); TYPE: `integer?`;
-    Count of active client connections at the timestamp,
+    Count of active MQTT connections at the timestamp,
     BECAUSE active viewers differ from sessions once an attendee leaves.
 
 ##  ENTITY: ChannelStatistic
 
 -   REQUIREMENTS: [[REQUIREMENT:channel-stats]], [[REQUIREMENT:stats-snapshots]]
--   USE-CASES:    [[USE-CASE:export-data]]
--   GROUP:        [[GROUP:Statistics]]
+-   USE-CASES: [[USE-CASE:export-data]]
+-   GROUP: [[GROUP:Statistics]]
 
 A periodic count of viewers for a channel,
 BECAUSE organizers need per-channel popularity over time.
@@ -666,19 +661,19 @@ BECAUSE organizers need per-channel popularity over time.
     Unique identifier of the channel statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the snapshot was created,
     BECAUSE channel statistics are plotted over time.
 
 -   ATTRIBUTE: numberOfViewers (*); TYPE: `integer?`;
     Count of viewers of the channel at the timestamp,
-    BECAUSE organizers judge the relative popularity of the language and resolution variants by it.
+    BECAUSE the per-channel viewer count is the tracked metric.
 
 ##  ENTITY: UserStatistic
 
 -   REQUIREMENTS: [[REQUIREMENT:user-stats]]
--   USE-CASES:    [[USE-CASE:join-event]], [[USE-CASE:export-data]]
--   GROUP:        [[GROUP:Statistics]]
+-   USE-CASES: [[USE-CASE:join-event]], [[USE-CASE:export-data]]
+-   GROUP: [[GROUP:Statistics]]
 
 Tracked viewer information about a user,
 BECAUSE audience composition informs reporting and default localization.
@@ -687,13 +682,13 @@ BECAUSE audience composition informs reporting and default localization.
     Unique identifier of the user statistic,
     BECAUSE it is referenced as a foreign key.
 
--   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `current time`;
+-   ATTRIBUTE: timestamp; TYPE: `datetime`; DEFAULT: `Date.now()`;
     Time the snapshot was created,
     BECAUSE user statistics are recorded over time.
 
 -   ATTRIBUTE: country (*); TYPE: `string?`; CLASSIFICATION: Personal;
     RETENTION: linked to the user until event finish, retained unlinked afterwards;
-    ISO country code of the location of the viewer,
+    ISO country code from GeoIP tracking,
     BECAUSE country selects the default application language on first use.
 
 -   ATTRIBUTE: browserType (*); TYPE: `string?`; CLASSIFICATION: Personal;

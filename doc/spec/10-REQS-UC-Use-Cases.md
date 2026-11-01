@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-14 14:01
 ---
 
 REQS: Use Cases (UC)
@@ -12,7 +12,7 @@ USE-CASE: Join Event and Watch Stream {{join-event}}
 -   ACTOR:          [[ROLE:attendee]]
 -   JOURNEYS:       [[STEP:arrival]], [[STEP:participate]]
 -   ACTIVITIES:     [[ACTIVITY:attend-event]]
--   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:access-recheck]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:country-language]]
+-   REQUIREMENTS:   [[REQUIREMENT:individual-url]], [[REQUIREMENT:authentication]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:resource-url]], [[REQUIREMENT:mobile]], [[REQUIREMENT:language-switch]], [[REQUIREMENT:theme-toggle]]
 -   INCLUDES:       [[USE-CASE:authenticate]]
 -   PRE-CONDITION:  The attendee holds an event URL and their email is granted access.
 -   TRIGGER:        The attendee opens the individual event URL received by invitation.
@@ -28,7 +28,7 @@ attendee was invited.
 
 -   TYPE: Main
 
-1.  The attendee opens the individual event URL in a web browser supported by [[REQUIREMENT:browser-compat]], without installing software.
+1.  The attendee opens the individual event URL in any recent web browser, without installing software.
 2.  The attendee authenticates ([[USE-CASE:authenticate]]).
 3.  The system grants the attendee access to the live video stream.
 
@@ -48,7 +48,7 @@ attendee was invited.
 -   TYPE:         Alternative
 -   RESULT:       Success
 -   AT-MAIN-STEP: 1
--   OUTCOME:      The attendee watches the stream on the phone, while the interaction features need not be available there ([[REQUIREMENT:mobile]]).
+-   OUTCOME:      The attendee watches the stream on the phone, with the interaction possibly restricted.
 
 1.  The attendee opens the individual event URL in the browser of a mobile phone.
 2.  The attendee authenticates ([[USE-CASE:authenticate]]).
@@ -62,7 +62,7 @@ attendee was invited.
 -   OUTCOME:      The attendee sees the interface and the translated messages in the chosen language.
 
 3.  The system grants the attendee access to the live video stream in the default language.
-4.  The attendee switches the language between German and English.
+4.  The attendee switches the language between German and English in the header.
 5.  The system applies the language immediately to the interface and the translated messages.
 
 ### SCENARIO: Toggle the Theme {{join-event-theme}}
@@ -73,7 +73,7 @@ attendee was invited.
 -   OUTCOME:      The attendee sees the interface in the chosen light or dark theme.
 
 3.  The system grants the attendee access to the live video stream in the default theme.
-4.  The attendee toggles between the light and the dark theme.
+4.  The attendee toggles between the light and the dark theme in the header.
 5.  The system applies the theme immediately across the whole interface.
 
 USE-CASE: Authenticate via Email Token {{authenticate}}
@@ -135,16 +135,6 @@ entitles the attendee to the event they were invited to.
 3.  The system finds the email neither on the access list nor matching the access pattern.
 4.  The system denies access and informs the attendee that they are not authorized.
 
-### SCENARIO: Token Wrong or Expired {{authenticate-expired}}
-
--   TYPE:         Exceptional
--   RESULT:       Resume
--   AT-MAIN-STEP: 5
--   OUTCOME:      No session exists, and the attendee may request a fresh token (resumes at step 3).
-
-5.  The system finds the entered token wrong or beyond its validity.
-6.  The system refuses the login and offers to send a fresh token.
-
 USE-CASE: Ask a Question {{ask-question}}
 ------------------------
 
@@ -157,10 +147,9 @@ USE-CASE: Ask a Question {{ask-question}}
 -   TRIGGER:        The attendee decides to raise a question during the running event.
 -   POST-CONDITION: The question is stored in state pending and awaits moderation.
 
-The attendee writes a question, optionally tags it, and submits it; the
-system stores it and routes it through moderation if the event requires
-approval before it becomes visible, BECAUSE getting their own question
-answered turns the attendee from a passive viewer into a participant.
+The attendee writes a question, optionally tags it, and submits it; the system stores it and routes it through moderation if
+the event requires approval before it becomes visible, BECAUSE getting their own question answered turns the attendee from a
+passive viewer into a participant.
 
 ### SCENARIO: Submit Moderated Question {{ask-question-moderated}}
 
@@ -220,7 +209,7 @@ USE-CASE: Chat During the Event {{chat-during-event}}
 -   ACTOR:          [[ROLE:attendee]]
 -   JOURNEYS:       [[STEP:participate]]
 -   ACTIVITIES:     [[ACTIVITY:attend-event]]
--   REQUIREMENTS:   [[REQUIREMENT:chat]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]], [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:display-options]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:mc-feedback]]
+-   REQUIREMENTS:   [[REQUIREMENT:chat]], [[REQUIREMENT:likes]], [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:display-options]], [[REQUIREMENT:name-appearance]], [[REQUIREMENT:mc-feedback]]
 -   RULES:          [[RULE:moderation-gate]], [[RULE:type-states]], [[RULE:forward-lock]]
 -   PRE-CONDITION:  The attendee has an active session and chat is enabled for the event.
 -   TRIGGER:        The attendee wants to comment on the running event.
@@ -238,7 +227,7 @@ from silent viewers into an engaged community.
 1.  The attendee writes a chat message.
 2.  The attendee sends the message.
 3.  The system stores the message in state pending and accepts it at once, unless the event moderates chat messages and hence holds it for the moderator decision.
-4.  The system shows the message in the stream under the sender name in the form the event configures (full name, first name, or anonymous), keeping the email address of the sender available to the readers on request ([[REQUIREMENT:name-appearance]]).
+4.  The system shows the message in the stream under the sender name in the form the event configures (full name, first name, or anonymous), exposing the email address on hover.
 
 ### SCENARIO: Pending Message Stays Private {{chat-pending-private}}
 
@@ -338,11 +327,9 @@ USE-CASE: Moderate and Forward Messages {{moderate}}
 -   TRIGGER:        An attendee message arrives in state pending for moderation.
 -   POST-CONDITION: Messages are accepted, rejected, forwarded with optional hints, or settled on behalf of the presenter.
 
-The moderator reviews the pending messages by state, approves or rejects
-them, forwards selected approved questions to the presenter in a chosen
-order, and may attach hints or raise a presenter alert, BECAUSE the
-presenter can only handle a curated, ordered selection of the audience
-input while on stage.
+The moderator reviews the pending messages by state, approves or rejects them, forwards selected approved questions to the
+presenter in a chosen order, and may attach hints or raise a presenter alert, BECAUSE the presenter can only handle a
+curated, ordered selection of the audience input while on stage.
 
 ### SCENARIO: Approve and Forward Question {{moderate-forward}}
 
@@ -391,7 +378,7 @@ USE-CASE: Moderate the Chat Conversation {{moderate-chat}}
 -   PERSONAS:       [[PERSONA:moderator-chat]]
 -   JOURNEYS:       [[STEP:support]]
 -   ACTIVITIES:     [[ACTIVITY:rehearse-event]], [[ACTIVITY:moderate-interaction]]
--   REQUIREMENTS:   [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:manage-app]], [[REQUIREMENT:support-requests]]
+-   REQUIREMENTS:   [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:manage-app]]
 -   RULES:          [[RULE:moderator-accept]], [[RULE:moderation-gate]]
 -   PRE-CONDITION:  The event runs with chat enabled and the moderator has the Moderator role.
 -   TRIGGER:        Attendee chat messages arrive which need an answer, a steer, or a seed from the moderator.
@@ -435,13 +422,13 @@ an unattended chat drowns in spam and off-topic noise.
 3.  The system passes the control on to the application without interrupting the stream.
 
 USE-CASE: Steer the Presenter {{steer-presenter}}
------------------------------
+---------------------------------
 
 -   ACTOR:          [[ROLE:moderator]]
 -   PERSONAS:       [[PERSONA:moderator-qa]]
 -   JOURNEYS:       [[STEP:support]]
 -   ACTIVITIES:     [[ACTIVITY:moderate-interaction]]
--   REQUIREMENTS:   [[REQUIREMENT:presenter-alerts]], [[REQUIREMENT:config-propagation]]
+-   REQUIREMENTS:   [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:config-propagation]]
 -   PRE-CONDITION:  The event is running and the moderator has the Moderator role.
 -   TRIGGER:        The presenter needs timing or routing guidance during the live event.
 -   POST-CONDITION: The presenter alert is raised or the active agenda point is advanced, and the presenter sees it.
@@ -524,7 +511,7 @@ audience set up before anyone can rehearse it.
 -   AT-MAIN-STEP: 2
 -   OUTCOME:      The moderators and the presenter can enter the unpublished event for the rehearsal.
 
-2.  The manager grants the Attendee, Manager, Moderator, and Presenter roles to the users of the event by email address, or revokes them again.
+2.  The manager grants the Attendee, Moderator, and Presenter roles to the users of the event by email address, or revokes them again.
 3.  The system creates the users of the roles without permanent accounts and admits them to the unpublished event.
 
 ### SCENARIO: Maintain the Access List {{configure-event-access}}
@@ -559,10 +546,9 @@ USE-CASE: Switch Streaming Provider {{switch-provider}}
 -   TRIGGER:        The active streaming resource shows problems during a running event.
 -   POST-CONDITION: A new resource is active and all clients follow it automatically.
 
-When a provider has problems, the manager activates a fallback resource
-on the channel and the system propagates the change so attendee clients
-switch streams without any user interaction, BECAUSE a live event cannot
-be paused while a streaming provider recovers.
+When a provider has problems, the manager activates a fallback resource on the channel and the system propagates the change
+so attendee clients switch streams without any user interaction, BECAUSE a live event cannot be paused while a streaming
+provider recovers.
 
 ### SCENARIO: Live Failover {{switch-provider-failover}}
 
@@ -586,12 +572,9 @@ USE-CASE: Create Event from Registration Import {{create-event}}
 -   TRIGGER:        The manager receives the Excel sheet of the attendees of an upcoming event, exported by the Event Registration System.
 -   POST-CONDITION: The access list and tokens are created and the URL sheet is ready for the manager to hand back to the Event Registration System.
 
-The manager imports the Excel sheet of the Event Registration System to
-fill the event access list and generate authorization tokens, then
-exports an Excel sheet of personal access URLs back to the Event
-Registration System, avoiding duplicate invitations on repeated imports,
-BECAUSE provisioning hundreds of attendees by hand is error-prone and
-does not scale.
+The manager imports the Excel sheet of the Event Registration System to fill the event access list and generate authorization
+tokens, then exports an Excel sheet of personal access URLs back to the Event Registration System, avoiding duplicate
+invitations on repeated imports, BECAUSE provisioning hundreds of attendees by hand is error-prone and does not scale.
 
 ### SCENARIO: Import and Return URLs {{create-event-import}}
 
@@ -609,17 +592,14 @@ USE-CASE: Publish, Start, and Finish Event {{publish-start-finish}}
 -   ACTOR:          [[ROLE:manager]]
 -   JOURNEYS:       [[STEP:configure]]
 -   ACTIVITIES:     [[ACTIVITY:go-live]], [[ACTIVITY:finish-event]]
--   REQUIREMENTS:   [[REQUIREMENT:event-lifecycle]]
 -   RULES:          [[RULE:anonymize]]
 -   PRE-CONDITION:  The event is configured and its access list is populated.
--   TRIGGER:        The manager decides that the configured event is ready to be made visible to its invited attendees.
+-   TRIGGER:        The scheduled date of the event approaches.
 -   POST-CONDITION: The event is finished, access is closed, and the personal data is anonymized.
 
-The manager publishes the configured event to make it visible to the
-invited attendees, starts it when the live stream goes on air, and
-finishes it afterwards, BECAUSE the visibility, the live interaction,
-and the anonymization of an event are deliberate decisions of the
-manager, not side effects of the clock.
+The manager publishes the configured event to make it visible to the invited attendees, starts it when the live stream goes
+on air, and finishes it afterwards, BECAUSE the visibility, the live interaction, and the anonymization of an event are
+deliberate decisions of the manager, not side effects of the clock.
 
 ### SCENARIO: Publish, Start, and Finish {{publish-start-finish-main}}
 
@@ -654,11 +634,9 @@ USE-CASE: Export Anonymized Event Data {{export-data}}
 -   TRIGGER:        The manager is asked to hand over the recorded interaction of a finished event.
 -   POST-CONDITION: An export file of anonymized messages and statistics is produced.
 
-After the event finishes and personal data is anonymized, the manager
-exports all attendee inputs with timestamps, states, like counts, and
-texts, together with the event statistics, BECAUSE the organizer
-evaluates the event and answers open questions afterwards from this
-record.
+After the event finishes and personal data is anonymized, the manager exports all attendee inputs with timestamps, states,
+like counts, and texts, together with the event statistics, BECAUSE the organizer evaluates the event and answers open
+questions afterwards from this record.
 
 ### SCENARIO: Export After Finish {{export-data-after}}
 
@@ -686,16 +664,15 @@ USE-CASE: Present Forwarded Questions {{present}}
 
 -   ACTOR:          [[ROLE:presenter]]
 -   ACTIVITIES:     [[ACTIVITY:rehearse-event]], [[ACTIVITY:present-talk]]
--   REQUIREMENTS:   [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:presenter-hints]], [[REQUIREMENT:presenter-alerts]]
+-   REQUIREMENTS:   [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:presenter-hints]]
 -   RULES:          [[RULE:forward-lock]]
 -   PRE-CONDITION:  The event is running and questions have been forwarded.
 -   TRIGGER:        The moderator forwards a question to the presenter.
 -   POST-CONDITION: Processed questions are marked answered or suspended.
 
-The presenter views the forwarded questions in their intended order with
-any moderator hints, addresses them on stage, and marks each as answered
-or suspended, BECAUSE the presenter needs to keep track of what was
-already addressed while staying focused on the audience.
+The presenter views the forwarded questions in their intended order with any moderator hints, addresses them on stage, and
+marks each as answered or suspended, BECAUSE the presenter needs to keep track of what was already addressed while staying
+focused on the audience.
 
 ### SCENARIO: Answer Forwarded Question {{present-answer}}
 

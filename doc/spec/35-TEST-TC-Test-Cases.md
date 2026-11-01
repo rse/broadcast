@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-14 16:19
 ---
 
 TEST: Test Cases (TC)
@@ -186,7 +186,7 @@ TEST: Test Cases (TC)
 -   VERIFIES:       [[REQUIREMENT:user-consent]], [[RULE:anonymize]]
 -   PRE-CONDITION:  A running event with messages, likes, tokens, and an access list.
 -   INPUT:          The manager finishes the event.
--   EXPECTED:       Sender names become "Anonymous", likes become bare counts, and tokens, users, and all roles except the Manager roles are deleted.
+-   EXPECTED:       Sender names become "Anonymous", likes become bare counts, and tokens, users, and Moderator roles are deleted.
 -   POST-CONDITION: No personal attendee data remains and Manager roles are retained.
 
 ##  TEST-CASE: User Vanishes Without Role or Access {{no-accounts}}
@@ -211,7 +211,7 @@ TEST: Test Cases (TC)
 -   PRE-CONDITION:  A running event with a manager role and a moderator role assigned.
 -   INPUT:          The manager exports the event data after having finished the event.
 -   EXPECTED:       The moderator role is deleted by the anonymization while the manager role remains and can still export the event data.
--   POST-CONDITION: The manager role of the finished event still exists after the export.
+-   POST-CONDITION: The manager role exists until the event is deleted.
 
 1.  The manager finishes the event.
 2.  The moderator attempts to open the event.
@@ -255,8 +255,8 @@ TEST: Test Cases (TC)
 ##  TEST-CASE: Client-Side Check Holds Back Improper Input {{client-block}}
 
 -   VERIFIES:       [[REQUIREMENT:client-sentiment]], [[SCENARIO:ask-question-client]]
--   PRE-CONDITION:  A running event with client-side sentiment analysis and client-side auto-prevention enabled.
--   INPUT:          An attendee submits the insulting question "You are all idiots and this talk is garbage."
+-   PRE-CONDITION:  A running event with client-side sentiment analysis enabled.
+-   INPUT:          An attendee submits a question with clearly improper wording.
 -   EXPECTED:       The client prevents the submission and informs the attendee, and no request reaches the server.
 -   POST-CONDITION: No message exists for the submission.
 
@@ -296,13 +296,13 @@ TEST: Test Cases (TC)
 -   EXPECTED:       The view lists the forwarded question only, while a direct request for any of the three other questions is refused.
 -   POST-CONDITION: The four questions remain in their states.
 
-##  TEST-CASE: Administrator Reads Any Event Data {{administrator-data}}
+##  TEST-CASE: Administrator Sees No Attendee Data {{administrator-data}}
 
--   VERIFIES:       [[RULE:administrator-access]], [[PERMISSION:administrator-events]], [[PERMISSION:administrator-users]], [[PERMISSION:administrator-messages]]
+-   VERIFIES:       [[REQUIREMENT:gdpr-eu]], [[RULE:no-accounts]], [[PERMISSION:administrator-events]]
 -   PRE-CONDITION:  A running event with a populated access list and messages exists, provisioned through the configuration.
--   INPUT:          The administrator, logged into the event, requests its settings, its access list, and its messages.
--   EXPECTED:       The event settings, the access list, and the messages are returned, as the administrator may perform every operation on every entity of every event.
--   POST-CONDITION: The event, its access list, and its messages remain unchanged.
+-   INPUT:          The administrator reads the event through the configuration and requests its access list and messages.
+-   EXPECTED:       The event settings are returned, while the requests for the access list and the messages are refused.
+-   POST-CONDITION: No access list entry or message was disclosed to the administrator.
 
 ##  TEST-CASE: Administrator Enters Without Access List Entry {{administrator-access}}
 
@@ -334,5 +334,5 @@ TEST: Test Cases (TC)
 
 -   VERIFIES:      [[REQUIREMENT:attendee-scale]], [[REQUIREMENT:scalability]]
 -   PRE-CONDITION: A running event deployed with scaled proxy, relay, and server instances.
--   INPUT:         10000 simulated attendees connect to the event simultaneously.
+-   INPUT:         10000 simulated attendees connect simultaneously and interact.
 -   EXPECTED:      All 10000 attendees hold a served WebSocket connection at the same time, meeting the upper bound of the 2500 to 10000 attendees per event metric.

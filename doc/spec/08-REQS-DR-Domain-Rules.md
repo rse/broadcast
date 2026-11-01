@@ -1,10 +1,9 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-14 16:20
 ---
 
-REQS: Domain Rules (DR)
-=======================
+#   REQS: Domain Rules (DR)
 
 ##  RULE: Single Active Session per Event {{single-session}}
 
@@ -101,15 +100,15 @@ once upon creation, BECAUSE organizers must control what the audience sees.
 -   GOVERNS:    [[TERM:message]], [[TERM:moderator]]
 -   CONSTRAINS: [[REQUIREMENT:moderator-messages]]
 
-A [[TERM:Message]] authored by a [[TERM:Moderator]] MUST be accepted at once upon creation, BECAUSE
-[[TERM:Moderator]]-authored content is trusted and needs no further approval.
+A [[TERM:Message]] authored by a [[TERM:Moderator]] MUST be accepted at once upon creation and carry the sender name
+"Moderator" unless overridden, BECAUSE [[TERM:Moderator]]-authored content is trusted and needs no further approval.
 
 ##  RULE: Forwarded Messages Are Immutable {{forward-lock}}
 
 -   CATEGORY:   Constraint
 -   SOURCE:     Business
 -   GOVERNS:    [[TERM:message]], [[TERM:attendee]], [[TERM:presenter]]
--   CONSTRAINS: [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]], [[REQUIREMENT:forward-presenter]]
+-   CONSTRAINS: [[REQUIREMENT:message-editing]], [[REQUIREMENT:forward-presenter]]
 
 Once a [[TERM:Message]] reaches state forwarded, the [[TERM:Attendee]] MUST NOT edit or delete it, BECAUSE the
 [[TERM:Presenter]] relies on the forwarded content remaining stable for live processing.
@@ -125,7 +124,7 @@ A [[TERM:Message]] MUST use only the states its type permits:
 
 1.  The [[TERM:Message]] is a [[TERM:Question]]: pending, accepted, rejected, forwarded, answered, and suspended.
 2.  The [[TERM:Message]] is a [[TERM:Chat]]: pending, accepted, and rejected.
-3.  The [[TERM:Message]] is a [[TERM:Support]] message: pending (upon creation only) and accepted.
+3.  The [[TERM:Message]] is a [[TERM:Support]] message: accepted.
 
 No other combination of [[TERM:Message]] type and state is permitted, BECAUSE each [[TERM:Message]] type has a different
 interaction lifecycle.
@@ -153,10 +152,10 @@ makes automated moderation predictable.
 
 When an [[TERM:Event]] finishes, its [[TERM:Anonymization]] MUST reduce its [[TERM:Message]]s to a bare [[TERM:Like]] count
 with [[TERM:Chat]] and [[TERM:Question]] sender names set to "Anonymous" and liker and sender relations dropped, delete its
-[[TERM:Authorization Token]]s and [[TERM:Session Token]]s, delete the [[TERM:User]]s of its [[TERM:Access List]] not holding a
-[[TERM:Manager]] [[TERM:Role]] while retaining their viewer statistics unlinked from any [[TERM:User]], and delete all its
-[[TERM:Role]]s except its [[TERM:Manager]] [[TERM:Role]]s, BECAUSE personal data must not be retained beyond the
-[[TERM:Event]] (GDPR Art. 5(1)(e), storage limitation).
+[[TERM:Authorization Token]]s and [[TERM:Session Token]]s, clear its [[TERM:Access List]] and delete the referenced
+[[TERM:User]]s while retaining their viewer statistics unlinked from any [[TERM:User]], and delete its [[TERM:Moderator]]
+[[TERM:Role]]s while retaining its [[TERM:Manager]] [[TERM:Role]]s,
+BECAUSE personal data must not be retained beyond the [[TERM:Event]] (GDPR Art. 5(1)(e), storage limitation).
 
 ##  RULE: Likes Conserved as Count on Finish {{like-count}}
 
@@ -177,9 +176,8 @@ bare [[TERM:Like]] count before the liker relations are removed, BECAUSE [[TERM:
 -   CONSTRAINS: [[REQUIREMENT:registration-export]], [[REQUIREMENT:automatic-url]]
 -   PREMISES:   [[PREMISE:email-at-hand]], [[PREMISE:email-delivery]]
 
-An [[TERM:Authorization Token]] MUST be formatted as six digits "NNN-NNN"; a normal login token MUST expire after the
-token validity the [[TERM:Event]] configures (5 minutes by default), while a token pre-generated for the
-[[TERM:Event Registration System]] lasts until the [[TERM:Event]] ends, expiring on
+An [[TERM:Authorization Token]] MUST be formatted as six digits "NNN-NNN"; a normal login token MUST expire within 5 minutes
+while a token pre-generated for the [[TERM:Event Registration System]] lasts until the [[TERM:Event]] ends, expiring on
 first use only if the [[TERM:Event]] so configures, BECAUSE token strength and lifetime balance security against convenient
 automated access.
 

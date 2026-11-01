@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 00:49
-Modified: 2026-10-21 17:58
+Modified: 2026-09-14 10:13
 ---
 
 APIS: Interface Endpoints (IE)
@@ -16,24 +16,13 @@ ENDPOINT: broadcast-server
 -   OPERATION:   command
 -   LOCATOR:     `broadcast-server [options]`
 
-The sole command of the program, which pre-forks the configured number
-of worker processes and supervises them, BECAUSE the server is a
-long-running daemon whose process model has to stay uniform even for a
-single worker.
-
-Before pre-forking, the command loads the layered configuration of the
-[[INTERFACE:server-cli]], BECAUSE all workers have to operate on the
-same parameters, validated once before any worker starts.
-
-Before pre-forking, the command brings the database schema up to date,
-BECAUSE no worker may operate on an outdated database schema.
-
-A dead worker is respawned after the [[RESPAWN_DELAY]], BECAUSE the
-server has to recover from a crashed worker without an operator.
-
-The command runs until it receives a `SIGINT` or `SIGTERM` signal,
-which it forwards to all workers before terminating gracefully, BECAUSE
-the workers have to close their connections before the process exits.
+The sole command of the program, which loads the layered configuration,
+brings the database schema up to date, pre-forks the configured number
+of worker processes, supervises them (respawning a dead one after the
+[[RESPAWN_DELAY]]), and runs until it receives a `SIGINT` or `SIGTERM`
+signal, which it forwards to all workers before terminating gracefully,
+BECAUSE the server is a long-running daemon whose process model has to
+stay uniform even for a single worker.
 
 -   OPTION: --version; ALIAS: `-V`; TYPE: `boolean`; DEFAULT: `false`;
     Prints the name and version of the program and exits,
@@ -55,9 +44,13 @@ the workers have to close their connections before the process exits.
     The environment file loaded in addition to, and overriding, the `.env` file of the current working directory,
     BECAUSE secrets have to be injected without appearing in the configuration file or the command line.
 
--   OPTION: --admin-email; ALIAS: `-a`; TYPE: `string`;
-    Overrides the `adminEmail` configuration parameter,
-    BECAUSE the administrator has to be settable per environment.
+-   OPTION: --admin-username; ALIAS: `-u`; TYPE: `string`;
+    Overrides the `adminUsername` configuration parameter,
+    BECAUSE the administrator account has to be settable per environment.
+
+-   OPTION: --admin-password; ALIAS: `-p`; TYPE: `string`;
+    Overrides the `adminPassword` configuration parameter,
+    BECAUSE the administrator account has to be settable per environment.
 
 -   OPTION: --mqtt-url; ALIAS: `-m`; TYPE: `string`; DEFAULT: [[DEFAULT_MQTT_URL]];
     Overrides the `mqttUrl` configuration parameter,
@@ -72,7 +65,7 @@ the workers have to close their connections before the process exits.
     BECAUSE the client bundle may be deployed apart from the server.
 
 -   OPTION: --workers; ALIAS: `-w`; TYPE: `integer`; DEFAULT: `1`; CONSTRAINT: `1..n`;
-    Overrides the `workers` configuration parameter,
+    Overrides the `workers` configuration parameter, rejecting a non-positive or non-integer value as a usage error,
     BECAUSE the process count has to match the CPU resources of the environment.
 
 -   RESULT: log; TYPE: `text`; ARITY: `*`;

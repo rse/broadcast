@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 00:49
-Modified: 2026-10-21 17:58
+Modified: 2026-08-30 14:06
 ---
 
 APIS: Interface Datatypes (ID)
@@ -12,9 +12,8 @@ TYPE: LogLevel
 -   INTERFACES: [[INTERFACE:server-cli]]
 -   BASE:       `enum(error,warning,info,debug)`
 
-The verbosity level of the server log, from errors only up to debugging
-details, BECAUSE the amount of log output has to be tuned per
-environment.
+The verbosity level of the server log, from errors only up to debugging details,
+BECAUSE the amount of log output has to be tuned per environment.
 
 TYPE: Configuration
 -------------------
@@ -23,24 +22,20 @@ TYPE: Configuration
 
 The structure of the YAML configuration file, whose keys are also
 the surface of the recognized `BROADCAST_*` environment variables
-(`BROADCAST_ADMIN_EMAIL` maps onto `adminEmail`) and of the
-corresponding command-line options, BECAUSE one schema has to define all
-three configuration layers consistently.
-
-An unrecognized key is a fatal startup error, BECAUSE a mistyped key
-would otherwise be silently ignored and let the server run with an
-unintended default.
-
-Within the name of such an environment variable, a double underscore
-separates the nesting path segments and a single underscore the words
-of one camel-cased segment, BECAUSE every configuration key has to be
-derivable unambiguously from the variable name.
+(`BROADCAST_ADMIN_USERNAME` maps onto `adminUsername`) and of the
+corresponding command-line options, where an unrecognized key is a fatal
+startup error, BECAUSE one schema has to define all three configuration
+layers consistently.
 
 ### FIELD
 
--   adminEmail; TYPE: `string`; CONSTRAINT: `email address`;
-    The email address the configuration grants the Administrator role to ([[RULE:administrator-bootstrap]]),
-    BECAUSE the administrator enters every event through the ordinary login challenge of this address ([[RULE:administrator-access]]).
+-   adminUsername; TYPE: `string`; CONSTRAINT: `non-empty`;
+    The user name of the administrator account,
+    BECAUSE the administrator has to be able to log in without any event-specific token.
+
+-   adminPassword; TYPE: `string`; CONSTRAINT: `non-empty`;
+    The password of the administrator account,
+    BECAUSE the administrator account has to be protected.
 
 -   mqttUrl; TYPE: `string`; DEFAULT: [[DEFAULT_MQTT_URL]];
     The URL of the MQTT broker the server connects to, including the credentials and the topic prefix,
@@ -62,18 +57,12 @@ derivable unambiguously from the variable name.
     The number of worker processes the primary process pre-forks,
     BECAUSE the load-balanced traffic of the broker has to be spread over several processes.
 
--   providers; TYPE: `any`; ARITY: `*`;
-    The streaming providers, each with its `providerId` and the keys of the parameters a resource of it supplies ([[ENTITY:ResourceProviderParam]]),
-    BECAUSE a resource binds to a provider and its parameter keys defined in the configuration file.
-
--   events; TYPE: `any`; ARITY: `*`;
-    The events provisioned through the configuration, each with its initial channels and resources and the email address of its first Manager,
-    BECAUSE the administrator provisions the events and their first Manager through the configuration ([[CONCERN:role-assignment]]).
-
 ### CONSTANT
 
 -   ENV_PREFIX; TYPE: `string`; VALUE: `BROADCAST_`;
-    The prefix of all environment variables overriding configuration parameters,
+    The prefix of all environment variables overriding configuration parameters, where a double
+    underscore separates the nesting path segments and a single underscore the words of one
+    camel-cased segment,
     BECAUSE the server has to ignore the unrelated variables of the ambient environment.
 
 -   DEFAULT_MQTT_URL; TYPE: `string`; VALUE: `wss://example:example@127.0.0.1:1883/pr/api/server/?topic=broadcast`;

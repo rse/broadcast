@@ -1,10 +1,9 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-03 14:30
 ---
 
-ARCH: Deployment View (DV)
-==========================
+#   ARCH: Deployment View (DV)
 
 ##  TIER: Client {{client-tier}}
 
@@ -26,8 +25,7 @@ served close to a large, distributed audience instead of from the data center.
 -   LOCATION: Hetzner cloud (Nürnberg, DE), separated into dev, QA, and production environments
 
 The data center tier groups all server-side tiers within one EU-resident hosting location, BECAUSE EU-resident
-self-hosting satisfies [[REQUIREMENT:gdpr]] and keeps the per-event cost below Azure or AWS hosting as
-[[REQUIREMENT:cost]] demands.
+self-hosting satisfies GDPR and minimizes per-event cost versus public cloud.
 
 ##  TIER: Middleware {{middleware-tier}}
 
@@ -53,6 +51,33 @@ independently of the connection handling and the persistence.
 The database tier holds the authoritative persistent state, BECAUSE durable state must reside on a protected tier
 reachable from the business services alone.
 
+##  NETWORK: Public Internet {{internet}}
+
+-   SCOPE:      Public
+-   PROTOCOLS:  HTTPS 443, WSS 443
+-   ADDRESSING: Public IPv4 and IPv6
+
+The public Internet carries all attendee and operator traffic to the CDN and the edge router over TLS only, BECAUSE the
+audience joins from arbitrary, untrusted networks.
+
+##  NETWORK: Backend Network {{backend}}
+
+-   SCOPE:      Private
+-   PROTOCOLS:  HTTP, WS, WSS
+-   ADDRESSING: Hetzner private vSwitch, per-environment VLAN
+
+The backend network connects the router, the proxies, the relays, and the service containers within the data center,
+BECAUSE the internal hops must stay unreachable from the Internet while remaining cheap to scale per environment.
+
+##  NETWORK: Data Network {{data}}
+
+-   SCOPE:      Isolated
+-   PROTOCOLS:  TCP 5432
+-   ADDRESSING: Hetzner private vSwitch, database subnet
+
+The data network connects the service containers to the database server only, BECAUSE the persistence node must be
+reachable from the business services alone.
+
 ##  NODE: Client Device {{client-device}}
 
 -   KIND:        Device
@@ -75,7 +100,7 @@ no installation and must run on both managed and unmanaged devices.
 -   NETWORKS:    [[NETWORK:internet]]
 
 A Cloudflare CDN edge distributes the static client bundle and static resources close to users, BECAUSE static content must
-be delivered to the start surge of up to 10000 joining attendees within the time [[REQUIREMENT:asset-delivery]] demands.
+be delivered quickly and stably to a large, distributed audience.
 
 ##  NODE: Edge Router {{router}}
 
@@ -88,8 +113,7 @@ be delivered to the start surge of up to 10000 joining attendees within the time
 -   NETWORKS:    [[NETWORK:internet]], [[NETWORK:backend]]
 
 The edge router terminates inbound HTTP and WebSocket traffic and round-robins it to per-environment proxies, BECAUSE a
-single public entry point keeps the proxies of all environments on the private backend network, unreachable from the
-Internet.
+single hardened entry point must balance load and isolate environments.
 
 ##  NODE: Proxy Servers {{proxy}}
 
@@ -101,8 +125,8 @@ Internet.
 -   CONNECTS-TO: [[NODE:relay]]
 -   NETWORKS:    [[NETWORK:backend]]
 
-The proxy servers run several reverse proxy instances per environment forwarding to the relay brokers, BECAUSE a
-single proxy instance cannot forward the 10000 concurrent connections per event of [[REQUIREMENT:scalability]].
+The proxy servers run several reverse proxy instances per environment forwarding to the relay brokers, BECAUSE
+per-environment scaling of request handling needs multiple proxy instances.
 
 ##  NODE: Relay Brokers {{relay}}
 
@@ -140,31 +164,4 @@ containerized services give reproducible, independently scalable business logic.
 
 The database server runs PostgreSQL with filesystem asset storage as the authoritative persistence node, BECAUSE durable
 state must reside on a protected, non-public node.
-
-##  NETWORK: Public Internet {{internet}}
-
--   SCOPE:      Public
--   PROTOCOLS:  HTTPS 443, WSS 443
--   ADDRESSING: Public IPv4 and IPv6
-
-The public Internet carries all attendee and operator traffic to the CDN and the edge router over TLS only, BECAUSE the
-audience joins from arbitrary, untrusted networks.
-
-##  NETWORK: Backend Network {{backend}}
-
--   SCOPE:      Private
--   PROTOCOLS:  HTTP, WS, WSS
--   ADDRESSING: Hetzner private vSwitch, per-environment VLAN
-
-The backend network connects the router, the proxies, the relays, and the service containers within the data center,
-BECAUSE the internal hops must stay unreachable from the Internet while remaining cheap to scale per environment.
-
-##  NETWORK: Data Network {{data}}
-
--   SCOPE:      Isolated
--   PROTOCOLS:  TCP 5432
--   ADDRESSING: Hetzner private vSwitch, database subnet
-
-The data network connects the service containers to the database server only, BECAUSE a compromised node of the
-Internet-facing backend network then still has no route to the persisted personal data.
 

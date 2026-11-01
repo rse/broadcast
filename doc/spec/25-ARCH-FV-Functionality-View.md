@@ -1,26 +1,21 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-05 01:00
 ---
 
-ARCH: Functionality View (FV)
-=============================
+#   ARCH: Functionality View (FV)
 
 ![](25-ARCH-FV-Functionality-View-1.svg)
 
 ##  COMPONENT: Web Client {{client}}
 
 -   KIND:           Subsystem
--   REALIZES:       [[REQUIREMENT:name-appearance]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:individual-url]],
-                    [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:personalized-url]],
-                    [[REQUIREMENT:resource-url]], [[REQUIREMENT:display-options]], [[REQUIREMENT:info-messages]],
-                    [[REQUIREMENT:country-language]], [[REQUIREMENT:presenter-dashboard]], [[REQUIREMENT:mc-feedback]],
-                    [[REQUIREMENT:mobile]], [[REQUIREMENT:theme-toggle]], [[REQUIREMENT:manage-app]]
+-   REALIZES:       [[REQUIREMENT:name-appearance]], [[REQUIREMENT:browser-access]], [[REQUIREMENT:individual-url]], [[REQUIREMENT:user-consent]], [[REQUIREMENT:provider-switch]]
 -   DEPENDS-ON:     [[COMPONENT:relay]]
 
 The Vue.js single-page application renders the attendee and operator UI and drives all user interaction: it presents the
 panel, attendee, studio, moderator, and manager screens, plays the video stream, and exchanges live data over MQTT,
-BECAUSE Broadcast delivers its entire experience in the browser.
+BECAUSE msg.Broadcast delivers its entire experience in the browser.
 
 ##  COMPONENT: Client NLP {{client-nlp}}
 
@@ -28,9 +23,8 @@ BECAUSE Broadcast delivers its entire experience in the browser.
 -   PART-OF:        [[COMPONENT:client]]
 -   REALIZES:       [[REQUIREMENT:client-sentiment]]
 
-The client NLP module pre-processes attendee input in the browser before it is sent, analyzing its sentiment and
-identifying its language, BECAUSE processing input at its source both relieves the server from filtering improper
-submissions and spares it an initial round-trip for detecting the message language.
+The client NLP module performs lightweight client-side sentiment analysis and language identification on attendee input
+before it is sent, BECAUSE filtering at the source reduces server load and can prevent improper submissions.
 
 ##  COMPONENT: Router {{router}}
 
@@ -38,8 +32,8 @@ submissions and spares it an initial round-trip for detecting the message langua
 -   PATTERNS:       [[PATTERN:reverse-proxy-edge]]
 
 The router (HAProxy with NFTables) routes incoming HTTP and WebSocket traffic across the proxy instances of an environment
-using round-robin and separates the dev, QA, and production environments, BECAUSE a single controlled entry point is easier
-to secure and to scale than many, while separated environments keep dev and QA traffic away from running production events.
+using round-robin and separates the dev, QA, and production environments, BECAUSE traffic must be balanced and environments
+isolated at the edge.
 
 ##  COMPONENT: Proxy {{proxy}}
 
@@ -64,19 +58,9 @@ performance challenge.
 
 -   KIND:           Service
 -   PATTERNS:       [[PATTERN:modular-monolith]]
--   REALIZES:       [[REQUIREMENT:questions]], [[REQUIREMENT:chat]], [[REQUIREMENT:moderation]],
-                    [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]], [[REQUIREMENT:likes]],
-                    [[REQUIREMENT:replies]], [[REQUIREMENT:message-editing]], [[REQUIREMENT:message-deletion]],
-                    [[REQUIREMENT:deleted-placeholder]], [[REQUIREMENT:question-tags]], [[REQUIREMENT:server-sentiment]],
-                    [[REQUIREMENT:answer-inputs]], [[REQUIREMENT:moderator-messages]], [[REQUIREMENT:presenter-hints]],
-                    [[REQUIREMENT:presenter-alerts]], [[REQUIREMENT:sort-filter]], [[REQUIREMENT:export-inputs]],
-                    [[REQUIREMENT:multi-provider]], [[REQUIREMENT:registration-import]], [[REQUIREMENT:registration-export]],
-                    [[REQUIREMENT:event-portability]], [[REQUIREMENT:gdpr-eu]], [[REQUIREMENT:access-recheck]],
-                    [[REQUIREMENT:event-lifecycle]], [[REQUIREMENT:support-requests]]
--   OWNS:           [[ENTITY:Event]], [[ENTITY:AgendaPoint]], [[ENTITY:Channel]], [[ENTITY:Resource]],
-                    [[ENTITY:ResourceProviderParam]], [[ENTITY:Role]], [[ENTITY:Message]], [[ENTITY:MessageText]],
-                    [[ENTITY:QuestionTag]]
--   PROVIDES:       [[INTERFACE:server-cli]], [[INTERFACE:event-topics]]
+-   REALIZES:       [[REQUIREMENT:questions]], [[REQUIREMENT:chat]], [[REQUIREMENT:moderation]], [[REQUIREMENT:forward-presenter]], [[REQUIREMENT:config-propagation]]
+-   OWNS:           [[ENTITY:Event]], [[ENTITY:AgendaPoint]], [[ENTITY:Channel]], [[ENTITY:Resource]], [[ENTITY:ResourceProviderParam]], [[ENTITY:Role]], [[ENTITY:Message]], [[ENTITY:MessageText]], [[ENTITY:QuestionTag]]
+-   PROVIDES:       [[INTERFACE:server-cli]]
 -   DEPENDS-ON:     [[FV.database]]
 
 The service layer executes all business logic for events, messages, authentication, and statistics: as the main server it
@@ -108,8 +92,7 @@ languages on the fly while preserving the original, BECAUSE chat and questions m
 
 -   KIND:           Module
 -   PART-OF:        [[COMPONENT:service]]
--   REALIZES:       [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]], [[REQUIREMENT:channel-stats]],
-                    [[REQUIREMENT:user-stats]], [[REQUIREMENT:stats-snapshots]]
+-   REALIZES:       [[REQUIREMENT:event-stats]], [[REQUIREMENT:debug-stats]], [[REQUIREMENT:channel-stats]], [[REQUIREMENT:user-stats]], [[REQUIREMENT:stats-snapshots]]
 -   OWNS:           [[ENTITY:EventStatistic]], [[ENTITY:ChannelStatistic]], [[ENTITY:UserStatistic]]
 -   DEPENDS-ON:     [[FV.database]]
 
@@ -122,8 +105,8 @@ the event's lifetime.
 -   KIND:           Component
 -   REALIZES:       [[REQUIREMENT:browser-access]]
 
-The Junction component serves the static client bundle and orchestrates its delivery to the relay over MQTT-Plus,
-BECAUSE the client must be distributed alongside the same messaging infrastructure used for live data.
+The Junction component serves the static client bundle and orchestrates its delivery to the relay over MQTT+, BECAUSE the
+client must be distributed alongside the same messaging infrastructure used for live data.
 
 ##  COMPONENT: Database {{database}}
 

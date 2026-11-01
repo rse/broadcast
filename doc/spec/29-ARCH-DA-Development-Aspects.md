@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-03 23:10
 ---
 
 ARCH: Development Aspects (DA)
@@ -8,7 +8,7 @@ ARCH: Development Aspects (DA)
 
 ##  ASPECT: Client/Common/Server Split {{module-split}}
 
--   CATEGORY:  Structure
+-   CATEGORY: Structure
 -   GUIDED-BY: [[PRINCIPLE:shared-contracts]]
 
 The codebase is organized into `src/client`, `src/common`, and
@@ -18,7 +18,7 @@ agree on contracts without duplicating them.
 
 ##  ASPECT: TypeScript Everywhere {{typescript}}
 
--   CATEGORY:  Standardization
+-   CATEGORY: Standardization
 -   GUIDED-BY: [[PRINCIPLE:shared-contracts]]
 
 All client-side and server-side code is written in strongly typed
@@ -39,9 +39,8 @@ every module a consistent developer entry point.
 
 The client is built and served in development by Vite, bundling the
 Vue, Pinia, Reka UI, Tailwind, and Stylus stack into the static client
-artifact, BECAUSE one build configuration for development and
-production keeps the developed client equal to the delivered static
-bundle.
+artifact, BECAUSE Vite provides fast HMR development and an optimized
+production bundle.
 
 ##  ASPECT: Layered Linting {{linting}}
 
@@ -64,31 +63,16 @@ dependency keeps the shared contract free of platform-specific concerns.
 -   CATEGORY: Codeline
 
 The project is versioned in a single Git repository hosted on the
-self-administered Gitea, BECAUSE self-hosted version control keeps
-source under full organizational control.
-
-##  ASPECT: Repository Access {{repository-access}}
-
--   CATEGORY: Codeline
-
-Access to the repository is granted by the Software Administrator,
-BECAUSE the Software Administrator manages the software configuration
-and hence controls who may change the solution.
+self-administered Gitea, with the Software Administrator granting
+repository access, BECAUSE self-hosted version control keeps source
+under full organizational control.
 
 ##  ASPECT: Identifier Naming {{identifier-naming}}
 
 -   CATEGORY: Standardization
 
 Data-model entities are named in PascalCase and their attributes in
-camelCase, BECAUSE these are the prevailing TypeScript conventions for
-types and their members, so the entities map onto the code unrenamed.
-
-##  ASPECT: Identifier Referencing {{identifier-referencing}}
-
--   CATEGORY: Standardization
-
-Data-model entities and attributes are referred to by exactly their
-identifiers, set in code font, wherever code or documents mention them
-(e.g. `Event.accessList`, `Message.senderName`), BECAUSE a single
-identifier form lets a reader grep from a document straight into the
-code.
+camelCase, and both are referred to by exactly these identifiers, set in
+code font, wherever code or documents mention them (e.g.
+`Event.accessList`, `Message.senderName`), BECAUSE a single identifier
+form lets a reader grep from a document straight into the code.

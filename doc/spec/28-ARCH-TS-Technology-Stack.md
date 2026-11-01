@@ -1,103 +1,9 @@
 ---
 Created:  2026-06-19 00:15
-Modified: 2026-10-21 17:58
+Modified: 2026-09-09 17:51
 ---
 
-ARCH: Technology Stack (TS)
-===========================
-
-##  TIER: Common
-
-### COMPONENT: Language {{language}}
-
--   PRODUCT:  TypeScript
--   LICENSE:  Apache-2.0
--   PHASE:    Build-Time
--   COVERAGE: Build, Standardization
-
-All client-side and server-side code, including the shared common module, is authored in strongly typed TypeScript and
-compiled to JavaScript, BECAUSE a single strongly typed language catches contract mismatches against the shared common
-module at compile time.
-
-### COMPONENT: Task Runner {{task-runner}}
-
--   PRODUCT:  STX
--   LICENSE:  MIT
--   PHASE:    Build-Time
--   COVERAGE: Tooling
-
-The STX task runner drives the build, lint, and run tasks of every module from a per-module `stx.conf`, BECAUSE a single
-task runner gives every module a consistent developer entry point.
-
-### COMPONENT: Linting {{linting}}
-
--   PRODUCT:  ESLint
--   LICENSE:  MIT
--   PHASE:    Build-Time
--   COVERAGE: Standardization
-
-ESLint enforces code quality and style for the client and server TypeScript, complemented by the faster OxLint, BECAUSE
-a focused linter per language layer keeps the TypeScript layer clean and consistent.
-
-### COMPONENT: Messaging {{messaging}}
-
--   PRODUCT:  MQTT-Plus
--   LICENSE:  MIT
--   PHASE:    Run-Time
--   COVERAGE: Client Networking, Dialog Communication, Server Networking, Component Communication
--   USED-BY:  [[COMPONENT:client]], [[COMPONENT:relay]], [[COMPONENT:service]]
-
-MQTT-Plus handles the MQTT-over-WebSocket communication of the client with the relay layer and the MQTT messaging of the
-service and relay layers on top of the base MQTT.js functionality, BECAUSE MQTT is the messaging protocol for the
-real-time relay layer and MQTT-Plus adds the needed request/response and event handling on all tiers alike.
-
-### COMPONENT: HTTP Client {{http-client}}
-
--   PRODUCT:  OFetch
--   LICENSE:  MIT
--   PHASE:    Run-Time
--   COVERAGE: Client Networking
--   USED-BY:  [[COMPONENT:client]], [[COMPONENT:auth]]
-
-OFetch provides the HTTP/REST request/response communication of the client and the call of the external GraphQL
-mail-sending API by the authentication service, BECAUSE plain HTTP calls complement the MQTT channel for the
-request/response-style interactions of both tiers, REST on the client and GraphQL on the server alike.
-
-### COMPONENT: Logging {{logging}}
-
--   PRODUCT:  Pino
--   LICENSE:  MIT
--   PHASE:    Run-Time
--   COVERAGE: Execution Tracing
--   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
-
-Pino provides the leveled, structured logging facility, wrapping the browser console on the client and rendered
-human-readably by pino-pretty on the server during development, BECAUSE a single logging library shared by client and
-server keeps the tracing consistent.
-
-### COMPONENT: Date Management {{date-management}}
-
--   PRODUCT:  Luxon
--   LICENSE:  MIT
--   PHASE:    Run-Time
--   COVERAGE: Data Conversion
--   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
-
-Luxon handles date and time parsing, formatting, and localization across the client UI and the timestamps emitted by
-the server services, BECAUSE locale-aware date handling is required for event schedules and timestamps in
-German and English on client and server alike.
-
-### COMPONENT: Unique Identifier Generation {{unique-id}}
-
--   PRODUCT:  nanoid
--   LICENSE:  MIT
--   PHASE:    Run-Time
--   COVERAGE: Business Model, Peer Information
--   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
-
-nanoid generates the compact, collision-resistant unique identifiers for the messaging peers of client and server,
-while the entities keep the UUID keys of the data model, BECAUSE short URL-safe peer identifiers are needed on both
-tiers without the size and overhead of full UUIDs.
+#   ARCH: Technology Stack (TS)
 
 ##  TIER: Client
 
@@ -109,8 +15,7 @@ tiers without the size and overhead of full UUIDs.
 -   COVERAGE: Build
 
 Vite serves the client in development with fast HMR and bundles the runtime stack into the optimized static client
-artifact, BECAUSE a single tool for both development serving and production bundling keeps the build configuration of
-the Vue stack in one place for the static bundle delivered from the CDN.
+artifact, BECAUSE it provides a fast development server and an optimized production bundle for the Vue stack.
 
 ### COMPONENT: Styling Framework {{styling-framework}}
 
@@ -120,39 +25,9 @@ the Vue stack in one place for the static bundle delivered from the CDN.
 -   COVERAGE: Build, Interface Theme, Interface Layouting, Interface Effects
 -   USED-BY:  [[COMPONENT:client]]
 
-Tailwind CSS generates the utility-first styling for theme, layout, and effects at build time, BECAUSE utility-first
-styling speeds consistent UI work.
-
-### COMPONENT: CSS Preprocessor {{css-preprocessor}}
-
--   PRODUCT:  Stylus
--   LICENSE:  MIT
--   PHASE:    Build-Time
--   COVERAGE: Build, Interface Theme
--   USED-BY:  [[COMPONENT:client]]
-
-Stylus is the preferred preprocessor for authoring the custom CSS of the client beyond the generated utility classes,
-BECAUSE bespoke styling which utility classes cannot express needs a concise authoring language.
-
-### COMPONENT: HTML Linting {{html-linting}}
-
--   PRODUCT:  HTMLHint
--   LICENSE:  MIT
--   PHASE:    Build-Time
--   COVERAGE: Standardization
-
-HTMLHint enforces code quality for the HTML markup of the client, BECAUSE a focused linter per language layer keeps
-the HTML layer clean and consistent.
-
-### COMPONENT: Style Linting {{style-linting}}
-
--   PRODUCT:  StyleLint
--   LICENSE:  MIT
--   PHASE:    Build-Time
--   COVERAGE: Standardization
-
-StyleLint enforces code quality and style for the Stylus sources of the client, BECAUSE a focused linter per language
-layer keeps the Stylus layer clean and consistent.
+Tailwind CSS generates the utility-first styling for theme, layout, and effects at build time, with Stylus as the
+preferred preprocessor for authoring custom CSS, BECAUSE utility-first styling speeds consistent UI work while Stylus
+covers bespoke styling.
 
 ### COMPONENT: UI Framework {{ui-framework}}
 
@@ -259,11 +134,11 @@ entry point and the horizontally scaled per-environment forwarding.
 
 ### COMPONENT: Message Broker {{message-broker}}
 
--   PRODUCT:  Mosquitto
--   LICENSE:  EPL-2.0
--   PHASE:    Run-Time
--   COVERAGE: Message Brokering
--   USED-BY:  [[COMPONENT:relay]]
+-   PRODUCT:    Mosquitto
+-   LICENSE:    EPL-2.0
+-   PHASE:      Run-Time
+-   COVERAGE:   Message Brokering
+-   USED-BY:    [[COMPONENT:relay]]
 
 Mosquitto brokers the MQTT messages between the thousands of WebSocket connections of the clients and the service
 layer as a pool of instances per environment, BECAUSE a lightweight, proven MQTT broker sustains the connection count of
@@ -303,8 +178,8 @@ preserves end-to-end TypeScript type-safety and full PostgreSQL feature access w
 -   COVERAGE: Server Networking, Request Processing
 -   USED-BY:  [[COMPONENT:junction]]
 
-Junction serves the static client content over MQTT-Plus from the backend, BECAUSE the client must be distributed
-alongside the same messaging infrastructure used for live data.
+Junction serves the static client content over MQTT+ from the backend, BECAUSE the client must be distributed alongside
+the same messaging infrastructure used for live data.
 
 ### COMPONENT: Argument Parsing {{argument-parsing}}
 
@@ -390,3 +265,96 @@ integrity, EU-resident self-hosting, and rich query support for moderation and r
 The pg_dump utility of PostgreSQL produces the logical database dumps stored together with the filesystem assets on the
 backup storage and restored with pg_restore, BECAUSE a logical dump is portable across PostgreSQL versions and needs
 no additional backup server.
+
+##  TIER: Common
+
+### COMPONENT: Language {{language}}
+
+-   PRODUCT:  TypeScript
+-   LICENSE:  Apache-2.0
+-   PHASE:    Build-Time
+-   COVERAGE: Build, Standardization
+
+All client-side and server-side code, including the shared common module, is authored in strongly typed TypeScript and
+compiled to JavaScript, BECAUSE a single strongly typed language catches contract mismatches against the shared common
+module at compile time.
+
+### COMPONENT: Task Runner {{task-runner}}
+
+-   PRODUCT:  STX
+-   LICENSE:  MIT
+-   PHASE:    Build-Time
+-   COVERAGE: Tooling
+
+The STX task runner drives the build, lint, and run tasks of every module from a per-module `stx.conf`, BECAUSE a single
+task runner gives every module a consistent developer entry point.
+
+### COMPONENT: Linting {{linting}}
+
+-   PRODUCT:  ESLint
+-   LICENSE:  MIT
+-   PHASE:    Build-Time
+-   COVERAGE: Standardization
+
+ESLint enforces code quality and style for the client and server TypeScript, complemented by the faster OxLint, HTMLHint
+for HTML, and StyleLint for Stylus, BECAUSE multiple focused linters keep each language layer clean and consistent.
+
+### COMPONENT: Messaging {{messaging}}
+
+-   PRODUCT:    MQTT-Plus
+-   LICENSE:    MIT
+-   PHASE:      Run-Time
+-   COVERAGE:   Client Networking, Dialog Communication, Server Networking, Component Communication
+-   USED-BY:    [[COMPONENT:client]], [[COMPONENT:relay]], [[COMPONENT:service]]
+
+MQTT-Plus handles the MQTT-over-WebSocket communication of the client with the relay layer and the MQTT messaging of the
+service and relay layers on top of the base MQTT.js functionality, BECAUSE MQTT is the messaging protocol for the
+real-time relay layer and MQTT-Plus adds the needed request/response and event handling on all tiers alike.
+
+### COMPONENT: HTTP Client {{http-client}}
+
+-   PRODUCT:  OFetch
+-   LICENSE:  MIT
+-   PHASE:    Run-Time
+-   COVERAGE: Client Networking
+-   USED-BY:  [[COMPONENT:client]], [[COMPONENT:auth]]
+
+OFetch provides the HTTP/REST request/response communication of the client and the call of the external GraphQL
+mail-sending API by the authentication service, BECAUSE REST calls complement the MQTT channel for request/response-style
+interactions on both tiers.
+
+### COMPONENT: Logging {{logging}}
+
+-   PRODUCT:  Pino
+-   LICENSE:  MIT
+-   PHASE:    Run-Time
+-   COVERAGE: Execution Tracing
+-   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
+
+Pino provides the leveled, structured logging facility, wrapping the browser console on the client and rendered
+human-readably by pino-pretty on the server during development, BECAUSE a single logging library shared by client and
+server keeps the tracing consistent.
+
+### COMPONENT: Date Management {{date-management}}
+
+-   PRODUCT:  Luxon
+-   LICENSE:  MIT
+-   PHASE:    Run-Time
+-   COVERAGE: Data Conversion
+-   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
+
+Luxon handles date and time parsing, formatting, and localization across the client UI and the timestamps emitted by
+the server services, BECAUSE robust, locale-aware date handling is required for event schedules and timestamps in
+German and English on client and server alike.
+
+### COMPONENT: Unique Identifier Generation {{unique-id}}
+
+-   PRODUCT:  nanoid
+-   LICENSE:  MIT
+-   PHASE:    Run-Time
+-   COVERAGE: Business Model, Peer Information
+-   USED-BY:  [[COMPONENT:client]], [[COMPONENT:service]]
+
+nanoid generates the compact, collision-resistant unique identifiers for the messaging peers of client and server and
+for the entities the client creates, BECAUSE short URL-safe identifiers are needed on both tiers without the size and
+overhead of full UUIDs.

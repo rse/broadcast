@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-05 00:30
 ---
 
 ARCH: Context View (CV)
@@ -34,24 +34,8 @@ concurrent attendees.
 
 The event operator is a manager, moderator, or presenter who configures
 events, moderates input, and presents forwarded questions, through the
-same browser-based web client as the attendees, BECAUSE the solution
-joins attendance and its moderated interaction in a single web
-application, sparing the operators any separate tool or installation.
-
-##  ENTITY: Administrator {{administrator}}
-
--   KIND:      Person
--   DIRECTION: Bidirectional
--   TERMS:     [[TERM:administrator]]
--   INTERFACE: [[INTERFACE:server-cli]]
--   ACTORS:    [[ROLE:administrator]]
--   USE-CASES: [[USE-CASE:administer-event]]
--   DATA:      Software configuration, event provisioning, corrections of any event
-
-The administrator provisions the events and streaming providers through
-the configuration and the command line of the server and corrects any
-event through the web client, BECAUSE the operation of the solution
-needs one role which depends on no event-specific grant.
+same browser-based web client as the attendees, BECAUSE all event
+operation happens through the same web application as attendance.
 
 ##  ENTITY: Streaming Provider {{provider}}
 
@@ -74,10 +58,9 @@ provider endpoints rather than hosting video.
 -   USE-CASES: [[USE-CASE:join-event]]
 -   DATA:      Static client assets and static resources
 
-A Cloudflare content delivery network serves the static client assets
-and static resources, BECAUSE the start surge has to receive the client
-bundle as [[REQUIREMENT:asset-delivery]] demands, without competing with
-the live connections for the single entry point of the data center.
+A Cloudflare content delivery network fronts static content for fast,
+stable distribution, BECAUSE static assets must load quickly and
+reliably for a global, large-scale audience.
 
 ##  ENTITY: Event Registration System {{registration-system}}
 
@@ -127,8 +110,6 @@ German and English on the fly.
 -   USE-CASES: [[USE-CASE:moderate-chat]]
 -   DATA:      Interactive app content and administration
 
-An optional third-party application is embedded into the event as a
-sidebar tab for the attendees, with a separate admin URL for the
-moderators, BECAUSE an event can thereby offer interactive tooling the
-solution itself does not provide, without the attendees leaving the
-stream.
+An optional third-party application is embedded into the event for
+additional interactivity, with a separate admin URL for moderators,
+BECAUSE some events integrate external interactive tooling.

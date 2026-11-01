@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-10-21 17:58
+Modified: 2026-09-05 13:10
 ---
 
 ARCH: Design Decisions (DD)
@@ -33,14 +33,15 @@ ARCH: Design Decisions (DD)
 -   STATUS:       Accepted
 -   DRIVEN-BY:    [[REQUIREMENT:gdpr]], [[REQUIREMENT:cost]], [[PREMISE:eu-hosting]]
 -   GUIDED-BY:    [[MAXIM:simplicity]]
--   AFFECTS:      [[TIER:datacenter]]
--   ALTERNATIVES: Azure, AWS
+-   AFFECTS:      [[TIER:datacenter]], [[ASPECT:codeline]]
+-   ALTERNATIVES: Azure, AWS, GitHub
 -   WHEN:
     The solution must be GDPR-compliant with EU data residency, and a primary economic goal is to minimize recurring cost per
     event, the solution having been built specifically to replace a costlier third-party platform.
 -   WHAT:
     We operate all server tiers on self-managed Hetzner infrastructure in Nürnberg, Germany, separated into dev, QA, and
-    production environments, rather than on Azure or AWS.
+    production environments, rather than on Azure or AWS, and keep the source on a self-administered Gitea rather than on
+    a hosted forge.
 -   WHY:
     Hetzner delivers EU-resident hosting at a fraction of hyperscaler cost, satisfying both the data-residency and
     cost-minimization forces; public cloud was rejected because its per-event egress and compute pricing would undermine the
@@ -61,8 +62,8 @@ ARCH: Design Decisions (DD)
     Events handle personal attendee data under GDPR, yet attendance is transient and the operator wants to carry as little
     personal-data liability as possible while still supporting per-event identity for chat and moderation.
 -   WHAT:
-    We hold no permanent user accounts ([[RULE:no-accounts]]), and on event finish the automated procedure of
-    [[RULE:anonymize]] removes the personal data of the event.
+    We hold no permanent user accounts: users exist only via an event access list, role grant, or pattern match, and on event
+    finish an automated procedure anonymizes messages and deletes users, tokens, and Moderator roles.
 -   WHY:
     Deleting personal data the moment it is no longer needed minimizes both breach impact and compliance burden, which
     outweighs the convenience of persistent accounts; a conventional account model was rejected because standing personal data
@@ -81,7 +82,7 @@ ARCH: Design Decisions (DD)
     automated joining for large distributions provisioned from the Event Registration System.
 -   WHAT:
     We authenticate via a one-time "NNN-NNN" token emailed to the attendee's address, with optionally pre-generated tokens
-    embeddable in the access URL for automatic entry.
+    embeddable in the access URL for automatic entry, and we enforce a single active session per user per event.
 -   WHY:
     An emailed token proves control of the authorized address with zero stored credentials and reuses email as a channel
     everyone already has, fitting the no-accounts stance; password accounts and external identity providers were rejected as
@@ -178,9 +179,8 @@ ARCH: Design Decisions (DD)
 -   DECIDES:      [[TACTIC:portability]], [[COMPONENT:ui-framework]], [[COMPONENT:widget-framework]], [[COMPONENT:build-tool]]
 -   ALTERNATIVES: React, Svelte, server-rendered pages with progressive enhancement
 -   WHEN:
-    The attendee and operator screens run in the browsers named by [[REQUIREMENT:browser-compat]] on managed and unmanaged
-    desktop and mobile devices, react to server-pushed changes within the latency bound of [[REQUIREMENT:config-latency]],
-    and are styled to the corporate design without a native look.
+    The attendee and operator screens run in any recent browser on managed and unmanaged desktop and mobile devices, react
+    to server-pushed changes within seconds, and are styled to the corporate design without a native look.
 -   WHAT:
     We build the client as a Vue.js single-page application composed of headless Reka UI widgets styled with Tailwind CSS,
     bundled by Vite into static files.
