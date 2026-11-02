@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-11-02 16:02
+Modified: 2026-11-02 16:39
 ---
 
 REQS: Use Cases (UC)
@@ -389,15 +389,26 @@ answering attendees publicly or privately, seeding the conversation with
 messages of their own, and controlling an embedded application, BECAUSE
 an unattended chat drowns in spam and off-topic noise.
 
-### SCENARIO: Answer an Attendee Directly {{moderate-chat-answer}}
+### SCENARIO: Answer an Attendee in Public {{moderate-chat-public}}
 
 -   TYPE: Main
 
 1.  The moderator reviews the incoming chat messages.
-2.  The moderator selects a chat message which needs a clarification or support.
-3.  The moderator writes a reply to the attendee.
-4.  The moderator chooses whether the reply is visible to all or a direct message to the attendee only.
-5.  The system stores the reply in state pending, accepts it at once as a moderator-authored message, and delivers it accordingly.
+2.  The moderator selects a chat message which deserves an answer visible to the audience.
+3.  The moderator writes a reply to the chat message.
+4.  The system stores the reply in state pending, accepts it at once as a moderator-authored message, and shows it to the audience.
+
+### SCENARIO: Answer an Attendee Directly {{moderate-chat-answer}}
+
+-   TYPE:         Alternative
+-   RESULT:       Success
+-   AT-MAIN-STEP: 2
+-   OUTCOME:      The attendee's message and the moderator's reply are support messages visible to the attendee and the moderators only.
+
+2.  The moderator selects a chat message which needs a clarification or support and moves it to the support lane.
+3.  The system turns the chat message into a support message, which leaves the chat of the audience.
+4.  The moderator writes a reply to the support message.
+5.  The system stores the reply as a support message in state accepted and delivers it to the attendee only.
 
 ### SCENARIO: Seed the Conversation as Moderator {{moderate-chat-seed}}
 

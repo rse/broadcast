@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-08-30 10:00
+Modified: 2026-11-02 16:39
 ---
 
 UXUI: Dialog Storyboard (DS)
@@ -71,14 +71,16 @@ STORYBOARD: Attendee Gets Support from a Moderator {{support-request}}
 
 ### FRAME
 
--   Support Tab; ACTOR: [[PERSONA:attendee]]; PATTERNS: [[DIALOG-PATTERN:video-sidebar]], [[DIALOG-PATTERN:composer]];
-    The attendee opens the Support tab, which shows only their own requests, and writes a request for help into the composer.
+-   Chat Request; ACTOR: [[PERSONA:attendee]]; PATTERNS: [[DIALOG-PATTERN:video-sidebar]], [[DIALOG-PATTERN:composer]];
+    The attendee writes a request for help into the composer of the chat.
 -   Chat Moderation Board; SCENARIO-STEP: 1; ACTOR: [[PERSONA:moderator-chat]]; PATTERNS: [[DIALOG-PATTERN:kanban-board]];
     The moderator reviews the incoming chat messages in the rejected, pending, and accepted lanes beside the stream, the request among them.
+-   Move to Support; SCENARIO-STEP: 2; ACTOR: [[PERSONA:moderator-chat]]; PATTERNS: [[DIALOG-PATTERN:kanban-board]];
+    The moderator moves the request card into the support lane, which takes it out of the chat of the audience.
 -   Direct Reply; SCENARIO-STEP: 4; ACTOR: [[PERSONA:moderator-chat]]; PATTERNS: [[DIALOG-PATTERN:composer]];
-    The moderator writes a reply in the board's composer and marks it as a direct message to the attendee instead of a public one.
+    The moderator writes a reply to the request in the support lane through the board's composer.
 -   Reply Received; SCENARIO-STEP: 5; ACTOR: [[PERSONA:attendee]]; PATTERNS: [[DIALOG-PATTERN:message-stream]];
-    The attendee sees the amber-tinted moderator reply below their own request in the Support tab, without any further approval step.
+    The attendee finds their request in the Support tab, which shows only their own requests, with the amber-tinted moderator reply below it, without any further approval step.
 
 STORYBOARD: Chat Moderator Triages Messages {{chat-moderation}}
 -------------------------------------------

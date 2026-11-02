@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 16:19
+Modified: 2026-11-02 16:39
 ---
 
 TEST: Test Cases (TC)
@@ -264,13 +264,14 @@ TEST: Test Cases (TC)
 
 -   VERIFIES:       [[REQUIREMENT:answer-inputs]], [[SCENARIO:moderate-chat-answer]], [[RULE:moderator-accept]]
 -   PRE-CONDITION:  A running event with chat enabled and two attendees watching the stream.
--   INPUT:          The moderator replies to the message of the first attendee as a direct message.
--   EXPECTED:       The reply reaches the first attendee in state accepted while the second attendee does not see it.
--   POST-CONDITION: The reply is stored as accepted with the first attendee as its sole recipient.
+-   INPUT:          The moderator moves the chat message of the first attendee to the support lane and replies to it there.
+-   EXPECTED:       The reply reaches the first attendee in state accepted while the second attendee sees neither the moved message nor the reply.
+-   POST-CONDITION: The moved message and the reply are stored as accepted support messages with the first attendee as their sole attendee.
 
 1.  The first attendee posts a chat message.
-2.  The moderator replies to that message as a direct message.
-3.  The tester inspects the stream on the screens of both attendees.
+2.  The moderator moves that message to the support lane.
+3.  The moderator replies to the moved message.
+4.  The tester inspects the stream on the screens of both attendees.
 
 ##  TEST-CASE: Resource URL Selects the Resource {{resource-url}}
 

@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 12:00
-Modified: 2026-09-14 14:01
+Modified: 2026-11-02 16:39
 ---
 
 DATA: Authorization Model (AM)
@@ -94,7 +94,7 @@ DATA: Authorization Model (AM)
 
 -   Review All Messages {{moderator-read-messages}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:Message]]; OPERATIONS: Read;
     CONDITION: The message belongs to the event the moderator holds the Moderator role of.;
-    USE-CASES: [[SCENARIO:moderate-forward]], [[SCENARIO:moderate-chat-answer]];
+    USE-CASES: [[SCENARIO:moderate-forward]], [[SCENARIO:moderate-chat-public]], [[SCENARIO:moderate-chat-answer]];
     The moderator reads every message of the event in every state, with its sender, sentiment score, and like count.
 
 -   Decide Pending Messages {{moderator-decide}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:Message]];
@@ -115,10 +115,16 @@ DATA: Authorization Model (AM)
     USE-CASES: [[SCENARIO:moderate-settle]];
     The moderator marks a forwarded question answered or suspended on behalf of the presenter.
 
+-   Move Chats to Support {{moderator-move-support}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:Message]]; OPERATIONS: Update;
+    CONDITION: The message is a chat, and the update is confined to turning it into a support message.;
+    RULES: [[RULE:type-states]];
+    USE-CASES: [[SCENARIO:moderate-chat-answer]];
+    The moderator moves a chat message which needs a clarification or support to the support lane, which hides it from the audience and leaves it visible to its sender and the moderators only.
+
 -   Author Messages {{moderator-author}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:Message]]; OPERATIONS: Create;
     CONDITION: The event is running.;
     RULES: [[RULE:moderator-accept]];
-    USE-CASES: [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
+    USE-CASES: [[SCENARIO:moderate-chat-public]], [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
     The moderator answers attendees publicly or privately and seeds the conversation, where the messages are accepted at once upon creation under the sender name "Moderator" unless overridden.
 
 -   Use All Tags {{moderator-use-tags}}; ROLE: [[ROLE:moderator]]; ENTITY: [[ENTITY:QuestionTag]]; OPERATIONS: Read;

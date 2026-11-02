@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 16:20
+Modified: 2026-11-02 16:39
 ---
 
 DATA: State Model (SM)
@@ -92,7 +92,7 @@ LIFECYCLE: Message {{message}}
 -   `accept {{accept-moderator}}`; FROM: [[STATE:Pending]]; TO: [[STATE:Accepted]]; ACTOR: System;
     GUARD: The message is authored by a moderator.;
     RULES: [[RULE:moderator-accept]];
-    USE-CASES: [[SCENARIO:moderate-chat-answer]], [[SCENARIO:moderate-chat-seed]];
+    USE-CASES: [[SCENARIO:moderate-chat-public]], [[SCENARIO:moderate-chat-seed]];
     The moderator-authored message becomes visible at once, right after its creation.
 
 -   `reject`; FROM: [[STATE:Pending]]; TO: [[STATE:Rejected]]; ACTOR: [[ROLE:moderator]];
