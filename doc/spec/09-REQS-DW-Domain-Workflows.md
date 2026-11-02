@@ -1,6 +1,6 @@
 ---
 Created:  2026-08-30 10:00
-Modified: 2026-09-05 00:30
+Modified: 2026-11-02 16:45
 ---
 
 REQS: Domain Workflows (DW)
@@ -49,8 +49,8 @@ part.
     The moderators accept, reject, answer, and forward the incoming
     messages throughout the live event.
 
--   Present and Answer {{present-talk}}; ACTOR: [[ROLE:presenter]];
-    The presenter delivers the talk and answers the forwarded questions
+-   Present and Raise Questions {{present-talk}}; ACTOR: [[ROLE:presenter]];
+    The presenter delivers the talk and raises the forwarded questions
     on air.
 
 -   Finish Event {{finish-event}}; ACTOR: [[ROLE:manager]];
