@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 10:24
+Modified: 2026-11-02 16:02
 ---
 
 #   UXUI: Visual Design (VD)
@@ -150,7 +150,7 @@ composer.
 
 ##  MOCKUP: Administrator Event Creation {{mockup-administrator-create}}
 
--   ACTORS: [[PERSONA:administrator]]
+-   ACTORS: [[PERSONA:manager]]
 -   ELEMENTS: [[ELEMENT:color-palette]], [[ELEMENT:wordmark]], [[ELEMENT:typography]], [[ELEMENT:spacing]], [[ELEMENT:shape]]
 -   IMAGE: ![](21-UXUI-VD-Visual-Design-4.png)
 

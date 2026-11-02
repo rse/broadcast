@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 14:01
+Modified: 2026-11-02 16:02
 ---
 
 REQS: Use Cases (UC)
@@ -538,7 +538,7 @@ USE-CASE: Switch Streaming Provider {{switch-provider}}
 -----------------------------------
 
 -   ACTOR:          [[ROLE:manager]]
--   JOURNEYS:       [[STEP:configure]]
+-   JOURNEYS:       [[STEP:run]]
 -   ACTIVITIES:     [[ACTIVITY:go-live]]
 -   REQUIREMENTS:   [[REQUIREMENT:multi-provider]], [[REQUIREMENT:provider-switch]], [[REQUIREMENT:config-propagation]]
 -   RULES:          [[RULE:single-channel]], [[RULE:single-resource]]
@@ -590,7 +590,7 @@ USE-CASE: Publish, Start, and Finish Event {{publish-start-finish}}
 ------------------------------------------
 
 -   ACTOR:          [[ROLE:manager]]
--   JOURNEYS:       [[STEP:configure]]
+-   JOURNEYS:       [[STEP:run]]
 -   ACTIVITIES:     [[ACTIVITY:go-live]], [[ACTIVITY:finish-event]]
 -   RULES:          [[RULE:anonymize]]
 -   PRE-CONDITION:  The event is configured and its access list is populated.
@@ -717,7 +717,7 @@ USE-CASE: Administer Any Event {{administer-event}}
 ------------------------------
 
 -   ACTOR:          [[ROLE:administrator]]
--   PERSONAS:       [[PERSONA:administrator]]
+-   PERSONAS:       [[PERSONA:manager]]
 -   RULES:          [[RULE:administrator-access]], [[RULE:administrator-bootstrap]], [[RULE:no-accounts]]
 -   PRE-CONDITION:  The Administrator role is granted to the email address of the administrator through the configuration.
 -   TRIGGER:        The administrator opens the URL of an event they are not enrolled in.

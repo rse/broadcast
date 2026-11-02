@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-14 10:13
+Modified: 2026-11-02 16:02
 ---
 
 REQS: User Personas (UP)
@@ -100,21 +100,18 @@ and nothing else."
 
 ##  PERSONA: Manfred {{manager}}
 
--   ROLES:       [[ROLE:manager]]
--   TERMS:       [[TERM:manager]], [[TERM:registration-system]]
--   GOAL:        Set up events quickly and hand the access URLs back to the Event Registration System.
--   FRUSTRATION: Manual, error-prone event setup with access URLs that have to be copied around by hand.
+-   ROLES:       [[ROLE:manager]], [[ROLE:administrator]]
+-   TERMS:       [[TERM:manager]], [[TERM:administrator]], [[TERM:registration-system]],
+                 [[TERM:provider]]
+-   GOAL:        Provision events and streaming providers reproducibly via configuration,
+                 set up events quickly and hand the access URLs back to the Event Registration
+                 System, and fix anything in any event when the organizers are stuck.
+-   FRUSTRATION: Manual, error-prone event setup with access URLs that have to be copied around
+                 by hand, and platforms that require per-event manual clicks and lock out the
+                 very person who provisioned the events.
 
-"Setting up an event and getting the access URLs back to the Event
-Registration System has to be quick and repeatable."
-
-##  PERSONA: Sven {{administrator}}
-
--   ROLES:       [[ROLE:administrator]]
--   TERMS:       [[TERM:administrator]], [[TERM:provider]]
--   GOAL:        Provision events and streaming providers reproducibly via configuration, and fix anything in any event when the organizers are stuck.
--   FRUSTRATION: Platforms that require per-event manual clicks and lock him out of the events he provisioned.
-
-"I provision events and streaming providers via config, and when
-something is stuck I step into any event and fix it."
+"I provision events and streaming providers via config, set up events
+and get the access URLs back to the Event Registration System quickly
+and repeatably, and when something is stuck I step into any event and
+fix it."
 

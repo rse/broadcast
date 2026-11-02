@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-09-05 13:10
+Modified: 2026-11-02 16:02
 ---
 
 ARCH: Operations View (OV)
@@ -10,7 +10,7 @@ ARCH: Operations View (OV)
 
 -   CATEGORY:  Upgrade
 -   TRIGGER:   on every release, outside running events
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:maintenance-window]]
 -   ELEMENTS:  [[NODE:service]]
 -   TOOLS:     [[COMPONENT:container-orchestration]]
@@ -23,7 +23,7 @@ BECAUSE a running broadcast must never be interrupted by a rollout.
 
 -   CATEGORY:  Configuration
 -   TRIGGER:   before each event
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:maintenance-window]]
 -   ELEMENTS:  [[COMPONENT:service]]
 -   TOOLS:     [[COMPONENT:configuration-loading]]
@@ -37,7 +37,7 @@ concerns kept out of the database.
 
 -   CATEGORY:  Administration
 -   TRIGGER:   on event creation
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:privacy]]
 -   ELEMENTS:  [[COMPONENT:auth]]
 
@@ -49,7 +49,7 @@ controlled administratively to uphold privacy by design.
 
 -   CATEGORY:  Monitoring
 -   TRIGGER:   during each event
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:attendee-scale]], [[REQUIREMENT:observability]]
 -   ELEMENTS:  [[COMPONENT:statistics]], [[NODE:proxy]], [[NODE:relay]]
 
@@ -62,7 +62,7 @@ be detected while the audience is still online.
 
 -   CATEGORY:  Incident
 -   TRIGGER:   on reported login failures
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:observability]]
 -   ELEMENTS:  [[COMPONENT:auth]]
 -   TOOLS:     [[COMPONENT:logging]]
@@ -75,7 +75,7 @@ find out why an attendee fails to authenticate while the event runs.
 
 -   CATEGORY:  Capacity
 -   TRIGGER:   ahead of large events
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:scalability]], [[REQUIREMENT:attendee-scale]]
 -   ELEMENTS:  [[NODE:proxy]], [[NODE:relay]], [[NODE:service]]
 -   TOOLS:     [[COMPONENT:container-orchestration]]
@@ -88,7 +88,7 @@ to 10000 require capacity provisioned per environment.
 
 -   CATEGORY:  Backup
 -   TRIGGER:   nightly and before each event
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:recovery]], [[REQUIREMENT:gdpr]]
 -   ELEMENTS:  [[NODE:database]], [[ENTITY:Event]]
 -   TOOLS:     [[COMPONENT:database-backup]]
@@ -102,7 +102,7 @@ EU hosting boundary.
 
 -   CATEGORY:  Recovery
 -   TRIGGER:   on database loss
--   OPERATOR:  [[PERSONA:administrator]]
+-   OPERATOR:  [[PERSONA:manager]]
 -   ADDRESSES: [[REQUIREMENT:recovery]]
 -   ELEMENTS:  [[NODE:database]], [[NODE:service]]
 -   TOOLS:     [[COMPONENT:database-backup]], [[COMPONENT:container-orchestration]]

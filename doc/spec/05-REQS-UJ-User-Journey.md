@@ -1,6 +1,6 @@
 ---
 Created:  2026-06-18 10:18
-Modified: 2026-06-18 10:18
+Modified: 2026-11-02 16:02
 ---
 
 REQS: User Journey (UJ)
@@ -54,15 +54,25 @@ JOURNEY: Operate a Broadcast Event {{operate}}
 
 -   ACTORS:      [[PERSONA:manager]]
 
-### STEP: Configure and run the event {{configure}}
+### STEP: Configure the event {{configure}}
 
 -   STAGE:       Usage
--   GOAL:        Set up, start, and control an event end-to-end
+-   GOAL:        Set up an event so that it is ready to go live
 -   TOUCHPOINT:  Manager configuration screen and Event Registration System Excel import/export
--   ACTION:      The manager imports attendees, configures channels and options, and starts the event.
+-   ACTION:      The manager imports attendees and configures channels and options.
 -   EMOTION:     Focused (0)
 -   PAIN-POINT:  Coordinating streaming providers, access lists, and tokens before going live is error-prone.
 -   OPPORTUNITY: The configuration screen validates the imported attendee list and the streaming settings before the event goes live.
+
+### STEP: Run the event {{run}}
+
+-   STAGE:       Usage
+-   GOAL:        Start and control the event live until its finish
+-   TOUCHPOINT:  Manager configuration screen of the running event
+-   ACTION:      The manager publishes and starts the event, switches the streaming provider on problems, and finishes the event.
+-   EMOTION:     Focused (0)
+-   PAIN-POINT:  A failing streaming provider during the live broadcast interrupts the stream for the whole audience.
+-   OPPORTUNITY: The manager switches the active streaming provider live and the attendee clients follow without user interaction.
 
 ### STEP: Export anonymized results after event {{export}}
 
